@@ -1,0 +1,85 @@
+# Nmap 7.80 scan initiated Sun Apr 26 13:54:25 2020 as: nmap -A -T5 -sV --script vuln -oN ./6-blue/rpnmap.nmap 10.10.132.93
+Pre-scan script results:
+| broadcast-avahi-dos: 
+|   Discovered hosts:
+|     224.0.0.251
+|   After NULL UDP avahi packet DoS (CVE-2011-1002).
+|_  Hosts are all up (not vulnerable).
+Nmap scan report for 10.10.132.93
+Host is up (0.097s latency).
+Not shown: 991 closed ports
+PORT      STATE SERVICE      VERSION
+135/tcp   open  msrpc        Microsoft Windows RPC
+|_clamav-exec: ERROR: Script execution failed (use -d to debug)
+139/tcp   open  netbios-ssn  Microsoft Windows netbios-ssn
+|_clamav-exec: ERROR: Script execution failed (use -d to debug)
+445/tcp   open  microsoft-ds Microsoft Windows 7 - 10 microsoft-ds (workgroup: WORKGROUP)
+|_clamav-exec: ERROR: Script execution failed (use -d to debug)
+3389/tcp  open  tcpwrapped
+|_clamav-exec: ERROR: Script execution failed (use -d to debug)
+| rdp-vuln-ms12-020: 
+|   VULNERABLE:
+|   MS12-020 Remote Desktop Protocol Denial Of Service Vulnerability
+|     State: VULNERABLE
+|     IDs:  CVE:CVE-2012-0152
+|     Risk factor: Medium  CVSSv2: 4.3 (MEDIUM) (AV:N/AC:M/Au:N/C:N/I:N/A:P)
+|           Remote Desktop Protocol vulnerability that could allow remote attackers to cause a denial of service.
+|           
+|     Disclosure date: 2012-03-13
+|     References:
+|       https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-0152
+|       http://technet.microsoft.com/en-us/security/bulletin/ms12-020
+|   
+|   MS12-020 Remote Desktop Protocol Remote Code Execution Vulnerability
+|     State: VULNERABLE
+|     IDs:  CVE:CVE-2012-0002
+|     Risk factor: High  CVSSv2: 9.3 (HIGH) (AV:N/AC:M/Au:N/C:C/I:C/A:C)
+|           Remote Desktop Protocol vulnerability that could allow remote attackers to execute arbitrary code on the targeted system.
+|           
+|     Disclosure date: 2012-03-13
+|     References:
+|       http://technet.microsoft.com/en-us/security/bulletin/ms12-020
+|_      https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-0002
+|_ssl-ccs-injection: No reply from server (TIMEOUT)
+|_sslv2-drown: 
+49152/tcp open  msrpc        Microsoft Windows RPC
+|_clamav-exec: ERROR: Script execution failed (use -d to debug)
+49153/tcp open  msrpc        Microsoft Windows RPC
+|_clamav-exec: ERROR: Script execution failed (use -d to debug)
+49154/tcp open  msrpc        Microsoft Windows RPC
+|_clamav-exec: ERROR: Script execution failed (use -d to debug)
+49158/tcp open  msrpc        Microsoft Windows RPC
+|_clamav-exec: ERROR: Script execution failed (use -d to debug)
+49160/tcp open  msrpc        Microsoft Windows RPC
+|_clamav-exec: ERROR: Script execution failed (use -d to debug)
+Aggressive OS guesses: Microsoft Windows Home Server 2011 (Windows Server 2008 R2) (96%), Microsoft Windows Server 2008 SP1 (96%), Microsoft Windows Server 2008 SP2 (96%), Microsoft Windows 7 (96%), Microsoft Windows 7 SP0 - SP1 or Windows Server 2008 (96%), Microsoft Windows 7 SP0 - SP1, Windows Server 2008 SP1, Windows Server 2008 R2, Windows 8, or Windows 8.1 Update 1 (96%), Microsoft Windows 7 SP1 (96%), Microsoft Windows 7 Ultimate (96%), Microsoft Windows 8.1 (96%), Microsoft Windows Vista or Windows 7 SP1 (96%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops
+Service Info: Host: JON-PC; OS: Windows; CPE: cpe:/o:microsoft:windows
+
+Host script results:
+|_samba-vuln-cve-2012-1182: NT_STATUS_ACCESS_DENIED
+|_smb-vuln-ms10-054: false
+|_smb-vuln-ms10-061: NT_STATUS_ACCESS_DENIED
+| smb-vuln-ms17-010: 
+|   VULNERABLE:
+|   Remote Code Execution vulnerability in Microsoft SMBv1 servers (ms17-010)
+|     State: VULNERABLE
+|     IDs:  CVE:CVE-2017-0143
+|     Risk factor: HIGH
+|       A critical remote code execution vulnerability exists in Microsoft SMBv1
+|        servers (ms17-010).
+|           
+|     Disclosure date: 2017-03-14
+|     References:
+|       https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-0143
+|       https://blogs.technet.microsoft.com/msrc/2017/05/12/customer-guidance-for-wannacrypt-attacks/
+|_      https://technet.microsoft.com/en-us/library/security/ms17-010.aspx
+
+TRACEROUTE (using port 587/tcp)
+HOP RTT      ADDRESS
+1   95.89 ms 10.9.0.1
+2   96.35 ms 10.10.132.93
+
+OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Sun Apr 26 13:56:41 2020 -- 1 IP address (1 host up) scanned in 135.91 seconds
