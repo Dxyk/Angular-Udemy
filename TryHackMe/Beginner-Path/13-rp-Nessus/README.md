@@ -51,4 +51,4 @@
    4. `.bak`
    5. `/external/phpids/0.6/docs/examples/`
    6. `clickjacking`
-   7. `5.5.9–1ubuntu4.26`
+   7. `5.5.9-1ubuntu4.26`
