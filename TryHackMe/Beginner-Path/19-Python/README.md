@@ -60,4 +60,4 @@
 
 12. Challenge Time
 
-    1.  
+    1. See `decode_flag.py` -> `THM{d431ff8fea00ad3f6b685b7182078e73}`
