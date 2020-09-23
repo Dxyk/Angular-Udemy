@@ -30,3 +30,17 @@ NPM (Node Package Manager) to manage Node packages
 1. `npm install -g @angular/cli` - install Angular globally
 2. `ng new <app name>` - create a new ng app
 3. `ng serve` - start development server that runs the build and serves at `localhost:4200` by default
+
+## Lesson 7 - Editing the first app
+
+Angular CLI automatically rebuilds and serves the server once it detects code changes when `ng serve` is running
+
+**Data Binding** - Bind data in `.component.ts` to `.component.html` to form static html page on serve.
+
+**Directive** - A tool provided by Angular
+
+- Directive `<input type="text" [(ngModel)]="name">` tells Angular to listen to the input and store the input in the variable `name`
+
+**Modules** - Features are divided into separate modules
+
+- To import a module, go to `.module.ts` and add the corresponding module / package in the `import` statement
