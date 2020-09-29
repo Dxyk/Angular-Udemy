@@ -96,3 +96,40 @@ In `app/server/server.component.html`
 ``` typescript
 <p>The server component</p>
 ```
+
+## Lesson 17 - AppModule and Component Declaration
+
+Angular uses components to build webpages, and uses **modules** to make them into bundles of functionalities. Angular will not know the component exists unless we register them in the NgModule.
+
+A module is an exported class with decorators.
+
+- declarations - the _registered_ components
+- imports - other modules to import into the current one
+- providers
+- bootstrap - the components that Angular should be aware of when app starts
+
+``` typescript
+@NgModule({
+  declarations: [
+    AppComponent
+  ],
+  imports: [
+    BrowserModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+```
+
+## Lesson 18 - Using Custom Components
+
+After registering the new component in the module, we can use the tag specified in the `selector` of the component.
+
+In `app.component.html`:
+
+``` html
+<h3>I'm in the AppComponent!</h3>
+<hr>
+<app-server></app-server>
+```
