@@ -133,3 +133,14 @@ In `app.component.html`:
 <hr>
 <app-server></app-server>
 ```
+
+## Lesson 19 - Creating Components through the CLI and Nesting Components
+
+`ng generate component <component name>` == `ng g c <component name>` - will generate declarations in AppComponent and the bundle of 4 files (`.component.ts`, `.component.spec.ts`, `.component.html`, `.component.css`)
+
+Within servers.component.html, we can nest multiple other components (`server`s).
+
+``` html
+<app-server></app-server>
+<app-server></app-server>
+```
