@@ -220,3 +220,83 @@ In `app.component.ts`.
 export class AppComponent {
 }
 ```
+
+## Lesson 22 - Component Selector
+
+Selectors must have unique values
+
+In components, it is possible to select by **attribute** (as in css). This will apply to all tags that contain the attribute defined in the selector. User `[]` to encompass the selector element.
+
+In `servers.component.ts`,
+
+``` typescript
+@Component({
+  selector: '[app-servers]',
+  template: `
+    <app-server></app-server>
+    <app-server></app-server>
+  `,
+  styleUrls: ['./servers.component.css']
+})
+export class ServersComponent implements OnInit {
+
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+
+}
+```
+
+In `app.component.html`,
+
+``` html
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12">
+      <h3>I'm in the AppComponent!</h3>
+      <hr>
+      <div app-servers></div>
+    </div>
+  </div>
+</div>
+```
+
+It is also possible to select by **class** (as in css). This will apply to all tags that contain the class defined in the selector. User `.` to prepend the selector class.
+
+In `servers.component.ts`,
+
+``` typescript
+@Component({
+  selector: '.app-servers',
+  template: `
+    <app-server></app-server>
+    <app-server></app-server>
+  `,
+  styleUrls: ['./servers.component.css']
+})
+export class ServersComponent implements OnInit {
+
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+
+}
+```
+
+In `app.component.html`,
+
+``` html
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12">
+      <h3>I'm in the AppComponent!</h3>
+      <hr>
+      <div class="app-servers"></div>
+    </div>
+  </div>
+</div>
+```
+
+Note that Angular does not support select by id.
