@@ -386,7 +386,7 @@ In `server.component.html`,
 
 ## Lesson 26 Property Binding
 
-It is possible to bind DOM native properties to Angular component properties as long as the types match up.
+It is possible to bind DOM native properties, directives and Angular components to Angular properties as long as the types match up.
 
 In `servers.component.ts`
 
@@ -420,3 +420,9 @@ In `servers.component.html`
 <button class="btn btn-primary"
   [disabled]="!allowNewServer">Add Server</button>
 ```
+
+## Lesson 27 String Interpolation vs Property Binding
+
+Use String Interpolation when trying to display text, and use Property Binding when trying to change DOM property or directives.
+
+Never mix string interpolation with property binding.
