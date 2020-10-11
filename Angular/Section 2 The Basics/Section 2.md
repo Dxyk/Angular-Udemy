@@ -16,7 +16,7 @@ Within it, the `<app-root></app-root>` is a root **component**.
 
 In `app.component.ts`'s `@Component`, the `selector` property has value of `app-root`. This property specifies the custom component.
 
-``` typescript
+``` ts
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -34,7 +34,7 @@ On app startup, the custom component gets substituted by whatever was generated 
 
 3. Within the `main.ts` file, the code block bellow bootstraps `AppModule`, which is defined in `src/app/app.module.ts`.
 
-    ``` typescript
+    ``` ts
     import { AppModule } from './app/app.module';
 
     platformBrowserDynamic().bootstrapModule(AppModule)
@@ -43,7 +43,7 @@ On app startup, the custom component gets substituted by whatever was generated 
 
 4. In `app.module.ts`, the `bootstrap` array in `@NgModule` lists all the **components** that should be known to Angular when it analyzes the HTML file.
 
-    ``` typescript
+    ``` ts
     @NgModule({
     declarations: [
         AppComponent
@@ -80,7 +80,7 @@ The following lessons will be targeted to build the following:
 
 In `app/server/server.component.ts`,
 
-``` typescript
+``` ts
 import { Component } from '@angular/core';
 
 @Component({
@@ -93,7 +93,7 @@ export class ServerComponent {
 
 In `app/server/server.component.html`
 
-``` typescript
+``` ts
 <p>The server component</p>
 ```
 
@@ -108,7 +108,7 @@ A module is an exported class with decorators.
 - providers
 - bootstrap - the components that Angular should be aware of when app starts
 
-``` typescript
+``` ts
 @NgModule({
   declarations: [
     AppComponent
@@ -153,7 +153,7 @@ Note if we add template inline using `'`, we cannot wrap the code with new line.
 
 in `servers.component.ts`,
 
-``` typescript
+``` ts
 @Component({
   selector: 'app-servers',
   template: `
@@ -206,7 +206,7 @@ Option 3: add styling in `*.component.ts` inline, using the `styles` property th
 
 In `app.component.ts`.
 
-``` typescript
+``` ts
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -229,7 +229,7 @@ In components, it is possible to select by **attribute** (as in css). This will 
 
 In `servers.component.ts`,
 
-``` typescript
+``` ts
 @Component({
   selector: '[app-servers]',
   template: `
@@ -266,7 +266,7 @@ It is also possible to select by **class** (as in css). This will apply to all t
 
 In `servers.component.ts`,
 
-``` typescript
+``` ts
 @Component({
   selector: '.app-servers',
   template: `
@@ -322,13 +322,13 @@ Output data: TS to HTML
 
 - String Interpolation
 
-  ``` typescript
+  ``` ts
   {{ data }}
   ```
 
 - Property Binding
 
-  ``` typescript
+  ``` ts
   [property]="data"
   ```
 
@@ -336,13 +336,13 @@ Input data / User Event: HTML to TS
 
 - Event Binding
 
-  ``` typescript
+  ``` ts
   (event)="expression"
   ```
 
 **Two-Way-Binding**: Combining property binding and event binding
 
-``` typescript
+``` ts
 ([ngModel])="data"
 ```
 
@@ -359,7 +359,7 @@ Restrictions:
 
 In `server.component.ts`,
 
-``` typescript
+``` ts
 import { Component } from '@angular/core';
 
 @Component({
@@ -382,4 +382,41 @@ In `server.component.html`,
 
 ``` html
 <p>The {{ 'server' }} {{ getServer() }} with Id {{ serverId }} is of status {{ serverIsUp ? serverStatusOnline : serverStatus }}.</p>
+```
+
+## Lesson 26 Property Binding
+
+It is possible to bind DOM native properties to Angular component properties as long as the types match up.
+
+In `servers.component.ts`
+
+``` ts
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-servers',
+  templateUrl: './servers.component.html',
+  styleUrls: ['./servers.component.css']
+})
+export class ServersComponent implements OnInit {
+
+  allowNewServer = false;
+
+  constructor() {
+    setTimeout(() => {
+      this.allowNewServer = true;
+    }, 2000);
+  }
+
+  ngOnInit(): void {
+  }
+
+}
+```
+
+In `servers.component.html`
+
+``` html
+<button class="btn btn-primary"
+  [disabled]="!allowNewServer">Add Server</button>
 ```
