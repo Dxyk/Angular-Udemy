@@ -308,4 +308,78 @@ Note that Angular does not support select by id.
 3. Output a warning or success message in the Components
 4. Style the Components appropriately (maybe some red/ green text?)
 
-See `assignment-1/`.
+See `./assignment-1/`.
+
+## Lesson 23 Assignment Solution
+
+See `./assignment-1/`.
+
+## Lesson 24 Databinding
+
+**Databinding** is the communication between the typescript code and the HTML template. E.g. use TS to fetch data and communicate that data to the HTML template
+
+Output data: TS to HTML
+
+- String Interpolation
+
+  ``` typescript
+  {{ data }}
+  ```
+
+- Property Binding
+
+  ``` typescript
+  [property]="data"
+  ```
+
+Input data / User Event: HTML to TS
+
+- Event Binding
+
+  ``` typescript
+  (event)="expression"
+  ```
+
+**Two-Way-Binding**: Combining property binding and event binding
+
+``` typescript
+([ngModel])="data"
+```
+
+## Lesson 25 String Interpolation
+
+For HTML to reference string expressions defined in TS. Could be a string, property or a method that returns a string.
+
+Restrictions:
+
+- Can only reference string or resolved strings
+- Can use ternary expressions
+- Cannot write multi-line string
+- Cannot have complex logic such as if/else blocks
+
+In `server.component.ts`,
+
+``` typescript
+import { Component } from '@angular/core';
+
+@Component({
+    selector: 'app-server',
+    templateUrl: './server.component.html'
+})
+export class ServerComponent {
+    serverId = 10;
+    serverIsUp = true;
+    serverStatusOnline = 'online';
+    serverStatusOffline = 'offline';
+
+    getServer() {
+        return 'Server';
+    }
+}
+```
+
+In `server.component.html`,
+
+``` html
+<p>The {{ 'server' }} {{ getServer() }} with Id {{ serverId }} is of status {{ serverIsUp ? serverStatusOnline : serverStatus }}.</p>
+```
