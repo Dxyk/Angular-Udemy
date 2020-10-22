@@ -312,13 +312,13 @@ Note that Angular does not support select by id.
 
 See `./assignment-1/`.
 
-### Lesson 23 Assignment Solution
+### Lesson 23 - Assignment Solution
 
 See `./assignment-1/`.
 
 ## Databinding
 
-### Lesson 24 Databinding
+### Lesson 24 - Databinding
 
 **Databinding** is the communication between the typescript code and the HTML template. E.g. use TS to fetch data and communicate that data to the HTML template
 
@@ -350,7 +350,7 @@ Input data / User Event: HTML to TS
 ([ngModel])="data"
 ```
 
-### Lesson 25 String Interpolation
+### Lesson 25 - String Interpolation
 
 For HTML to reference string expressions defined in TS. Could be a string, property or a method that returns a string.
 
@@ -388,7 +388,7 @@ In `server.component.html`,
 <p>The {{ 'server' }} {{ getServer() }} with Id {{ serverId }} is of status {{ serverIsUp ? serverStatusOnline : serverStatus }}.</p>
 ```
 
-### Lesson 26 Property Binding
+### Lesson 26 - Property Binding
 
 It is possible to bind DOM native properties (`disabled` in this case), directives and Angular components to Angular properties as long as the types match up.
 
@@ -425,13 +425,13 @@ In `servers.component.html`
   [disabled]="!allowNewServer">Add Server</button>
 ```
 
-### Lesson 27 String Interpolation vs Property Binding
+### Lesson 27 - String Interpolation vs Property Binding
 
 Use String Interpolation when trying to display text, and use Property Binding when trying to change DOM property or directives.
 
 Never mix string interpolation with property binding.
 
-### Lesson 28 Event Binding
+### Lesson 28 - Event Binding
 
 It is possible to bind DOM native events (`click` in this case) and Angular events to Angular methods.
 
@@ -470,11 +470,11 @@ In `servers.component.html`
 <p>{{ serverCreationStatus }}</p>
 ```
 
-### Lesson 29 Bindable Properties and Events
+### Lesson 29 - Bindable Properties and Events
 
 Search in MDN (Mozilla Developer Network) for a list of properties and events.
 
-### Lesson 30 Passing and Using Data with Event Binding
+### Lesson 30 - Passing and Using Data with Event Binding
 
 When using event binding, the reserved variable `$event` can be passed into the method in the quotation marks. This variable denotes the data emitted with that event. For `<input (input)="method($event)">`, `$event` represents data from the user input event, and we can use `$event.target.value` to extract the data in the input tag.
 
@@ -510,7 +510,7 @@ In `servers.component.html`
 <p>{{ serverName }}</p>
 ```
 
-### Lesson 31 FormsModule
+### Lesson 31 - FormsModule
 
 In order for two-way-binding to work, need to enable `ngModule` directive by including `FormsModule` in `imports[]` in `AppModule`.
 
@@ -535,7 +535,7 @@ import { FormsModule } from '@angular/forms';
 export class AppModule { }
 ```
 
-### Lesson 32 Two-Way-Databinding
+### Lesson 32 - Two-Way-Databinding
 
 Use `[(ngModel)]="<Component property>"` for two way binding
 
@@ -578,4 +578,74 @@ In `servers.component.html`, notice when we type in the `serverNameInput` input 
        class="form-control"
        id="serverNameInput-TWB"
        [(ngModel)]="serverName">
+```
+
+### Lesson 33 - Combining all Forms of Databinding
+
+A demo application:
+
+- Property binding to enable the button
+- Event binding to listen to the click
+- String interpolation to display the server status
+- Two-Way-Binding to fetch the input data
+
+In `servers.component.ts`
+
+``` ts
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-servers',
+  templateUrl: './servers.component.html',
+  styleUrls: ['./servers.component.css']
+})
+export class ServersComponent implements OnInit {
+
+  allowNewServer = false;
+
+  serverCreationStatus = 'There are no servers created';
+
+  serverName = 'testServerName';
+
+  constructor() {
+    setTimeout(() => {
+      this.allowNewServer = true;
+    }, 2000);
+  }
+
+  ngOnInit(): void {
+  }
+
+  onCreateServer(): void {
+    this.serverCreationStatus = 'A server with name of [ ' + this.serverName + ' ] has been created';
+  }
+
+  onUpdateServerName(event: any): void {
+    this.serverName = (<HTMLInputElement>event.target).value;
+  }
+
+}
+
+```
+
+In `servers.component.html`
+
+``` html
+<label for="serverNameInput">Server Name</label>
+<input type="text"
+       class="form-control"
+       id="serverNameInput"
+       (input)="onUpdateServerName($event)">
+<label for="serverNameInput-TWB">Server Name Two-Way-Binding</label>
+<input type="text"
+       class="form-control"
+       id="serverNameInput-TWB"
+       [(ngModel)]="serverName">
+<p>{{ serverName }}</p>
+<button class="btn btn-primary"
+        [disabled]="!allowNewServer"
+        (click)="onCreateServer()">Add Server</button>
+<p>{{ serverCreationStatus }}</p>
+<app-server></app-server>
+<app-server></app-server>
 ```
