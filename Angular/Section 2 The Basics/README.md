@@ -303,7 +303,7 @@ In `app.component.html`,
 
 Note that Angular does not support select by id.
 
-### Assignment 1
+## Assignment 1
 
 1. Create two new Components (manually or with CLI): WarningAlert and SuccessAlert
 2. Output them beneath each other in the AppComponent
@@ -312,7 +312,7 @@ Note that Angular does not support select by id.
 
 See `./assignment-1/`.
 
-### Lesson 23 - Assignment Solution
+### Lesson 23 - Assignment 1 Solution
 
 See `./assignment-1/`.
 
@@ -649,3 +649,16 @@ In `servers.component.html`
 <app-server></app-server>
 <app-server></app-server>
 ```
+
+## Assignment 2
+
+1. Add a Input field which updates a property ('username') via Two-Way-Binding
+2. Output the username property via String Interpolation (in a paragraph below the input)
+3. Add a button which may only be clicked if the username is NOT an empty string
+4. Upon clicking the button, the username should be reset to an empty string
+
+See `./assignment-2/`.
+
+### Lesson 34 - Assignment 2 Solution
+
+See `./assignment-2/`.
