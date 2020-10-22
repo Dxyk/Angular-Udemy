@@ -505,3 +505,28 @@ In `servers.component.html`
        (input)="onUpdateServerName($event)">
 <p>{{ serverName }}</p>
 ```
+
+## Lesson 31 FormsModule
+
+In order for two-way-binding to work, need to enable `ngModule` directive by including `FormsModule` in `imports[]` in `AppModule`.
+
+In `app.module.ts`
+
+``` ts
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+
+import { AppComponent } from './app.component';
+import { FormsModule } from '@angular/forms';
+
+@NgModule({
+  declarations: [],
+  imports: [
+    BrowserModule,
+    FormsModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+```
