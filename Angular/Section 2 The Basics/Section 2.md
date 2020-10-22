@@ -1,15 +1,19 @@
 # Section 2 The Basics
 
-## Lesson 14 - How an Angular app gets Loaded and Started
+## Components
 
-### Complete Overview
+---
+
+### Lesson 14 - How an Angular app gets Loaded and Started
+
+#### Complete Overview
 
 1. App starts up, loads `index.html`, and the scripts in it loads Angular.
 2. Angular reads bootstrapped modules (`AppModule`) defined in `src/app/app.module.ts`
 3. `AppModule` declares `AppComponent` to let Angular be aware of it on app startup
 4. `app.component.ts` declares `app-root` component, and `app.component.html` uses it.
 
-### How index.html is generated
+#### How index.html is generated
 
 Only `src/index.html` is served by the server.
 Within it, the `<app-root></app-root>` is a root **component**.
@@ -26,7 +30,7 @@ In `app.component.ts`'s `@Component`, the `selector` property has value of `app-
 
 On app startup, the custom component gets substituted by whatever was generated in the corresponding `.component.html`
 
-### How Angular is triggered on startup
+#### How Angular is triggered on startup
 
 1. Whenever `ng serve` rebuilds our project, Angular CLI generates script files that imports Angular.
 
@@ -56,13 +60,13 @@ On app startup, the custom component gets substituted by whatever was generated 
     })
     ```
 
-## Lesson 15 - Components
+### Lesson 15 - Components
 
 Once Angular recognize it should start with the `app-root` component, we can build more components nested within `app-root`.
 
 Each component should contain its own template and business logic. It allows splitting up complex logic into smaller / simpler parts that are reusable.
 
-## Lesson 16 - Creating Components
+### Lesson 16 - Creating Components
 
 The following lessons will be targeted to build the following:
 
@@ -97,7 +101,7 @@ In `app/server/server.component.html`
 <p>The server component</p>
 ```
 
-## Lesson 17 - AppModule and Component Declaration
+### Lesson 17 - AppModule and Component Declaration
 
 Angular uses components to build webpages, and uses **modules** to make them into bundles of functionalities. Angular will not know the component exists unless we register them in the NgModule.
 
@@ -122,7 +126,7 @@ A module is an exported class with decorators.
 export class AppModule { }
 ```
 
-## Lesson 18 - Using Custom Components
+### Lesson 18 - Using Custom Components
 
 After registering the new component in the module, we can use the tag specified in the `selector` of the component.
 
@@ -134,7 +138,7 @@ In `app.component.html`,
 <app-server></app-server>
 ```
 
-## Lesson 19 - Creating Components through the CLI and Nesting Components
+### Lesson 19 - Creating Components through the CLI and Nesting Components
 
 `ng generate component <component name>` == `ng g c <component name>` - will generate declarations in AppComponent and the bundle of 4 files (`.component.ts`, `.component.spec.ts`, `.component.html`, `.component.css`)
 
@@ -145,7 +149,7 @@ Within servers.component.html, we can nest multiple other components (`server`s)
 <app-server></app-server>
 ```
 
-## Lesson 20 - Component Templates
+### Lesson 20 - Component Templates
 
 Component template code can be added inline instead of using `*.component.html` by changing `templateUrl` to `template`.
 
@@ -172,7 +176,7 @@ export class ServersComponent implements OnInit {
 }
 ```
 
-## Lesson 21 - Component Styles
+### Lesson 21 - Component Styles
 
 To add styles, we have
 
@@ -221,7 +225,7 @@ export class AppComponent {
 }
 ```
 
-## Lesson 22 - Component Selector
+### Lesson 22 - Component Selector
 
 Selectors must have unique values
 
@@ -301,7 +305,7 @@ In `app.component.html`,
 
 Note that Angular does not support select by id.
 
-## Assignment 1
+### Assignment 1
 
 1. Create two new Components (manually or with CLI): WarningAlert and SuccessAlert
 2. Output them beneath each other in the AppComponent
@@ -310,11 +314,15 @@ Note that Angular does not support select by id.
 
 See `./assignment-1/`.
 
-## Lesson 23 Assignment Solution
+### Lesson 23 Assignment Solution
 
 See `./assignment-1/`.
 
-## Lesson 24 Databinding
+## Databinding
+
+---
+
+### Lesson 24 Databinding
 
 **Databinding** is the communication between the typescript code and the HTML template. E.g. use TS to fetch data and communicate that data to the HTML template
 
@@ -346,7 +354,7 @@ Input data / User Event: HTML to TS
 ([ngModel])="data"
 ```
 
-## Lesson 25 String Interpolation
+### Lesson 25 String Interpolation
 
 For HTML to reference string expressions defined in TS. Could be a string, property or a method that returns a string.
 
@@ -384,7 +392,7 @@ In `server.component.html`,
 <p>The {{ 'server' }} {{ getServer() }} with Id {{ serverId }} is of status {{ serverIsUp ? serverStatusOnline : serverStatus }}.</p>
 ```
 
-## Lesson 26 Property Binding
+### Lesson 26 Property Binding
 
 It is possible to bind DOM native properties (`disabled` in this case), directives and Angular components to Angular properties as long as the types match up.
 
@@ -421,13 +429,13 @@ In `servers.component.html`
   [disabled]="!allowNewServer">Add Server</button>
 ```
 
-## Lesson 27 String Interpolation vs Property Binding
+### Lesson 27 String Interpolation vs Property Binding
 
 Use String Interpolation when trying to display text, and use Property Binding when trying to change DOM property or directives.
 
 Never mix string interpolation with property binding.
 
-## Lesson 28 Event Binding
+### Lesson 28 Event Binding
 
 It is possible to bind DOM native events (`click` in this case) and Angular events to Angular methods.
 
@@ -466,11 +474,11 @@ In `servers.component.html`
 <p>{{ serverCreationStatus }}</p>
 ```
 
-## Lesson 29 Bindable Properties and Events
+### Lesson 29 Bindable Properties and Events
 
 Search in MDN (Mozilla Developer Network) for a list of properties and events.
 
-## Lesson 30 Passing and Using Data with Event Binding
+### Lesson 30 Passing and Using Data with Event Binding
 
 When using event binding, the reserved variable `$event` can be passed into the method in the quotation marks. This variable denotes the data emitted with that event. For `<input (input)="method($event)">`, `$event` represents data from the user input event, and we can use `$event.target.value` to extract the data in the input tag.
 
@@ -506,7 +514,7 @@ In `servers.component.html`
 <p>{{ serverName }}</p>
 ```
 
-## Lesson 31 FormsModule
+### Lesson 31 FormsModule
 
 In order for two-way-binding to work, need to enable `ngModule` directive by including `FormsModule` in `imports[]` in `AppModule`.
 
