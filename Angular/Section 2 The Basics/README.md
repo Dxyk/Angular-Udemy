@@ -534,3 +534,48 @@ import { FormsModule } from '@angular/forms';
 })
 export class AppModule { }
 ```
+
+### Lesson 32 Two-Way-Databinding
+
+Use `[(ngModel)]="<Component property>"` for two way binding
+
+- Bind the element's value to the component property. When the element changes, the change is reflected on the component property.
+- Bind the component property to the element's value. When the component property changes, the change is reflected on the element.
+
+In `servers.component.html`
+
+``` ts
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-servers',
+  templateUrl: './servers.component.html',
+  styleUrls: ['./servers.component.css']
+})
+export class ServersComponent implements OnInit {
+
+  serverName = 'testServerName';
+
+  constructor() {
+  }
+
+  ngOnInit(): void {
+  }
+}
+
+```
+
+In `servers.component.html`, notice when we type in the `serverNameInput` input field, value is reflected in the `serverNameInput-TWB` input field. The other way around does not work because it only has event binding not data binding.
+
+``` html
+<label for="serverNameInput">Server Name</label>
+<input type="text"
+       class="form-control"
+       id="serverNameInput"
+       (input)="onUpdateServerName($event)">
+<label for="serverNameInput-TWB">Server Name Two-Way-Binding</label>
+<input type="text"
+       class="form-control"
+       id="serverNameInput-TWB"
+       [(ngModel)]="serverName">
+```

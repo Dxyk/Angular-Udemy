@@ -3,6 +3,11 @@
        class="form-control"
        id="serverNameInput"
        (input)="onUpdateServerName($event)">
+<label for="serverNameInput-TWB">Server Name Two-Way-Binding</label>
+<input type="text"
+       class="form-control"
+       id="serverNameInput-TWB"
+       [(ngModel)]="serverName">
 <p>{{ serverName }}</p>
 <button class="btn btn-primary"
         [disabled]="!allowNewServer"
