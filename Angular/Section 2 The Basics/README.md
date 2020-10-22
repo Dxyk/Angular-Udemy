@@ -2,8 +2,6 @@
 
 ## Components
 
----
-
 ### Lesson 14 - How an Angular app gets Loaded and Started
 
 #### Complete Overview
@@ -319,8 +317,6 @@ See `./assignment-1/`.
 See `./assignment-1/`.
 
 ## Databinding
-
----
 
 ### Lesson 24 Databinding
 

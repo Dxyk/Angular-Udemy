@@ -1,12 +1,14 @@
 # Section 1 Getting Started
 
-## Lesson 2 - Angular
+## Angular Intro
+
+### Lesson 2 - Angular
 
 Angular is used to create _reactive_ **Single-Paged-Applications**
 
 Angular uses TypeScript
 
-## Lesson 4 - Angular Versions
+### Lesson 4 - Angular Versions
 
 There are 2 Angular frameworks commonly known
 
@@ -19,7 +21,7 @@ There are 2 Angular frameworks commonly known
   - A new version is released every 6 months
   - Not a lot of difference between all the versions, just adding features etc.
 
-## Lesson 6 - Project Setup and the first app
+### Lesson 6 - Project Setup and the first app
 
 [Angular CLI](https://github.com/angular/angular-cli) is used to generate boiler codes for Angular apps
 
@@ -31,7 +33,7 @@ NPM (Node Package Manager) to manage Node packages
 2. `ng new <app name>` - create a new ng app
 3. `ng serve` - start development server that runs the build and serves at `localhost:4200` by default
 
-## Lesson 7 - Editing the first app
+### Lesson 7 - Editing the first app
 
 Angular CLI automatically rebuilds and serves the server once it detects code changes when `ng serve` is running
 
