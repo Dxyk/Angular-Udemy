@@ -386,7 +386,7 @@ In `server.component.html`,
 
 ## Lesson 26 Property Binding
 
-It is possible to bind DOM native properties, directives and Angular components to Angular properties as long as the types match up.
+It is possible to bind DOM native properties (`disabled` in this case), directives and Angular components to Angular properties as long as the types match up.
 
 In `servers.component.ts`
 
@@ -426,3 +426,42 @@ In `servers.component.html`
 Use String Interpolation when trying to display text, and use Property Binding when trying to change DOM property or directives.
 
 Never mix string interpolation with property binding.
+
+## Lesson 28 Event Binding
+
+It is possible to bind DOM native events (`click` in this case) and Angular events to Angular methods.
+
+In `servers.component.ts`
+
+``` ts
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-servers',
+  templateUrl: './servers.component.html',
+  styleUrls: ['./servers.component.css']
+})
+export class ServersComponent implements OnInit {
+
+  serverCreationStatus = 'There are no servers created';
+
+  constructor() {
+  }
+
+  ngOnInit(): void {
+  }
+
+  onCreateServer(): void {
+    this.serverCreationStatus = 'A server has been created';
+  }
+
+}
+```
+
+In `servers.component.html`
+
+``` html
+<button class="btn btn-primary"
+  (click)="onCreateServer()">Add Server</button>
+<p>{{ serverCreationStatus }}</p>
+```
