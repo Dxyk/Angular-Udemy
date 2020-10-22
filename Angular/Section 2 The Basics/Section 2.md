@@ -465,3 +465,43 @@ In `servers.component.html`
   (click)="onCreateServer()">Add Server</button>
 <p>{{ serverCreationStatus }}</p>
 ```
+
+## Lesson 29 Bindable Properties and Events
+
+Search in MDN (Mozilla Developer Network) for a list of properties and events.
+
+## Lesson 30 Passing and Using Data with Event Binding
+
+When using event binding, the reserved variable `$event` can be passed into the method in the quotation marks. This variable denotes the data emitted with that event. For `<input (input)="method($event)">`, `$event` represents data from the user input event, and we can use `$event.target.value` to extract the data in the input tag.
+
+TypeScript casting - use `<Class>var` to cast the variable `var` as class `Class`.
+
+In `servers.component.ts`
+
+``` ts
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-servers',
+  templateUrl: './servers.component.html',
+  styleUrls: ['./servers.component.css']
+})
+export class ServersComponent implements OnInit {
+  serverName = '';
+
+  onUpdateServerName(event: any): void {
+    this.serverName = (<HTMLInputElement>event.target).value;
+  }
+}
+```
+
+In `servers.component.html`
+
+``` html
+<label for="serverNameInput">Server Name</label>
+<input type="text"
+       class="form-control"
+       id="serverNameInput"
+       (input)="onUpdateServerName($event)">
+<p>{{ serverName }}</p>
+```
