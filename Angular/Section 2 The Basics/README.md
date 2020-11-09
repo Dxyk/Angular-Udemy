@@ -662,3 +662,80 @@ See `./assignment-2/`.
 ### Lesson 34 - Assignment 2 Solution
 
 See `./assignment-2/`.
+
+## Directives
+
+### Lesson 35 - Understanding Directives
+
+**Directives** are instructions in the DOM.
+
+Components are a kind of directives. When referencing the selector of a component in a template, we instruct Angular to add the component template.
+
+Directives can be used without a template. Usually add directives as attribute style.
+
+In html
+
+``` html
+<p directiveName>Hello World</p>
+```
+
+In TS
+
+``` ts
+@Directive({
+  selector: '[directiveName]'
+})
+export class DirectiveNameDirective {
+  ...
+}
+```
+
+### Lesson 36 - Use ngIf to Output Data Conditionally
+
+The `ngIf` directive allows showing content conditionally.
+
+In HTML, use `<div *ngIf>`. The `*` is necessary, and indicates that the the directive changes the structure of the DOM.
+
+Note that the `ngIf` directive does NOT hide an element. It generates elements and add them to the DOM on the fly.
+
+In `servers.component.html`
+
+``` html
+<label for="serverNameInput-TWB">Server Name Two-Way-Binding</label>
+<input type="text"
+       class="form-control"
+       id="serverNameInput-TWB"
+       [(ngModel)]="serverName">
+<button class="btn btn-primary"
+        [disabled]="!allowNewServer"
+        (click)="onCreateServer()">Add Server</button>
+<p *ngIf="serverCreated">A server with name of [ {{ serverName }} ] has been created</p>
+<app-server></app-server>
+<app-server></app-server>
+```
+
+In `servers.component.ts`
+
+``` ts
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-servers',
+  templateUrl: './servers.component.html',
+  styleUrls: ['./servers.component.css']
+})
+export class ServersComponent implements OnInit {
+  serverName = 'testServerName';
+  serverCreated = false;
+
+  constructor() {
+  }
+
+  ngOnInit(): void {
+  }
+
+  onCreateServer(): void {
+    this.serverCreated = true;
+  }
+}
+```
