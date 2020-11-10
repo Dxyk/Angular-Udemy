@@ -771,3 +771,52 @@ In `servers.component.html`
 <app-server></app-server>
 <app-server></app-server>
 ```
+
+### Lesson 38 - Styling Elements Dynamically with ngStyle
+
+**Structural Directives** (e.g. `ngIf`)
+
+- add / remove elements to the DOM.
+- Needs the `*`
+
+**Attribute Directive** (e.g. `ngStyle`)
+
+- only change the element they were placed on.
+- Does not need the `*`
+
+To change styling dynamically, use directive `ngStyle`.
+
+In `server.component.html`, notice `[ngStyle]`
+
+- `ngStyle` is the directive
+- `[ngStyle]` is using property binding to bind to some properties of the `ngStyle` directive.
+
+``` html
+<p [ngStyle]="{backgroundColor: getColor()}">The {{ 'server' }}
+  {{ getServer() }} with Id {{ serverId }} is of status {{ serverStatus }}.</p>
+```
+
+In `server.component.ts`
+
+``` ts
+@Component({
+  selector: 'app-server',
+  templateUrl: './server.component.html',
+})
+export class ServerComponent {
+  serverId = 10;
+  serverIsUp = true;
+  serverStatusOnline = 'online';
+  serverStatusOffline = 'offline';
+  serverStatus: string;
+
+  constructor() {
+    this.serverStatus =
+      Math.random() > 0.5 ? this.serverStatusOnline : this.serverStatusOffline;
+  }
+
+  getColor() {
+    return this.serverStatus === this.serverStatusOnline ? 'chartreuse' : 'palevioletred';
+  }
+}
+```

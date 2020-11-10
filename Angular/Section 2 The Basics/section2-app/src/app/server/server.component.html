@@ -1,1 +1,5 @@
-<p>The {{ 'server' }} {{ getServer() }} with Id {{ serverId }} is of status {{ serverIsUp ? serverStatusOnline : serverStatusOffline }}.</p>
+<p [ngStyle]="{backgroundColor: getColor()}">
+  The {{ 'server' }} {{ getServer() }} with Id {{ serverId }} is of status {{ serverStatus }}.
+</p>
+<!-- <p>The {{ 'server' }} {{ getServer() }} with Id {{ serverId }}
+  is of status {{ serverIsUp ? serverStatusOnline : serverStatusOffline }}.</p> -->

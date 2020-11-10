@@ -9,10 +9,9 @@ import { Component, OnInit } from '@angular/core';
   //   <app-server></app-server>
   // `,
   templateUrl: './servers.component.html',
-  styleUrls: ['./servers.component.css']
+  styleUrls: ['./servers.component.css'],
 })
 export class ServersComponent implements OnInit {
-
   allowNewServer = false;
 
   serverCreationStatus = 'There are no servers created';
@@ -27,16 +26,15 @@ export class ServersComponent implements OnInit {
     }, 2000);
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   onCreateServer(): void {
     this.serverCreated = true;
-    this.serverCreationStatus = 'A server with name of [ ' + this.serverName + ' ] has been created';
+    this.serverCreationStatus =
+      'A server with name of [ ' + this.serverName + ' ] has been created';
   }
 
   // onUpdateServerName(event: any): void {
   //   this.serverName = (<HTMLInputElement>event.target).value;
   // }
-
 }
