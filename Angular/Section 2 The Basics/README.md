@@ -739,3 +739,35 @@ export class ServersComponent implements OnInit {
   }
 }
 ```
+
+### Lesson 37 - Enhancing ngIf with an Else Condition
+
+In practice, HTML does not usually contain logic. However, it is still achievable. To do this, there are two ways using `ngIf`.
+
+One way is to use 2 `ngIf` blocks with negated expressions.
+
+The other is to use `*ngIf="trueExpression; else falseExpression/localReference"`.
+
+A **Local Reference** is marked with a `#`. It can be understood as a marker for now.
+
+`ng-template` is a component and directive shipped with Angular that can be used to mark places in the DOM.
+
+In `servers.component.html`
+
+``` html
+<label for="serverNameInput-TWB">Server Name Two-Way-Binding</label>
+<input type="text"
+       class="form-control"
+       id="serverNameInput-TWB"
+       [(ngModel)]="serverName">
+<button class="btn btn-primary"
+        [disabled]="!allowNewServer"
+        (click)="onCreateServer()">Add Server</button>
+<p *ngIf="serverCreated; else noServerCreated">A server with name of [ {{ serverName }} ]
+  has been created</p>
+<ng-template #noServerCreated>
+  <p>No server was created</p>
+</ng-template>
+<app-server></app-server>
+<app-server></app-server>
+```
