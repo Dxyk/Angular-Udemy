@@ -18,7 +18,7 @@ Within it, the `<app-root></app-root>` is a root **component**.
 
 In `app.component.ts`'s `@Component`, the `selector` property has value of `app-root`. This property specifies the custom component.
 
-``` ts
+```ts
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -36,27 +36,28 @@ On app startup, the custom component gets substituted by whatever was generated 
 
 3. Within the `main.ts` file, the code block bellow bootstraps `AppModule`, which is defined in `src/app/app.module.ts`.
 
-    ``` ts
-    import { AppModule } from './app/app.module';
+   ```ts
+   import { AppModule } from './app/app.module';
 
-    platformBrowserDynamic().bootstrapModule(AppModule)
-    .catch(err => console.log(err));
-    ```
+   platformBrowserDynamic()
+     .bootstrapModule(AppModule)
+     .catch((err) => console.log(err));
+   ```
 
 4. In `app.module.ts`, the `bootstrap` array in `@NgModule` lists all the **components** that should be known to Angular when it analyzes the HTML file.
 
-    ``` ts
-    @NgModule({
-    declarations: [
-        AppComponent
-    ],
-    imports: [
-        BrowserModule
-    ],
-    providers: [],
-    bootstrap: [AppComponent]
-    })
-    ```
+   ```ts
+   @NgModule({
+   declarations: [
+       AppComponent
+   ],
+   imports: [
+       BrowserModule
+   ],
+   providers: [],
+   bootstrap: [AppComponent]
+   })
+   ```
 
 ### Lesson 15 - Components
 
@@ -82,20 +83,19 @@ The following lessons will be targeted to build the following:
 
 In `app/server/server.component.ts`,
 
-``` ts
+```ts
 import { Component } from '@angular/core';
 
 @Component({
-    selector: 'app-server',
-    templateUrl: './server.component.html'
+  selector: 'app-server',
+  templateUrl: './server.component.html',
 })
-export class ServerComponent {
-}
+export class ServerComponent {}
 ```
 
 In `app/server/server.component.html`
 
-``` ts
+```ts
 <p>The server component</p>
 ```
 
@@ -110,18 +110,14 @@ A module is an exported class with decorators.
 - providers
 - bootstrap - the components that Angular should be aware of when app starts
 
-``` ts
+```ts
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
-  imports: [
-    BrowserModule
-  ],
+  declarations: [AppComponent],
+  imports: [BrowserModule],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
 ```
 
 ### Lesson 18 - Using Custom Components
@@ -130,9 +126,9 @@ After registering the new component in the module, we can use the tag specified 
 
 In `app.component.html`,
 
-``` html
+```html
 <h3>I'm in the AppComponent!</h3>
-<hr>
+<hr />
 <app-server></app-server>
 ```
 
@@ -142,9 +138,8 @@ In `app.component.html`,
 
 Within servers.component.html, we can nest multiple other components (`server`s).
 
-``` html
-<app-server></app-server>
-<app-server></app-server>
+```html
+<app-server></app-server> <app-server></app-server>
 ```
 
 ### Lesson 20 - Component Templates
@@ -155,22 +150,19 @@ Note if we add template inline using `'`, we cannot wrap the code with new line.
 
 in `servers.component.ts`,
 
-``` ts
+```ts
 @Component({
   selector: 'app-servers',
   template: `
     <app-server></app-server>
     <app-server></app-server>
   `,
-  styleUrls: ['./servers.component.css']
+  styleUrls: ['./servers.component.css'],
 })
 export class ServersComponent implements OnInit {
+  constructor() {}
 
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }
 ```
 
@@ -182,12 +174,12 @@ Option 1: use external styling packages in the template.
 
 In `app.component.html`,
 
-``` html
+```html
 <div class="container">
   <div class="row">
     <div class="col-xs-12">
       <h3>I'm in the AppComponent!</h3>
-      <hr>
+      <hr />
       <app-servers></app-servers>
     </div>
   </div>
@@ -198,9 +190,9 @@ Option 2: add styling in the `*.component.css`, and reference this file in `styl
 
 In `app.component.css`
 
-``` css
+```css
 h3 {
-    color: darkblue
+  color: darkblue;
 }
 ```
 
@@ -208,19 +200,20 @@ Option 3: add styling in `*.component.ts` inline, using the `styles` property th
 
 In `app.component.ts`.
 
-``` ts
+```ts
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   // styleUrls: ['./app.component.css']
-  styles: [`
-    h3 {
-      color: dodgerblue;
-    }
-  `]
+  styles: [
+    `
+      h3 {
+        color: dodgerblue;
+      }
+    `,
+  ],
 })
-export class AppComponent {
-}
+export class AppComponent {}
 ```
 
 ### Lesson 22 - Component Selector
@@ -231,33 +224,30 @@ In components, it is possible to select by **attribute** (as in css). This will 
 
 In `servers.component.ts`,
 
-``` ts
+```ts
 @Component({
   selector: '[app-servers]',
   template: `
     <app-server></app-server>
     <app-server></app-server>
   `,
-  styleUrls: ['./servers.component.css']
+  styleUrls: ['./servers.component.css'],
 })
 export class ServersComponent implements OnInit {
+  constructor() {}
 
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }
 ```
 
 In `app.component.html`,
 
-``` html
+```html
 <div class="container">
   <div class="row">
     <div class="col-xs-12">
       <h3>I'm in the AppComponent!</h3>
-      <hr>
+      <hr />
       <div app-servers></div>
     </div>
   </div>
@@ -268,33 +258,30 @@ It is also possible to select by **class** (as in css). This will apply to all t
 
 In `servers.component.ts`,
 
-``` ts
+```ts
 @Component({
   selector: '.app-servers',
   template: `
     <app-server></app-server>
     <app-server></app-server>
   `,
-  styleUrls: ['./servers.component.css']
+  styleUrls: ['./servers.component.css'],
 })
 export class ServersComponent implements OnInit {
+  constructor() {}
 
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }
 ```
 
 In `app.component.html`,
 
-``` html
+```html
 <div class="container">
   <div class="row">
     <div class="col-xs-12">
       <h3>I'm in the AppComponent!</h3>
-      <hr>
+      <hr />
       <div class="app-servers"></div>
     </div>
   </div>
@@ -326,28 +313,32 @@ Output data: TS to HTML
 
 - String Interpolation
 
-  ``` ts
-  {{ data }}
+  ```ts
+  {
+    {
+      data;
+    }
+  }
   ```
 
 - Property Binding
 
-  ``` ts
-  [property]="data"
+  ```ts
+  [property] = 'data';
   ```
 
 Input data / User Event: HTML to TS
 
 - Event Binding
 
-  ``` ts
-  (event)="expression"
+  ```ts
+  event = 'expression';
   ```
 
 **Two-Way-Binding**: Combining property binding and event binding
 
-``` ts
-([ngModel])="data"
+```ts
+[ngModel] = 'data';
 ```
 
 ### Lesson 25 - String Interpolation
@@ -363,29 +354,32 @@ Restrictions:
 
 In `server.component.ts`,
 
-``` ts
+```ts
 import { Component } from '@angular/core';
 
 @Component({
-    selector: 'app-server',
-    templateUrl: './server.component.html'
+  selector: 'app-server',
+  templateUrl: './server.component.html',
 })
 export class ServerComponent {
-    serverId = 10;
-    serverIsUp = true;
-    serverStatusOnline = 'online';
-    serverStatusOffline = 'offline';
+  serverId = 10;
+  serverIsUp = true;
+  serverStatusOnline = 'online';
+  serverStatusOffline = 'offline';
 
-    getServer() {
-        return 'Server';
-    }
+  getServer() {
+    return 'Server';
+  }
 }
 ```
 
 In `server.component.html`,
 
-``` html
-<p>The {{ 'server' }} {{ getServer() }} with Id {{ serverId }} is of status {{ serverIsUp ? serverStatusOnline : serverStatus }}.</p>
+```html
+<p>
+  The {{ 'server' }} {{ getServer() }} with Id {{ serverId }} is of status {{
+  serverIsUp ? serverStatusOnline : serverStatus }}.
+</p>
 ```
 
 ### Lesson 26 - Property Binding
@@ -394,16 +388,15 @@ It is possible to bind DOM native properties (`disabled` in this case), directiv
 
 In `servers.component.ts`
 
-``` ts
+```ts
 import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-servers',
   templateUrl: './servers.component.html',
-  styleUrls: ['./servers.component.css']
+  styleUrls: ['./servers.component.css'],
 })
 export class ServersComponent implements OnInit {
-
   allowNewServer = false;
 
   constructor() {
@@ -412,17 +405,14 @@ export class ServersComponent implements OnInit {
     }, 2000);
   }
 
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }
 ```
 
 In `servers.component.html`
 
-``` html
-<button class="btn btn-primary"
-  [disabled]="!allowNewServer">Add Server</button>
+```html
+<button class="btn btn-primary" [disabled]="!allowNewServer">Add Server</button>
 ```
 
 ### Lesson 27 - String Interpolation vs Property Binding
@@ -437,36 +427,31 @@ It is possible to bind DOM native events (`click` in this case) and Angular even
 
 In `servers.component.ts`
 
-``` ts
+```ts
 import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-servers',
   templateUrl: './servers.component.html',
-  styleUrls: ['./servers.component.css']
+  styleUrls: ['./servers.component.css'],
 })
 export class ServersComponent implements OnInit {
-
   serverCreationStatus = 'There are no servers created';
 
-  constructor() {
-  }
+  constructor() {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   onCreateServer(): void {
     this.serverCreationStatus = 'A server has been created';
   }
-
 }
 ```
 
 In `servers.component.html`
 
-``` html
-<button class="btn btn-primary"
-  (click)="onCreateServer()">Add Server</button>
+```html
+<button class="btn btn-primary" (click)="onCreateServer()">Add Server</button>
 <p>{{ serverCreationStatus }}</p>
 ```
 
@@ -482,13 +467,13 @@ TypeScript casting - use `<Class>var` to cast the variable `var` as class `Class
 
 In `servers.component.ts`
 
-``` ts
+```ts
 import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-servers',
   templateUrl: './servers.component.html',
-  styleUrls: ['./servers.component.css']
+  styleUrls: ['./servers.component.css'],
 })
 export class ServersComponent implements OnInit {
   serverName = '';
@@ -501,12 +486,14 @@ export class ServersComponent implements OnInit {
 
 In `servers.component.html`
 
-``` html
+```html
 <label for="serverNameInput">Server Name</label>
-<input type="text"
-       class="form-control"
-       id="serverNameInput"
-       (input)="onUpdateServerName($event)">
+<input
+  type="text"
+  class="form-control"
+  id="serverNameInput"
+  (input)="onUpdateServerName($event)"
+/>
 <p>{{ serverName }}</p>
 ```
 
@@ -516,7 +503,7 @@ In order for two-way-binding to work, need to enable `ngModule` directive by inc
 
 In `app.module.ts`
 
-``` ts
+```ts
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
@@ -525,14 +512,11 @@ import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [],
-  imports: [
-    BrowserModule,
-    FormsModule
-  ],
+  imports: [BrowserModule, FormsModule],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
 ```
 
 ### Lesson 32 - Two-Way-Databinding
@@ -544,40 +528,40 @@ Use `[(ngModel)]="<Component property>"` for two way binding
 
 In `servers.component.html`
 
-``` ts
+```ts
 import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-servers',
   templateUrl: './servers.component.html',
-  styleUrls: ['./servers.component.css']
+  styleUrls: ['./servers.component.css'],
 })
 export class ServersComponent implements OnInit {
-
   serverName = 'testServerName';
 
-  constructor() {
-  }
+  constructor() {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 }
-
 ```
 
 In `servers.component.html`, notice when we type in the `serverNameInput` input field, value is reflected in the `serverNameInput-TWB` input field. The other way around does not work because it only has event binding not data binding.
 
-``` html
+```html
 <label for="serverNameInput">Server Name</label>
-<input type="text"
-       class="form-control"
-       id="serverNameInput"
-       (input)="onUpdateServerName($event)">
+<input
+  type="text"
+  class="form-control"
+  id="serverNameInput"
+  (input)="onUpdateServerName($event)"
+/>
 <label for="serverNameInput-TWB">Server Name Two-Way-Binding</label>
-<input type="text"
-       class="form-control"
-       id="serverNameInput-TWB"
-       [(ngModel)]="serverName">
+<input
+  type="text"
+  class="form-control"
+  id="serverNameInput-TWB"
+  [(ngModel)]="serverName"
+/>
 ```
 
 ### Lesson 33 - Combining all Forms of Databinding
@@ -591,16 +575,15 @@ A demo application:
 
 In `servers.component.ts`
 
-``` ts
+```ts
 import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-servers',
   templateUrl: './servers.component.html',
-  styleUrls: ['./servers.component.css']
+  styleUrls: ['./servers.component.css'],
 })
 export class ServersComponent implements OnInit {
-
   allowNewServer = false;
 
   serverCreationStatus = 'There are no servers created';
@@ -613,38 +596,44 @@ export class ServersComponent implements OnInit {
     }, 2000);
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   onCreateServer(): void {
-    this.serverCreationStatus = 'A server with name of [ ' + this.serverName + ' ] has been created';
+    this.serverCreationStatus =
+      'A server with name of [ ' + this.serverName + ' ] has been created';
   }
 
   onUpdateServerName(event: any): void {
     this.serverName = (<HTMLInputElement>event.target).value;
   }
-
 }
-
 ```
 
 In `servers.component.html`
 
-``` html
+```html
 <label for="serverNameInput">Server Name</label>
-<input type="text"
-       class="form-control"
-       id="serverNameInput"
-       (input)="onUpdateServerName($event)">
+<input
+  type="text"
+  class="form-control"
+  id="serverNameInput"
+  (input)="onUpdateServerName($event)"
+/>
 <label for="serverNameInput-TWB">Server Name Two-Way-Binding</label>
-<input type="text"
-       class="form-control"
-       id="serverNameInput-TWB"
-       [(ngModel)]="serverName">
+<input
+  type="text"
+  class="form-control"
+  id="serverNameInput-TWB"
+  [(ngModel)]="serverName"
+/>
 <p>{{ serverName }}</p>
-<button class="btn btn-primary"
-        [disabled]="!allowNewServer"
-        (click)="onCreateServer()">Add Server</button>
+<button
+  class="btn btn-primary"
+  [disabled]="!allowNewServer"
+  (click)="onCreateServer()"
+>
+  Add Server
+</button>
 <p>{{ serverCreationStatus }}</p>
 <app-server></app-server>
 <app-server></app-server>
@@ -675,13 +664,13 @@ Directives can be used without a template. Usually add directives as attribute s
 
 In html
 
-``` html
+```html
 <p directiveName>Hello World</p>
 ```
 
 In TS
 
-``` ts
+```ts
 @Directive({
   selector: '[directiveName]'
 })
@@ -700,39 +689,45 @@ Note that the `ngIf` directive does NOT hide an element. It generates elements a
 
 In `servers.component.html`
 
-``` html
+```html
 <label for="serverNameInput-TWB">Server Name Two-Way-Binding</label>
-<input type="text"
-       class="form-control"
-       id="serverNameInput-TWB"
-       [(ngModel)]="serverName">
-<button class="btn btn-primary"
-        [disabled]="!allowNewServer"
-        (click)="onCreateServer()">Add Server</button>
-<p *ngIf="serverCreated">A server with name of [ {{ serverName }} ] has been created</p>
+<input
+  type="text"
+  class="form-control"
+  id="serverNameInput-TWB"
+  [(ngModel)]="serverName"
+/>
+<button
+  class="btn btn-primary"
+  [disabled]="!allowNewServer"
+  (click)="onCreateServer()"
+>
+  Add Server
+</button>
+<p *ngIf="serverCreated">
+  A server with name of [ {{ serverName }} ] has been created
+</p>
 <app-server></app-server>
 <app-server></app-server>
 ```
 
 In `servers.component.ts`
 
-``` ts
+```ts
 import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-servers',
   templateUrl: './servers.component.html',
-  styleUrls: ['./servers.component.css']
+  styleUrls: ['./servers.component.css'],
 })
 export class ServersComponent implements OnInit {
   serverName = 'testServerName';
   serverCreated = false;
 
-  constructor() {
-  }
+  constructor() {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   onCreateServer(): void {
     this.serverCreated = true;
@@ -754,17 +749,24 @@ A **Local Reference** is marked with a `#`. It can be understood as a marker for
 
 In `servers.component.html`
 
-``` html
+```html
 <label for="serverNameInput-TWB">Server Name Two-Way-Binding</label>
-<input type="text"
-       class="form-control"
-       id="serverNameInput-TWB"
-       [(ngModel)]="serverName">
-<button class="btn btn-primary"
-        [disabled]="!allowNewServer"
-        (click)="onCreateServer()">Add Server</button>
-<p *ngIf="serverCreated; else noServerCreated">A server with name of [ {{ serverName }} ]
-  has been created</p>
+<input
+  type="text"
+  class="form-control"
+  id="serverNameInput-TWB"
+  [(ngModel)]="serverName"
+/>
+<button
+  class="btn btn-primary"
+  [disabled]="!allowNewServer"
+  (click)="onCreateServer()"
+>
+  Add Server
+</button>
+<p *ngIf="serverCreated; else noServerCreated">
+  A server with name of [ {{ serverName }} ] has been created
+</p>
 <ng-template #noServerCreated>
   <p>No server was created</p>
 </ng-template>
@@ -791,14 +793,16 @@ In `server.component.html`, notice `[ngStyle]`
 - `ngStyle` is the directive
 - `[ngStyle]` is using property binding to bind to some properties of the `ngStyle` directive.
 
-``` html
-<p [ngStyle]="{backgroundColor: getColor()}">The {{ 'server' }}
-  {{ getServer() }} with Id {{ serverId }} is of status {{ serverStatus }}.</p>
+```html
+<p [ngStyle]="{backgroundColor: getColor()}">
+  The {{ 'server' }} {{ getServer() }} with Id {{ serverId }} is of status {{
+  serverStatus }}.
+</p>
 ```
 
 In `server.component.ts`
 
-``` ts
+```ts
 @Component({
   selector: 'app-server',
   templateUrl: './server.component.html',
@@ -816,7 +820,46 @@ export class ServerComponent {
   }
 
   getColor() {
-    return this.serverStatus === this.serverStatusOnline ? 'chartreuse' : 'palevioletred';
+    return this.serverStatus === this.serverStatusOnline
+      ? 'chartreuse'
+      : 'palevioletred';
   }
+}
+```
+
+### Lesson 39 - Applying CSS Classes Dynamically with ngClass
+
+`ngStyle` allows dynamic change of styling, where as `ngClass` allows dynamic change of classes.
+
+Similar to `ngStyle`, also use `[ngClass]`, property binding that binds to a property of the `ngClass` directive.
+
+Takes in a js object of `{ className : <boolean expression when the class should be assigned> }`
+
+In `server.component.html`
+
+```html
+<p
+  [ngStyle]="{backgroundColor: getColor()}"
+  [ngClass]="{offline: serverStatus === 'offline'}"
+>
+  The {{ 'server' }} {{ getServer() }} with Id {{ serverId }} is of status {{
+  serverStatus }}.
+</p>
+```
+
+In `server.component.ts`
+
+```ts
+@Component({
+  selector: 'app-server',
+  templateUrl: './server.component.html',
+  styles: [`
+    .offline {
+        color: white
+    }
+  `]
+})
+export class ServerComponent {
+  ...
 }
 ```
