@@ -863,3 +863,63 @@ export class ServerComponent {
   ...
 }
 ```
+
+### Lesson 40 - Outputting Lists with ngFor
+
+Use `ngFor` to dynamically populate a list of contents in HTML.
+
+Basic syntax: `<div *ngFor="let var of listOfVars">`.
+
+This will dynamically update the variable `var` to each elements in the list `listOfVars`.
+
+Note in the example above, when the button is pressed, the `server` component is generated since `serverName` is pushed into the `servers` list. The `serverName` is not actually reflected in the `server` component because we have not set it to be.
+
+In `servers.component.html`
+
+``` html
+<label for="serverNameInput-TWB">Server Name Two-Way-Binding</label>
+<input type="text"
+       class="form-control"
+       id="serverNameInput-TWB"
+       [(ngModel)]="serverName">
+<button class="btn btn-primary"
+        [disabled]="!allowNewServer"
+        (click)="onCreateServer()">Add Server</button>
+<p *ngIf="serverCreated">A server with name of [ {{ serverName }} ]
+  has been created</p>
+<app-server *ngFor="let server of servers"></app-server>
+```
+
+In `servers.component.ts`
+
+``` ts
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-servers',
+  templateUrl: './servers.component.html',
+  styleUrls: ['./servers.component.css'],
+})
+export class ServersComponent implements OnInit {
+  allowNewServer = false;
+  serverCreationStatus = 'There are no servers created';
+  serverName = 'testServerName';
+  serverCreated = false;
+  servers = ['Test Server', 'Test Server 2'];
+
+  constructor() {
+    setTimeout(() => {
+      this.allowNewServer = true;
+    }, 2000);
+  }
+
+  ngOnInit(): void {}
+
+  onCreateServer(): void {
+    this.serverCreated = true;
+    this.servers.push(this.serverName);
+    this.serverCreationStatus =
+      'A server with name of [ ' + this.serverName + ' ] has been created';
+  }
+}
+```
