@@ -876,23 +876,30 @@ Note in the example above, when the button is pressed, the `server` component is
 
 In `servers.component.html`
 
-``` html
+```html
 <label for="serverNameInput-TWB">Server Name Two-Way-Binding</label>
-<input type="text"
-       class="form-control"
-       id="serverNameInput-TWB"
-       [(ngModel)]="serverName">
-<button class="btn btn-primary"
-        [disabled]="!allowNewServer"
-        (click)="onCreateServer()">Add Server</button>
-<p *ngIf="serverCreated">A server with name of [ {{ serverName }} ]
-  has been created</p>
+<input
+  type="text"
+  class="form-control"
+  id="serverNameInput-TWB"
+  [(ngModel)]="serverName"
+/>
+<button
+  class="btn btn-primary"
+  [disabled]="!allowNewServer"
+  (click)="onCreateServer()"
+>
+  Add Server
+</button>
+<p *ngIf="serverCreated">
+  A server with name of [ {{ serverName }} ] has been created
+</p>
 <app-server *ngFor="let server of servers"></app-server>
 ```
 
 In `servers.component.ts`
 
-``` ts
+```ts
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -922,4 +929,28 @@ export class ServersComponent implements OnInit {
       'A server with name of [ ' + this.serverName + ' ] has been created';
   }
 }
+```
+
+## Assignment 3
+
+1. Add A button which says 'Display Details'
+2. Add a paragraph with any content of your choice (e.g. 'Secret Password = tuna')
+3. Toggle the displaying of that paragraph with the button created in the first step
+4. Log all button clicks in an array and output that array below the secret paragraph (maybe log a timestamp or simply an incrementing number)
+5. Starting at the 5th log item, give all future log items a blue background (via ngStyle) and white color (ngClass)
+
+See `./assignment-3/`.
+
+### Lesson 41 - Assignment 3 Solution
+
+See `./assignment-3/`.
+
+### Lesson 42 - Getting the Index when using ngFor
+
+To get the index within the `*ngFor` directive, use the built-in `index` variable.
+
+In HTML:
+
+```html
+<div *ngFor="let count of countList; let i = index"></div>
 ```
