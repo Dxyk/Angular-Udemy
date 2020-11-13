@@ -14,14 +14,17 @@
           background (via ngStyle) and white color (ngClass)</li>
       </ol>
       <hr>
-      <button class="btn btn-primary" (click)="onButtonClickEvent()">Display
-        Details</button>
+      <button
+        class="btn btn-primary"
+        (click)="onButtonClickEvent()"
+      >Display Details</button>
       <p [hidden]="!showSecret">Secret Password = tuna</p>
       <div *ngFor="let count of countList">
-        <div >
-          <p [ngStyle]="{'backgroundColor': getColor(count)}"
-             [ngClass]="{'white-text': count >= 5}">{{ count }}
-          </p>
+        <div>
+          <p
+            [ngStyle]="{'backgroundColor': getColor(count)}"
+            [ngClass]="{'white-text': count >= 5}"
+          >{{ count }}</p>
         </div>
       </div>
     </div>
