@@ -39,3 +39,15 @@ This creates the bellow files and adds this to the AppModules declarations
 - componentName.component.spec.ts
 - componentName.component.html
 - componentName.component.css
+
+### Lesson 48 - Using the Components
+
+Adjust the component html files to include nested components
+
+### Lesson 49 - Adding a Navigation Bar
+
+See `header.component.html` for nav bar
+
+### Lesson 50 - Alternative Non-Collapsible Navigation Bar
+
+### Lesson 51 - Creating a "Recipe" Model
