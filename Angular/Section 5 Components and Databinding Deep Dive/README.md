@@ -85,3 +85,39 @@ export class ServerElementComponent implements OnInit {
   ngOnInit(): void {}
 }
 ```
+
+### Lesson 67 - Assigning an Alias to Custom Properties
+
+To create an alias of a property means from outside the component, the property will be referred as the alias.
+
+This is achieved through `@Input('aliasName')`
+
+In `app.component.html`
+
+```html
+<app-server-element
+  *ngFor="let serverElement of serverElements"
+  [serverElement]="serverElement"
+>
+</app-server-element>
+```
+
+In `server-element.component.ts`
+
+```ts
+import { Component, Input, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-server-element',
+  templateUrl: './server-element.component.html',
+  styleUrls: ['./server-element.component.css'],
+})
+export class ServerElementComponent implements OnInit {
+  @Input('serverElement')
+  element: { type: string; name: string; content: string };
+
+  constructor() {}
+
+  ngOnInit(): void {}
+}
+```
