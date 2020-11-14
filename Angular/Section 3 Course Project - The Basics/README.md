@@ -51,3 +51,5 @@ See `header.component.html` for nav bar
 ### Lesson 50 - Alternative Non-Collapsible Navigation Bar
 
 ### Lesson 51 - Creating a "Recipe" Model
+
+A model is simply a TS class. Add a model to the project by adding a `modelName.model.ts` file
