@@ -28,3 +28,14 @@ In terminal
 npm install
 ng serve
 ```
+
+### Lesson 47 - Creating the Components
+
+To create a component, use `ng generate component <componentName>`.
+
+This creates the bellow files and adds this to the AppModules declarations
+
+- componentName.component.ts
+- componentName.component.spec.ts
+- componentName.component.html
+- componentName.component.css
