@@ -328,3 +328,94 @@ export class CockpitComponent implements OnInit {
   }
 }
 ```
+
+### Lesson 74 - @ViewChild() in Angular 8+
+
+### Lesson 75 - Getting Access to the Template & DOM with @ViewChild
+
+Local reference can be used as inputs in HTML template (e.g. `<button class="btn btn-primary" (click)="onAddBlueprint(serverNameInput)">`).
+
+`@ViewChild(selector: string, {static: bool})` provides an alternative that allows accessing local references or HTML elements within the TS code before invoking TS methods.
+
+- The selector argument is either an element (less commonly used) or a string that is the name of the local reference in the template.
+- In the second argument contains a `static` attribute.
+  - Set to `true` if access the element in `ngOnInit`
+  - Set to `false` (by default) if access the element in the component but not in `ngOnInit`
+
+Note:
+
+Do not attempt to access / modify DOM in TS by `this.localReference.nativeElement.value = ""`. Angular offers directives to manipulate the DOM, and property binding and string interpolation to access DOM.
+
+In `cockpit.component.html`
+
+```html
+<div class="row">
+  <div class="col-xs-12">
+    <p>Add new Servers or blueprints!</p>
+    <label>Server Name</label>
+    <input
+      type="text"
+      class="form-control"
+      #serverNameInput
+    >
+    <label>Server Content</label>
+    <input
+      type="text"
+      class="form-control"
+      #serverContentInput
+    >
+    <br>
+    <button
+      class="btn btn-primary"
+      (click)="onAddServer(serverNameInput)"
+    >Add Server</button>
+    <button
+      class="btn btn-primary"
+      (click)="onAddBlueprint(serverNameInput)"
+    >Add Server Blueprint</button>
+  </div>
+</div>
+```
+
+In `cockpit.component.ts`
+
+```ts
+@Component({
+  selector: 'app-cockpit',
+  templateUrl: './cockpit.component.html',
+  styleUrls: ['./cockpit.component.css'],
+})
+export class CockpitComponent implements OnInit {
+  @Output('serverCreated')
+  serverCreated = new EventEmitter<{
+    serverName: string;
+    serverContent: string;
+  }>();
+  @Output()
+  blueprintCreated = new EventEmitter<{
+    serverName: string;
+    serverContent: string;
+  }>();
+  @ViewChild('serverContentInput', { static: true })
+  serverContentInput: ElementRef<HTMLInputElement>;
+
+  constructor() {}
+
+  ngOnInit(): void {}
+
+  onAddServer(serverNameInput: HTMLInputElement) {
+    this.serverCreated.emit({
+      serverName: serverNameInput.value,
+      serverContent: this.serverContentInput.nativeElement.value,
+    });
+  }
+
+  onAddBlueprint(serverNameInput: HTMLInputElement) {
+    this.blueprintCreated.emit({
+      serverName: serverNameInput.value,
+      serverContent: this.serverContentInput.nativeElement.value,
+    });
+  }
+}
+
+```
