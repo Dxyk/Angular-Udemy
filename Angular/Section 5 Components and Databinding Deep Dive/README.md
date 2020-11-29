@@ -274,3 +274,57 @@ export class ServerElementComponent implements OnInit {
   ...
 }
 ```
+
+### Lesson 73 - Using Local References in Templates
+
+An alternative to obtain data from the HTML element using two way binding (`([ngModel])="field"`) is to use **local reference** `<element #referenceName>`. The reference only works locally in the template and not the component.
+
+In `cockpit.component.html`
+
+```html
+<div class="row">
+  <div class="col-xs-12">
+    <p>Add new Servers or blueprints!</p>
+    <label>Server Name</label>
+    <input type="text" class="form-control" #serverNameInput />
+    <label>Server Content</label>
+    <input type="text" class="form-control" [(ngModel)]="newServerContent" />
+    <br />
+    <button class="btn btn-primary" (click)="onAddServer(serverNameInput)">
+      Add Server
+    </button>
+    <button class="btn btn-primary" (click)="onAddBlueprint(serverNameInput)">
+      Add Server Blueprint
+    </button>
+  </div>
+</div>
+```
+
+In `cockpit.component.ts`
+
+```ts
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+
+@Component({
+  selector: 'app-cockpit',
+  templateUrl: './cockpit.component.html',
+  styleUrls: ['./cockpit.component.css'],
+})
+export class CockpitComponent implements OnInit {
+  ...
+
+  onAddServer(serverNameInput: HTMLInputElement) {
+    this.serverCreated.emit({
+      serverName: serverNameInput.value,
+      serverContent: this.newServerContent,
+    });
+  }
+
+  onAddBlueprint(serverNameInput: HTMLInputElement) {
+    this.blueprintCreated.emit({
+      serverName: serverNameInput.value,
+      serverContent: this.newServerContent,
+    });
+  }
+}
+```
