@@ -250,3 +250,7 @@ export class CockpitComponent implements OnInit {
 `@Input` allows component properties to be bind from outside, the parent component.
 
 `@Output` allows parent components to listen to events emitted from the component.
+
+### Lesson 71 - Understanding View Encapsulation
+
+Angular enforces the **view** of the component to be encapsulated within the component. E.g. style definitions in the parent component does not apply to the child components. To achieve this, Angular adds generated classes to the HTML elements to distinguish elements in each component.
