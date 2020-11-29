@@ -13,7 +13,7 @@
         [serverElement]="serverElement"
         [name]="serverElement.name"
       >
-      <p>
+      <p #contentParagraph>
         <strong
           *ngIf="serverElement.type === 'server'"
           style="color: red"

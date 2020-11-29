@@ -4,6 +4,7 @@ import {
   AfterViewChecked,
   AfterViewInit,
   Component,
+  ContentChild,
   DoCheck,
   ElementRef,
   Input,
@@ -42,8 +43,11 @@ export class ServerElementComponent
   @Input()
   name: string;
 
-  @ViewChild('heading', {static: true})
+  @ViewChild('heading', { static: true })
   header: ElementRef<HTMLDivElement>;
+
+  @ContentChild('contentParagraph', { static: true })
+  paragraph: ElementRef<HTMLParagraphElement>;
 
   constructor() {
     console.log('Constructor Called');
@@ -57,6 +61,8 @@ export class ServerElementComponent
   ngOnInit(): void {
     console.log('ngOnInit Called');
     console.log('Text content: ' + this.header.nativeElement.textContent);
+    console.log('Text content of paragraph: ' + this.paragraph.nativeElement.textContent);
+
   }
 
   ngDoCheck(): void {
@@ -65,6 +71,7 @@ export class ServerElementComponent
 
   ngAfterContentInit(): void {
     console.log('ngAfterContentInit Called');
+    console.log('Text content of paragraph: ' + this.paragraph.nativeElement.textContent);
   }
 
   ngAfterContentChecked(): void {

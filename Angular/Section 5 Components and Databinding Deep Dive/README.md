@@ -480,3 +480,11 @@ Note only `ngOnChanges(changes: SimpleChange): void` takes in a changes event
 ### Lesson 79 - Lifecycle Hooks and Template Access
 
 From `server-element.component.ts`, using `@ViewChild`, we see that the DOM element value is not set in `ngOnInit`. It is only set after `ngAfterViewInit`.
+
+### Lesson 80 - @ContentChild() in Angular 8+
+
+### Lesson 81 - Getting Access to ng-content with @ContentChild
+
+To access element passed in by `ng-content`, label the content with local reference and use `@ContentChild` in the component to access the passed in element. The content will not be viewable at `ngOnInit`, but will be viewable since `ngAfterContentInit`.
+
+See `server-element.component.ts`
