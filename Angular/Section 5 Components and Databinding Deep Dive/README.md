@@ -121,3 +121,102 @@ export class ServerElementComponent implements OnInit {
   ngOnInit(): void {}
 }
 ```
+
+### Lesson 68 - Binding to Custom Events
+
+A component may wish to inform a change (emit an event) to the parent component so the parent component can respond accordingly. To achieve this, use event binding.
+
+In `app.component.html`
+
+```html
+<div class="container">
+  <app-cockpit
+    (serverCreated)="onServerAdded($event)"
+    (blueprintCreated)="onBlueprintAdded($event)"
+  ></app-cockpit>
+</div>
+```
+
+In `app.component.ts`
+
+```ts
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css'],
+})
+export class AppComponent {
+  serverElements: {
+    type: string;
+    name: string;
+    content: string;
+  }[] = [];
+
+  onServerAdded(serverData: { serverName: string; serverContent: string }) {
+    this.serverElements.push({
+      type: 'server',
+      name: serverData.serverName,
+      content: serverData.serverContent,
+    });
+  }
+
+  onBlueprintAdded(blueprintData: {
+    serverName: string;
+    serverContent: string;
+  }) {
+    this.serverElements.push({
+      type: 'blueprint',
+      name: blueprintData.serverName,
+      content: blueprintData.serverContent,
+    });
+  }
+}
+```
+
+No change in `cockpit.component.html`
+
+In `cockpit.component.html`
+
+```ts
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+
+@Component({
+  selector: 'app-cockpit',
+  templateUrl: './cockpit.component.html',
+  styleUrls: ['./cockpit.component.css'],
+})
+export class CockpitComponent implements OnInit {
+  @Output()
+  serverCreated = new EventEmitter<{
+    serverName: string;
+    serverContent: string;
+  }>();
+  @Output()
+  blueprintCreated = new EventEmitter<{
+    serverName: string;
+    serverContent: string;
+  }>();
+  newServerName = '';
+  newServerContent = '';
+
+  constructor() {}
+
+  ngOnInit(): void {}
+
+  onAddServer() {
+    this.serverCreated.emit({
+      serverName: this.newServerName,
+      serverContent: this.newServerContent,
+    });
+  }
+
+  onAddBlueprint() {
+    this.blueprintCreated.emit({
+      serverName: this.newServerName,
+      serverContent: this.newServerContent,
+    });
+  }
+}
+```
