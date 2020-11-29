@@ -244,3 +244,9 @@ export class CockpitComponent implements OnInit {
   ...
 }
 ```
+
+### Lesson 70 - Custom Property and Event Binding Summary
+
+`@Input` allows component properties to be bind from outside, the parent component.
+
+`@Output` allows parent components to listen to events emitted from the component.
