@@ -353,26 +353,16 @@ In `cockpit.component.html`
   <div class="col-xs-12">
     <p>Add new Servers or blueprints!</p>
     <label>Server Name</label>
-    <input
-      type="text"
-      class="form-control"
-      #serverNameInput
-    >
+    <input type="text" class="form-control" #serverNameInput />
     <label>Server Content</label>
-    <input
-      type="text"
-      class="form-control"
-      #serverContentInput
-    >
-    <br>
-    <button
-      class="btn btn-primary"
-      (click)="onAddServer(serverNameInput)"
-    >Add Server</button>
-    <button
-      class="btn btn-primary"
-      (click)="onAddBlueprint(serverNameInput)"
-    >Add Server Blueprint</button>
+    <input type="text" class="form-control" #serverContentInput />
+    <br />
+    <button class="btn btn-primary" (click)="onAddServer(serverNameInput)">
+      Add Server
+    </button>
+    <button class="btn btn-primary" (click)="onAddBlueprint(serverNameInput)">
+      Add Server Blueprint
+    </button>
   </div>
 </div>
 ```
@@ -417,5 +407,41 @@ export class CockpitComponent implements OnInit {
     });
   }
 }
+```
 
+### Lesson 76 - Projecting Content into Components with ng-content
+
+Sometimes property binding may not be the ideal way to pass complex content (e.g. HTML code instead of string) between components.
+
+By default, anything added within custom directives opening and closing tags are ignored by Angular (e.g. `<customComponent></customComponent>`). To avoid this, Add `<ng-content></ng-content>` in the child component (`customComponent` in this case) where external content can be projected.
+
+In `server-element.component.html`
+
+```html
+<div class="panel panel-default">
+  <div class="panel-heading">{{ element.name }}</div>
+  <div class="panel-body">
+    <ng-content></ng-content>
+  </div>
+</div>
+```
+
+In `app.component.html`, notice the variable names of the content has to match with the variables defined in `ngFor`.
+
+```html
+<div class="container">
+  <app-server-element
+    *ngFor="let serverElement of serverElements"
+    [serverElement]="serverElement"
+  >
+    <p>
+      <strong *ngIf="serverElement.type === 'server'" style="color: red"
+        >{{ serverElement.content }}</strong
+      >
+      <em *ngIf="serverElement.type === 'blueprint'"
+        >{{ serverElement.content }}</em
+      >
+    </p>
+  </app-server-element>
+</div>
 ```
