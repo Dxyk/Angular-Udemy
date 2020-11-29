@@ -476,3 +476,7 @@ On creating a new component, Angular goes through lifecycle phases, and within t
 See `server-element.component.ts` and check console logs to see lifecycle happening in real time.
 
 Note only `ngOnChanges(changes: SimpleChange): void` takes in a changes event
+
+### Lesson 79 - Lifecycle Hooks and Template Access
+
+From `server-element.component.ts`, using `@ViewChild`, we see that the DOM element value is not set in `ngOnInit`. It is only set after `ngAfterViewInit`.
