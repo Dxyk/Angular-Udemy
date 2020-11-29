@@ -6,9 +6,12 @@
   <hr>
   <div class="row">
     <div class="col-xs-12">
+      <button class="btn btn-primary" (click)="onChangeFirst($event)">Change First Element</button>
+      <button class="btn btn-dang" (click)="onDestroyFirst($event)">Destroy First Element</button>
       <app-server-element
         *ngFor="let serverElement of serverElements"
         [serverElement]="serverElement"
+        [name]="serverElement.name"
       >
       <p>
         <strong

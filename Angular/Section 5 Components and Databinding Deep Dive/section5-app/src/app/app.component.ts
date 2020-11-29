@@ -10,7 +10,13 @@ export class AppComponent {
     type: string;
     name: string;
     content: string;
-  }[] = [];
+  }[] = [
+    {
+      type: 'server',
+      name: 'Test Name',
+      content: 'Test Content',
+    },
+  ];
 
   onServerAdded(serverData: { serverName: string; serverContent: string }) {
     this.serverElements.push({
@@ -29,5 +35,13 @@ export class AppComponent {
       name: blueprintData.serverName,
       content: blueprintData.serverContent,
     });
+  }
+
+  onChangeFirst(event: any) {
+    this.serverElements[0].name = 'Changed';
+  }
+
+  onDestroyFirst(event: any) {
+    this.serverElements.splice(0, 1);
   }
 }

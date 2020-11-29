@@ -470,3 +470,9 @@ On creating a new component, Angular goes through lifecycle phases, and within t
    1. Called after the view of the own component has been initialized (view rendered in DOM)
 6. `ngOnDestroy`
    1. Called when the component is destroyed (e.g. `ngIf` returns false and no longer display the component)
+
+### Lesson 78 - Seeing Lifecycle Hooks in Action
+
+See `server-element.component.ts` and check console logs to see lifecycle happening in real time.
+
+Note only `ngOnChanges(changes: SimpleChange): void` takes in a changes event
