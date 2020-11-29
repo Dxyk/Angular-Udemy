@@ -488,3 +488,11 @@ From `server-element.component.ts`, using `@ViewChild`, we see that the DOM elem
 To access element passed in by `ng-content`, label the content with local reference and use `@ContentChild` in the component to access the passed in element. The content will not be viewable at `ngOnInit`, but will be viewable since `ngAfterContentInit`.
 
 See `server-element.component.ts`
+
+### Lesson 82 - Wrap Up
+
+## Assignment 4 - Practicing Property & Event Binding and View Encapsulation
+
+### Lesson 83 - Assignment Solution
+
+See `./assignment-4/`

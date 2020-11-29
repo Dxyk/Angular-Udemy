@@ -11,7 +11,7 @@ import {
   OnChanges,
   OnDestroy,
   OnInit,
-  SimpleChange,
+  SimpleChanges,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -53,7 +53,7 @@ export class ServerElementComponent
     console.log('Constructor Called');
   }
 
-  ngOnChanges(changes: SimpleChange): void {
+  ngOnChanges(changes: SimpleChanges): void {
     console.log('ngOnChanges Called');
     console.log(changes);
   }
@@ -61,8 +61,9 @@ export class ServerElementComponent
   ngOnInit(): void {
     console.log('ngOnInit Called');
     console.log('Text content: ' + this.header.nativeElement.textContent);
-    console.log('Text content of paragraph: ' + this.paragraph.nativeElement.textContent);
-
+    console.log(
+      'Text content of paragraph: ' + this.paragraph.nativeElement.textContent
+    );
   }
 
   ngDoCheck(): void {
@@ -71,7 +72,9 @@ export class ServerElementComponent
 
   ngAfterContentInit(): void {
     console.log('ngAfterContentInit Called');
-    console.log('Text content of paragraph: ' + this.paragraph.nativeElement.textContent);
+    console.log(
+      'Text content of paragraph: ' + this.paragraph.nativeElement.textContent
+    );
   }
 
   ngAfterContentChecked(): void {
