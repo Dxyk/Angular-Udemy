@@ -220,3 +220,27 @@ export class CockpitComponent implements OnInit {
   }
 }
 ```
+
+### Lesson 69 - Assigning an Alias to Custom Events
+
+Similar to `@Input(alias: string)`, `@Output()` also allows the custom events to have different alias referenced in the HTML component.
+
+In `cockpit.component.ts`
+
+```ts
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+
+@Component({
+  selector: 'app-cockpit',
+  templateUrl: './cockpit.component.html',
+  styleUrls: ['./cockpit.component.css'],
+})
+export class CockpitComponent implements OnInit {
+  @Output('serverCreatedEvent')
+  serverCreated = new EventEmitter<{
+    serverName: string;
+    serverContent: string;
+  }>();
+  ...
+}
+```

@@ -6,7 +6,8 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
   styleUrls: ['./cockpit.component.css'],
 })
 export class CockpitComponent implements OnInit {
-  @Output()
+  // tslint:disable-next-line: no-output-rename
+  @Output('serverCreated')
   serverCreated = new EventEmitter<{
     serverName: string;
     serverContent: string;
