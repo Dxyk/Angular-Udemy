@@ -445,3 +445,28 @@ In `app.component.html`, notice the variable names of the content has to match w
   </app-server-element>
 </div>
 ```
+
+### Lesson 77 - Understanding the Component Lifecycle
+
+Angular supports multiple lifecycle hooks such as `ngOnInit`.
+
+On creating a new component, Angular goes through lifecycle phases, and within these phases, we can execute code by adding them into these lifecycle hooks
+
+1. `ngOnChanges`
+   1. Called when the component is first initialized
+   2. Called when bound input property changes. (properties decorated with `@Input()`)
+2. `ngOnInit`
+   1. Called once the component is initialized (run after the constructor)
+   2. At this phase, the component has not yet been added to the DOM, but the object has been created
+3. `ngDoCheck`
+   1. Called on every check that Angular makes.
+   2. Angular makes these checks to detect property value changes and reflect these changes in the template.
+   3. Note that this is not only called when there are changes made. It is called whenever Angular performs the check operation (no matter if the properties have changed).
+   4. Examples include clicking a button, focusing / defocusing on a text field, keyboard events, etc
+4. `ngAfterContentInit`
+   1. Called after content (ng-content) has been projected into the view
+   2. Called when `ngDoCheck` is called in the parent component
+5. `ngAfterViewInit`
+   1. Called after the view of the own component has been initialized (view rendered in DOM)
+6. `ngOnDestroy`
+   1. Called when the component is destroyed (e.g. `ngIf` returns false and no longer display the component)
