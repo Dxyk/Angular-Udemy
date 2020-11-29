@@ -254,3 +254,23 @@ export class CockpitComponent implements OnInit {
 ### Lesson 71 - Understanding View Encapsulation
 
 Angular enforces the **view** of the component to be encapsulated within the component. E.g. style definitions in the parent component does not apply to the child components. To achieve this, Angular adds generated classes to the HTML elements to distinguish elements in each component.
+
+### Lesson 72 - More on View Encapsulation
+
+Angular View Encapsulation can be configured. The `@Component` decorator contains a `encapsulation` attribute. The default value is `Emulated`. By setting it to `None`, the View Encapsulation for this component is turned off, and the styles defined in the component gets applied globally.
+
+In `server-element.component.ts`,
+
+```ts
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+
+@Component({
+  selector: 'app-server-element',
+  templateUrl: './server-element.component.html',
+  styleUrls: ['./server-element.component.css'],
+  encapsulation: ViewEncapsulation.None
+})
+export class ServerElementComponent implements OnInit {
+  ...
+}
+```
