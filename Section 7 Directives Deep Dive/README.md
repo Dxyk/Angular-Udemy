@@ -299,3 +299,45 @@ is equivalent to
   </div>
 </ng-template>
 ```
+
+### Lesson 100 - Building a Structural Directive
+
+Creating a structural directive is similar to creating a property directive. The difference is that we need to
+
+- Inject `ViewContainer` to access the the view
+- Inject `TemplateRef<any>` to access the `ng-template` and the content in it.
+
+In `unless.directive.ts`
+
+- `set unless(condition: boolean) {}` is a setter method that gets invoked whenever the property (`unless` in this case) gets changed from outside the directive.
+
+```ts
+import {...} from '...';
+
+@Directive({
+  selector: '[appUnless]',
+})
+export class UnlessDirective {
+  @Input('appUnless')
+  set unless(condition: boolean) {
+    if (!condition) {
+      this.vcRef.createEmbeddedView(this.templateRef);
+    } else {
+      this.vcRef.clear();
+    }
+  }
+
+  constructor(
+    private templateRef: TemplateRef<any>,
+    private vcRef: ViewContainerRef
+  ) {}
+}
+```
+
+In `app.component.html`
+
+```html
+<div *appUnless="false">
+  <p>Hello World</p>
+</div>
+```
