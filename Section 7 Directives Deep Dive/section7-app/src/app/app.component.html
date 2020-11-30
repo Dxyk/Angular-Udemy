@@ -30,7 +30,11 @@
         </div>
       </ul>
       <p appBasicHighlight>Style me with basic highlight!</p>
-      <p appBetterHighlight>Style me with a better highlight!</p>
+      <p
+        appBetterHighlight
+        [defaultColor]="'yellow'"
+        [highlightColor]="'red'"
+      >Style me with a better highlight!</p>
     </div>
   </div>
 </div>

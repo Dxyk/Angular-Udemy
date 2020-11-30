@@ -196,3 +196,84 @@ export class BetterHighlightDirective implements OnInit {
   }
 }
 ```
+
+### Lesson 98 - Binding to Directive Properties
+
+To dynamically set directive values, use `@Input()` on custom properties in the directive.
+
+In HTML
+
+- These `@Input` properties are set on the same level as the directive.
+- Angular figures out whether a property is custom or native HTML.
+
+In `better-highlight.directive.ts`
+
+```ts
+import {...} from '...';
+
+@Directive({
+  selector: '[appBetterHighlight]',
+})
+export class BetterHighlightDirective implements OnInit {
+  @Input()
+  defaultColor = 'transparent';
+
+  @Input()
+  highlightColor = 'blue';
+
+  @HostBinding('style.backgroundColor')
+  backgroundColor: string;
+
+  constructor(private elRef: ElementRef, private renderer: Renderer2) {}
+
+  ngOnInit(): void {
+    this.backgroundColor = this.defaultColor;
+  }
+
+  @HostListener('mouseenter')
+  onMouseOver(eventData: Event) {
+    this.backgroundColor = this.highlightColor;
+  }
+
+  @HostListener('mouseleave')
+  onMouseLeave(eventData: Event) {
+    this.backgroundColor = this.defaultColor;
+  }
+}
+```
+
+In `app.component.html`
+
+```html
+<p appBetterHighlight [defaultColor]="'yellow'" [highlightColor]="'red'">
+  Style me with a better highlight!
+</p>
+```
+
+Special case: When the directive has a main property to be set as `@Input`, it is possible to use the input alias to set the property's alias to the directive name
+
+In `better-highlight.directive.ts`
+
+```ts
+import {...} from '...';
+
+@Directive({
+  selector: '[appBetterHighlight]',
+})
+export class BetterHighlightDirective implements OnInit {
+  @Input()
+  defaultColor = 'transparent';
+
+  @Input('appBetterHighlight')
+  highlightColor = 'blue';
+  ...
+}
+```
+
+In `app.component.html`
+
+```html
+<p [appBetterHighlight]="'red'" [defaultColor]="'yellow'">
+  Style me with a better highlight!
+</p>
+```
