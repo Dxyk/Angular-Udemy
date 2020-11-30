@@ -25,7 +25,7 @@ There can be multiple attribute directives on a single element. Note that attrib
 
 ### Lesson 93 - Creating a Basic Attribute Directive
 
-Custom directives are similar to custom components. They live in `<directive-name>/<directive-name>.directive.ts`.
+Custom directives are similar to custom components. They live in `<directive-folder (shared/directives)>/<directive-name>.directive.ts`.
 
 In `basic-highlight/basic-highlight.directive.ts`
 
@@ -81,4 +81,41 @@ In `app.component.html`, to use this new basic directive
 
 ```html
 <p appBasicHighlight>Style me with basic highlight!</p>
+```
+
+### Lesson 94 - Using the Renderer to build a Better Attribute Directive
+
+To generate a directive using the Angular CLI,
+
+```sh
+# these two are equivalent
+ng generate directive <directive-name>
+ng g d <directive-name>
+```
+
+Accessing elements in the DOM in TS is not a good practice. Angular is not limited to running in the browser. E.g. it also work with service workers, where Angular won't have access to the DOM. In this case, accessing DOM elements might throw errors.
+
+Angular provides a `Renderer2` object that helps manipulating the DOM within TS code.
+
+In `better-highlight.directive.ts`
+
+```ts
+import { Directive, ElementRef, OnInit, Renderer2 } from '@angular/core';
+
+@Directive({
+  selector: '[appBetterHighlight]',
+})
+export class BetterHighlightDirective implements OnInit {
+  constructor(private elRef: ElementRef, private renderer: Renderer2) {}
+
+  ngOnInit(): void {
+    this.renderer.setStyle(this.elRef.nativeElement, 'backgroundColor', 'blue');
+  }
+}
+```
+
+In `app.component.html`
+
+```html
+<p appBetterHighlight>Style me with a better highlight!</p>
 ```
