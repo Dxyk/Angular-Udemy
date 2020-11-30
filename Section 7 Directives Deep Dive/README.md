@@ -134,7 +134,7 @@ In `better-highlight.directives.ts`
 - `@HostListener` decorates a event listener method that is triggered once the event is fired
 
 ```ts
-import {...} from {...};
+import {...} from '...';
 
 @Directive({
   selector: '[appBetterHighlight]',
@@ -156,6 +156,43 @@ export class BetterHighlightDirective implements OnInit {
       'backgroundColor',
       'transparent'
     );
+  }
+}
+```
+
+### Lesson 97 - Using HostBinding to Bind to Host Properties
+
+An alternative to using the `Renderer` to modify the DOM is to use `@HostBinding`
+
+In `better-highlight.directive.ts`
+
+- `@HostBinding(elementProperty)` takes in a string that denotes the host element property to bind the directive property to.
+- The element property is the same as when directly accessing `ElementRef.nativeElement.<property1.property2>`
+- After the element property is bind to decorator property, changing the decorator property will change the element property.
+
+```ts
+import {...} from '...';
+
+@Directive({
+  selector: '[appBetterHighlight]',
+})
+export class BetterHighlightDirective implements OnInit {
+  @HostBinding('style.backgroundColor')
+  backgroundColor = 'transparent';
+
+  constructor(private elRef: ElementRef, private renderer: Renderer2) {}
+
+  ngOnInit(): void {
+  }
+
+  @HostListener('mouseenter')
+  onMouseOver(eventData: Event) {
+    this.backgroundColor = 'blue';
+  }
+
+  @HostListener('mouseleave')
+  onMouseLeave(eventData: Event) {
+    this.backgroundColor = 'transparent';
   }
 }
 ```
