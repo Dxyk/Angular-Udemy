@@ -18,3 +18,7 @@ Directives
 ### Lesson 91 - ngFor and ngIf Recap
 
 Within an element in the template, there can only be one structural directive. I.e. Using both `*ngIf` and `*ngFor` in an element will throw an error.
+
+### Lesson 92 - ngClass and ngStyle Recap
+
+There can be multiple attribute directives on a single element. Note that attribute directives need to be enclosed by squared brackets `[]` because we are binding properties to the `ngClass` directive.
