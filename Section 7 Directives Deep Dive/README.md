@@ -14,3 +14,7 @@ Directives
   - Similar to normal HTML attributes but with a leading `*`
   - Affect area of DOM around the element (add and delete elements)
   - E.g. `*ngIf`, `*ngFor`
+
+### Lesson 91 - ngFor and ngIf Recap
+
+Within an element in the template, there can only be one structural directive. I.e. Using both `*ngIf` and `*ngFor` in an element will throw an error.
