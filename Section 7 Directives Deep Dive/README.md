@@ -277,3 +277,25 @@ In `app.component.html`
   Style me with a better highlight!
 </p>
 ```
+
+### Lesson 99 - What Happens behind the Scenes on Structural Directives
+
+Structural directives must have a `*` before them because this informs Angular that these are structural directives.
+
+Behind the scenes, all usage of structural directives are encapsulated by a `ng-template` element. `ng-template` is not actually rendered, but provides properties that determines whether its content should be rendered.
+
+```html
+<div *ngIf="true">
+  <p>Hello World</p>
+</div>
+```
+
+is equivalent to
+
+```html
+<ng-template [ngIf]="true">
+  <div>
+    <p>Hello World</p>
+  </div>
+</ng-template>
+```
