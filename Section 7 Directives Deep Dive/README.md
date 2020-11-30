@@ -119,3 +119,43 @@ In `app.component.html`
 ```html
 <p appBetterHighlight>Style me with a better highlight!</p>
 ```
+
+### Lesson 95 - More about the Renderer
+
+The `Renderer2` object has more methods to perform DOM manipulation. See documentations for details
+
+### Lesson 96 - Using HostListener to Listen to Host Events
+
+To listen to DOM events occurring on the element that the directive sits on, use `@HostListener`.
+
+In `better-highlight.directives.ts`
+
+- `@HostListener(eventName)` takes in a `eventName` that is the name of a DOM supported event.
+- `@HostListener` decorates a event listener method that is triggered once the event is fired
+
+```ts
+import {...} from {...};
+
+@Directive({
+  selector: '[appBetterHighlight]',
+})
+export class BetterHighlightDirective implements OnInit {
+  constructor(private elRef: ElementRef, private renderer: Renderer2) {}
+
+  ngOnInit(): void {}
+
+  @HostListener('mouseenter')
+  onMouseOver(eventData: Event) {
+    this.renderer.setStyle(this.elRef.nativeElement, 'backgroundColor', 'blue');
+  }
+
+  @HostListener('mouseleave')
+  onMouseLeave(eventData: Event) {
+    this.renderer.setStyle(
+      this.elRef.nativeElement,
+      'backgroundColor',
+      'transparent'
+    );
+  }
+}
+```
