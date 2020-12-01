@@ -6,7 +6,8 @@ import { Component, EventEmitter, Output } from '@angular/core';
   styleUrls: ['./new-account.component.css'],
 })
 export class NewAccountComponent {
-  @Output() accountAdded = new EventEmitter<{ name: string; status: string }>();
+  @Output()
+  accountAdded = new EventEmitter<{ name: string; status: string }>();
 
   onCreateAccount(accountName: string, accountStatus: string) {
     this.accountAdded.emit({
