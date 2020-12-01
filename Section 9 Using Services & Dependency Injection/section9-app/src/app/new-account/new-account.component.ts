@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { AccountsService } from '../services/accounts.service';
-import { LoggingService } from '../services/logging.service';
 
 @Component({
   selector: 'app-new-account',
@@ -8,9 +7,11 @@ import { LoggingService } from '../services/logging.service';
   styleUrls: ['./new-account.component.css'],
 })
 export class NewAccountComponent {
-  constructor(
-    private accountsService: AccountsService
-  ) {}
+  constructor(private accountsService: AccountsService) {
+    this.accountsService.statusUpdated.subscribe((status: string) => {
+      alert('new status: ' + status);
+    });
+  }
 
   onCreateAccount(accountName: string, accountStatus: string) {
     this.accountsService.addAccount(accountName, accountStatus);

@@ -16,6 +16,8 @@ Services are used to
 Advantages:
 
 - Leaner code - avoid duplicated code
+- Utilizes hierarchical injector
+- Code readability - Reduces `@Output` and `@Input` usage
 
 ### Lesson 106 - Creating a Logging Service
 
@@ -229,5 +231,70 @@ export class AccountsService {
     this.loggingService.logStatusChange(status);
     this.accounts[id].status = status;
   }
+}
+```
+
+### Lesson 112 - Using Services for Cross-Component Communication
+
+Assume component A and its child components B and C. Without using services, for B and C to communicate with each other, B has to emit an event, and A has to catch it, and pass data to C using property binding.
+
+With services, the service S can define an event. Component B can emit the event, and component C can subscribe to it and perform action in the callback method.
+
+In `accounts.service.ts`
+
+```ts
+import { ... } from '...';
+
+@Injectable()
+export class AccountsService {
+  ...
+
+  statusUpdated = new EventEmitter<string>();
+
+  constructor(private loggingService: LoggingService) {}
+
+  ...
+}
+```
+
+In `account.component.ts` (B)
+
+```ts
+import { ... } from '...';
+
+@Component({
+  selector: 'app-account',
+  templateUrl: './account.component.html',
+  styleUrls: ['./account.component.css'],
+})
+export class AccountComponent {
+  ...
+
+  constructor(private accountsService: AccountsService) {}
+
+  onSetTo(status: string) {
+    ...
+    this.accountsService.statusUpdated.emit(status);
+  }
+}
+```
+
+In `new-account.component.ts` (C)
+
+```ts
+import { ... } from '...';
+
+@Component({
+  selector: 'app-new-account',
+  templateUrl: './new-account.component.html',
+  styleUrls: ['./new-account.component.css'],
+})
+export class NewAccountComponent {
+  constructor(private accountsService: AccountsService) {
+    this.accountsService.statusUpdated.subscribe((status: string) => {
+      alert('new status: ' + status);
+    });
+  }
+  ...
 }
 ```
