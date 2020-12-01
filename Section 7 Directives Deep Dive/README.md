@@ -341,3 +341,36 @@ In `app.component.html`
   <p>Hello World</p>
 </div>
 ```
+
+### Lesson 101 - Understanding ngSwitch
+
+`ngSwitch` is useful when dealing with multiple `*ngIf`s.
+
+In `app.component.html`
+
+- `ngSwitch` is a property directive
+- `ngSwitchCase` and `ngSwitchDefault` are structural directives
+
+```html
+<div [ngSwitch]="value">
+  <p *ngSwitchCase="5">Value is 5</p>
+  <p *ngSwitchCase="10">Value is 10</p>
+  <p *ngSwitchCase="100">Value is 100</p>
+  <p *ngSwitchDefault>Value is Default</p>
+</div>
+```
+
+In `app.component.ts`
+
+```ts
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css'],
+})
+export class AppComponent {
+  value = 10;
+}
+```
