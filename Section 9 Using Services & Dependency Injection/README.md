@@ -179,3 +179,55 @@ To specify that a component should inherit an injected service from its parent c
 Note the constructor will need to declare the service no matter if we want to create a new instance or not.
 
 To fix the bug mentioned in Lesson 108, remove `AccountService` in the `@Component({provider: [...]})` array for `account.component.ts` and `new-account.component.ts`. Keep it for `app.component.ts`, and this will make the rest of the components inherit the same service.
+
+### Lesson 111 - Injecting Services into Services
+
+By adding a service in `@NgModule(provider: [])` in the `AppModule`, the whole app (both components and services) will have access to the same instance of the service unless the component choose to override it.
+
+To inject a service `ServiceA` into another service `ServiceB`, there are 3 steps
+
+1. Register both service as `providers` in `AppModule`
+2. In the constructor for `ServiceB`, declare the service `ServiceA`
+3. Add `@Injectable()` decorator to the `serviceB`.
+   1. This informs Angular that it should be responsible for dependency injection when constructing `serviceB`.
+
+Note: In newer versions of Angular, all services are recommended to have the `@Injectable` even though it does not require dependency injection.
+
+Remove `provider` for `.*.component.html`
+
+In `app.module.ts`
+
+```ts
+import { ... } from '...';
+
+@NgModule({
+  declarations: [AppComponent, AccountComponent, NewAccountComponent],
+  imports: [BrowserModule, FormsModule],
+  providers: [AccountsService, LoggingService],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+```
+
+In `accounts.service.ts`
+
+```ts
+import { ... } from '...';
+
+@Injectable()
+export class AccountsService {
+  accounts = [];
+
+  constructor(private loggingService: LoggingService) {}
+
+  addAccount(name: string, status: string) {
+    this.loggingService.logStatusChange(status);
+    this.accounts.push({ name: name, status: status });
+  }
+
+  updateAccount(id: number, status: string) {
+    this.loggingService.logStatusChange(status);
+    this.accounts[id].status = status;
+  }
+}
+```
