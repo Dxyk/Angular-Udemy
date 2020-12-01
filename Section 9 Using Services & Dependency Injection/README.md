@@ -176,4 +176,6 @@ Angular **Hierarchical Injector**
 
 To specify that a component should inherit an injected service from its parent component, do not include the service in the `provider` property in the `@Component` decorator.
 
+Note the constructor will need to declare the service no matter if we want to create a new instance or not.
+
 To fix the bug mentioned in Lesson 108, remove `AccountService` in the `@Component({provider: [...]})` array for `account.component.ts` and `new-account.component.ts`. Keep it for `app.component.ts`, and this will make the rest of the components inherit the same service.
