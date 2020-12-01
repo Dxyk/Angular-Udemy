@@ -302,3 +302,9 @@ export class NewAccountComponent {
 ### Lesson 113 - Services in Angular 6+
 
 In Angular 6+, to make a service available application-wide, either register it in `provider` in `AppModule`, or add `@Injectable({providedIn: 'root'})` to the Service
+
+## Assignment 5
+
+### Lesson 114 - Assignment Solution
+
+See `./assignment-5`
