@@ -40,7 +40,8 @@ To inject a dependency in the component, there are 2 steps:
 1. Declare the service with type in the constructor. `constructor(private service: Service) {}`
    1. When Angular tries to instantiate the component class, it understands that it also needs to provide the service as a dependency.
 2. Add `provider: [Service]` in the `@Component` decorator.
-   1. The `provider` property tells Angular that it should be able to provide classes listed in it.
+   1. The `provider` property tells Angular that it should create a new instance for each class listed in this property.
+   2. Also used to override existing services from parent components
 
 In `account.component.ts`
 
@@ -161,3 +162,18 @@ export class NewAccountComponent {
   }
 }
 ```
+
+### Lesson 109 - Understanding the Hierarchical Injector
+
+Angular **Hierarchical Injector**
+
+- Injecting the service into `AppModule` -> the same instance of the service will be available application-wide (including components and services)
+- Injecting the service into `AppComponent` -> the same instance of the service will be available for all components, but not for other services
+- Injecting the service into any other component -> the same instance will be available for the component and its child components
+  - Will override if the same service is provided at a higher level
+
+### Lesson 110 - How many Instances of Service Should It Be
+
+To specify that a component should inherit an injected service from its parent component, do not include the service in the `provider` property in the `@Component` decorator.
+
+To fix the bug mentioned in Lesson 108, remove `AccountService` in the `@Component({provider: [...]})` array for `account.component.ts` and `new-account.component.ts`. Keep it for `app.component.ts`, and this will make the rest of the components inherit the same service.
