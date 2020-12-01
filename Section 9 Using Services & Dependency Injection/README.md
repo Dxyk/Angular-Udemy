@@ -8,7 +8,10 @@ In Angular, **Services** provide centralized code and business logic that can be
 
 ### Lesson 105 - Why would you Need Services
 
-Services can help with passing data between components
+Services are used to
+
+- store centralized code
+- store and manage data, pass data between components
 
 Advantages:
 
@@ -57,6 +60,104 @@ export class AccountComponent {
   onSetTo(status: string) {
     this.statusChanged.emit({ id: this.id, newStatus: status });
     this.loggingService.logStatusChange(status);
+  }
+}
+```
+
+### Lesson 108 - Creating a Data Service
+
+Services are also used to store and manage data. Note: The implementation after this lesson is incomplete because it contains a bug.
+
+In `services/accounts.service.ts`
+
+```ts
+export class AccountsService {
+  accounts = [];
+
+  addAccount(name: string, status: string) {
+    this.accounts.push({ name: name, status: status });
+  }
+
+  updateAccount(id: number, status: string) {
+    this.accounts[id].status = status;
+  }
+}
+```
+
+In `app.component.ts`
+
+Note: Since arrays are reference types in JS/TS, assigning a variable to the array is equivalent to accessing the exact same array
+
+```ts
+import { ... } from '...';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css'],
+  providers: [AccountsService],
+})
+export class AppComponent implements OnInit {
+  accounts: { name: string; status: string }[] = [];
+
+  constructor(private accountsService: AccountsService) {}
+
+  ngOnInit() {
+    this.accounts = this.accountsService.accounts;
+  }
+}
+```
+
+In `account.component.ts`
+
+```ts
+import { ... } from '...';
+
+@Component({
+  selector: 'app-account',
+  templateUrl: './account.component.html',
+  styleUrls: ['./account.component.css'],
+  providers: [LoggingService, AccountsService],
+})
+export class AccountComponent {
+  @Input()
+  account: { name: string; status: string };
+
+  @Input()
+  id: number;
+
+  constructor(
+    private loggingService: LoggingService,
+    private accountsService: AccountsService
+  ) {}
+
+  onSetTo(status: string) {
+    this.accountsService.updateAccount(this.id, status);
+    this.loggingService.logStatusChange(status);
+  }
+}
+```
+
+In `new-account.component.ts`
+
+```ts
+import { ... } from '...';
+
+@Component({
+  selector: 'app-new-account',
+  templateUrl: './new-account.component.html',
+  styleUrls: ['./new-account.component.css'],
+  providers: [LoggingService, AccountsService],
+})
+export class NewAccountComponent {
+  constructor(
+    private loggingService: LoggingService,
+    private accountsService: AccountsService
+  ) {}
+
+  onCreateAccount(accountName: string, accountStatus: string) {
+    this.accountsService.addAccount(accountName, accountStatus);
+    this.loggingService.logStatusChange(accountStatus);
   }
 }
 ```
