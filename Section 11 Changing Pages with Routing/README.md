@@ -220,3 +220,42 @@ const appRoutes: Routes = [
 })
 export class AppModule {}
 ```
+
+### Lesson 133 - Fetching Route Parameters
+
+To obtain the dynamic data in the dynamic path,
+
+In `user.component.ts`
+
+1. Use `ActivatedRoute` to obtain the current route
+   1. `ActivatedRoute.snapshot.params` contains a map of all the dynamic variables in the current route
+   2. These dynamic variables are defined in Route's path param
+
+```ts
+import { ... } from '...';
+
+@Component({
+  selector: 'app-user',
+  templateUrl: './user.component.html',
+  styleUrls: ['./user.component.css'],
+})
+export class UserComponent implements OnInit {
+  user: { id: number; name: string };
+
+  constructor(private route: ActivatedRoute) {}
+
+  ngOnInit() {
+    this.user = {
+      id: this.route.snapshot.params['id'],
+      name: this.route.snapshot.params['name']
+    };
+  }
+}
+```
+
+In `user.component.html`
+
+```html
+<p>User with ID {{ user.id }} loaded.</p>
+<p>User name is {{ user.name }}</p>
+```
