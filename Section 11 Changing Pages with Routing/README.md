@@ -341,3 +341,57 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 }
 ```
+
+### Lesson 136 - Passing Query Parameters and Fragments
+
+Goal: Pass and Retrieve query parameters and fragments in the url
+
+**Query Parameters** are params in the url of form `/path?param1=value1&param2=value2`
+
+**Fragments** are fragments of the html to jump to. In the url, `/path#jumpTo`
+
+To set these params using the `routerLink` directive, we use its bindable properties
+
+- `[queryParam]` takes in an object of `{ [queryParam]: [defaultValue] }`.
+- `[fragment]` takes in a string that indicates
+
+In `servers.component.html`
+
+```html
+<a
+  [routerLink]="['/servers', 5, 'edit']"
+  [queryParams]="{allowEdit: '1'}"
+  [fragment]="'Loading'"
+  href="#"
+  class="list-group-item"
+  *ngFor="let server of servers"
+></a>
+```
+
+To set these params programmatically, use the `NavigationExtras` object in `Router.navigate(paths, NavigationExtras)`
+
+In `home.component.ts`
+
+```ts
+import { ... } from '';
+
+@Component({ ... })
+export class HomeComponent implements OnInit {
+  constructor(private router: Router) {}
+
+  ngOnInit() {}
+
+  onLoadServers(id: number) {
+    this.router.navigate(['/servers', id, 'edit'], {
+      queryParams: { allowEdit: '1' },
+      fragment: 'Loading',
+    });
+  }
+}
+```
+
+In `home.component.html`
+
+```html
+<button class="btn btn-primary" (click)="onLoadServers(1)">Load Servers</button>
+```
