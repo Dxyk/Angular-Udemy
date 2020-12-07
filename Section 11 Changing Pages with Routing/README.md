@@ -53,3 +53,31 @@ In `app.component.html`
   </div>
 </div>
 ```
+
+### Lesson 127 - Navigating with Router Links
+
+Goal: make links in `app.component.html` functional.
+
+The first intuition would be to modify the value of `<a href="">` attribute. However, this is not the desired behavior because each time we click the link, it sends the request to the server, and the server returns our app page. This restarts the application entirely, and causes the application to lose the state, which is not what we want.
+
+Instead of using `href`, use `routerLink`. This is an Angular property that intercepts the click event and processes the path. If the path is registered, it will load the registered component instead of reloading the application.
+
+In `app.component.html`
+
+- `routerLink` can be used in 2 ways
+  - Property value assignment (`<a routerLink="/">`) takes in the path as a string
+  - Property binding (`<a [routerLink]="['/path1', 'path2']">`). It takes in a list of paths that will be concatenated together. E.g. `/path1/path2`.
+
+```html
+<ul class="nav nav-tabs">
+  <li role="presentation" class="active">
+    <a routerLink="/">Home</a>
+  </li>
+  <li role="presentation">
+    <a routerLink="/servers">Servers</a>
+  </li>
+  <li role="presentation">
+    <a [routerLink]="['/users']">Users</a>
+  </li>
+</ul>
+```
