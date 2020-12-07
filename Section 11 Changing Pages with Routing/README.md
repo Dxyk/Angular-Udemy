@@ -60,7 +60,7 @@ Goal: make links in `app.component.html` functional.
 
 The first intuition would be to modify the value of `<a href="">` attribute. However, this is not the desired behavior because each time we click the link, it sends the request to the server, and the server returns our app page. This restarts the application entirely, and causes the application to lose the state, which is not what we want.
 
-Instead of using `href`, use `routerLink`. This is an Angular property that intercepts the click event and processes the path. If the path is registered, it will load the registered component instead of reloading the application.
+Instead of using `href`, use `routerLink`. This is an Angular property that intercepts the click event and processes the path. If the path is registered, it will load the registered component instead of reloading the application. If the path is not registered, it will throw an error.
 
 In `app.component.html`
 
@@ -81,3 +81,12 @@ In `app.component.html`
   </li>
 </ul>
 ```
+
+### Lesson 128 - Understanding Navigation Paths
+
+In `<a routerLink>`, the paths can either be absolute (`/servers`) or relative (`servers`).
+
+- When using the absolute path, no matter the current path, Angular Router always goes to the specified router link (`/servers` -> `localhost:4200/servers`).
+- When using the relative path, angular appends the specified router link to the current path. The current path depends on which component the user is currently on (currently on the ServersComponent and specify `/servers` -> `localhost:4200/servers/servers`)
+
+Relative paths allow unix-like navigations. E.g. `./path`, `../path`, etc
