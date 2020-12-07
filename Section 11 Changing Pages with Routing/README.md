@@ -121,3 +121,37 @@ In `app.component.html`
   </li>
 </ul>
 ```
+
+### Lesson 130 - Navigating Programmatically
+
+Goal: navigate / change the route programmatically
+
+In `home.component.ts`
+
+Similar to the `[routerLinkActive]` directive, `Router.navigate()` takes in a list of paths that can be concatenated to the final path.
+
+```ts
+import { ... } from '...';
+
+@Component({
+  selector: 'app-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.css'],
+})
+export class HomeComponent implements OnInit {
+  constructor(private router: Router) {}
+
+  ngOnInit() {}
+
+  onLoadServers() {
+    // complex calculations
+    this.router.navigate(['/servers']);
+  }
+}
+```
+
+In `home.component.html`
+
+```html
+<button class="btn btn-primary" (click)="onLoadServers()">Load Servers</button>
+```
