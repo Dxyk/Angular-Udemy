@@ -308,3 +308,36 @@ In `user.component.html`
 ```html
 <a [routerLink]="['/users', 10, 'Anna']">Load Anna</a>
 ```
+
+### Lesson 135 - An Important Note about Route Observables
+
+Angular automatically cleans up all subscriptions to observables shipped with Angular when a component is destroyed. This is because if Angular doesn't clean this up, when a component is destroyed, the subscription is left in the memory, and eventually this eats up all the RAM.
+
+In `user.component.ts`, this is equivalent to the following
+
+- It is not necessary to manually cleanup when subscribing to observables shipped with Angular.
+- It is necessary to manually cleanup when subscribing to custom observables.
+
+```ts
+import { ... } from '...';
+
+@Component({
+  selector: 'app-user',
+  templateUrl: './user.component.html',
+  styleUrls: ['./user.component.css'],
+})
+export class UserComponent implements OnInit, OnDestroy {
+  paramSubscription: Subscription;
+
+  constructor(private route: ActivatedRoute) {}
+
+  ngOnInit() {
+    ...
+    this.paramSubscription = this.route.params.subscribe((params: Params) => { ... });
+  }
+
+  ngOnDestroy() {
+    this.paramSubscription.unsubscribe();
+  }
+}
+```
