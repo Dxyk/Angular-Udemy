@@ -13,17 +13,8 @@
   </div>
   <div class="row">
     <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
-      <app-home></app-home>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
-      <app-users></app-users>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
-      <app-servers></app-servers>
+      <!-- an angular directive that marks the location where the router should load the components -->
+      <router-outlet></router-outlet>
     </div>
   </div>
 </div>
