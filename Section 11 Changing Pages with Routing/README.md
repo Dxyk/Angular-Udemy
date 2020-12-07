@@ -90,3 +90,34 @@ In `<a routerLink>`, the paths can either be absolute (`/servers`) or relative (
 - When using the relative path, angular appends the specified router link to the current path. The current path depends on which component the user is currently on (currently on the ServersComponent and specify `/servers` -> `localhost:4200/servers/servers`)
 
 Relative paths allow unix-like navigations. E.g. `./path`, `../path`, etc
+
+### Lesson 129 - Styling Active Router Links
+
+Goal: Change tab style on route change
+
+The `routerLinkActive` allows adding / removing class to HTML elements. It analyzes the current path, and marks the element and its children in it as Active when the current path matches the link.
+
+`[routerLinkActiveOptions]` allows configurations on how the router link should be matched.
+
+- `exact: false` (default) indicates that `routerLinkActive` will be set to Active as long as the path **contains** the link value
+- `exact: true` indicates that `routerLinkActive` will only be set to Active if the path is an **exact match** of the link value
+
+In `app.component.html`
+
+```html
+<ul class="nav nav-tabs">
+  <li
+    role="presentation"
+    routerLinkActive="active"
+    [routerLinkActiveOptions]="{exact: true}"
+  >
+    <a routerLink="/">Home</a>
+  </li>
+  <li role="presentation" routerLinkActive="active">
+    <a routerLink="/servers">Servers</a>
+  </li>
+  <li role="presentation" routerLinkActive="active">
+    <a [routerLink]="['/users']">Users</a>
+  </li>
+</ul>
+```
