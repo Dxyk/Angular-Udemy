@@ -302,3 +302,9 @@ export class UserComponent implements OnInit {
   }
 }
 ```
+
+In `user.component.html`
+
+```html
+<a [routerLink]="['/users', 10, 'Anna']">Load Anna</a>
+```
