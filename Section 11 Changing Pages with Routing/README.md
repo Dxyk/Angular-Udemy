@@ -200,7 +200,7 @@ In `servers.component.html`
 
 ### Lesson 132 - Passing Parameters to Routes
 
-To setup a dynamic path in the Router, pass the `path` as `/path1/:dynamicPath` (e.g. `/users/:id`). The `:` in the path tells Angular that it is the dynamic part of the path, and the dynamic part should be retrievable as a string variable name.
+To setup a dynamic path in the Router, pass the `path` as `/path1/:dynamicPath` (e.g. `/users/:id`). The `:` in the path tells Angular that it is the dynamic part of the path, and the dynamic part is retrievable as **route parameter**.
 
 In `app.module.ts`
 
@@ -229,7 +229,7 @@ In `user.component.ts`
 
 1. Use `ActivatedRoute` to obtain the current route
    1. `ActivatedRoute.snapshot.params` contains a map of all the dynamic variables in the current route
-   2. These dynamic variables are defined in Route's path param
+   2. These dynamic variables are defined in Route's route param
 
 ```ts
 import { ... } from '...';
@@ -258,4 +258,47 @@ In `user.component.html`
 ```html
 <p>User with ID {{ user.id }} loaded.</p>
 <p>User name is {{ user.name }}</p>
+```
+
+### Lesson 134 - Fetching Route Parameters Reactively
+
+Problem with using `ActivatedRoute.snapshot`: When the component is already initialized, the snapshot will not be updated. E.g. navigate to the component, navigate to a different route but still in the component, the component will not be updated because it uses the same snapshot.
+
+To fetch route parameter in subsequent changes (after the component was initialized), use `ActivatedRoute.params`.
+
+In `user.component.ts`
+
+- `ActivatedRoute.params` is an **Observable**.
+  - Observables are used to execute asynchronous tasks.
+  - Fetching the route parameters is an async task because the component won't know if, when and how the route parameters are changed.
+  - When an Observable fires, the callback subscribed to it will be executed.
+  - A cookie cutter example of Observable is an Event. When an Event emits, the EventListener that listens to this event will execute its tasks.
+
+```ts
+import { ... } from '...';
+
+@Component({
+  selector: 'app-user',
+  templateUrl: './user.component.html',
+  styleUrls: ['./user.component.css'],
+})
+export class UserComponent implements OnInit {
+  user: { id: number; name: string };
+
+  constructor(private route: ActivatedRoute) {}
+
+  ngOnInit() {
+    this.user = {
+      id: this.route.snapshot.params['id'],
+      name: this.route.snapshot.params['name']
+    };
+
+    this.route.params.subscribe((params: Params) => {
+      this.user = {
+        id: params['id'],
+        name: params['name'],
+      };
+    });
+  }
+}
 ```
