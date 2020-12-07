@@ -395,3 +395,32 @@ In `home.component.html`
 ```html
 <button class="btn btn-primary" (click)="onLoadServers(1)">Load Servers</button>
 ```
+
+### Lesson 137 - Retrieving Query Parameters and Fragments
+
+To retrieve the query parameter and fragment, similar to route parameters, use `ActivatedRoute.snapshot.queryParams` and `ActivatedRoute.snapshot.fragment`.
+
+Note that these are still snapshots and the values will not updated once the component is initialized. To make the component listen to the changes, subscribe to the observables `ActivatedRoute.queryParams` and `ActivatedRoute.fragments`.
+
+In `edit-server.component.ts`
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class EditServerComponent implements OnInit {
+  ...
+  constructor(
+    private serversService: ServersService,
+    private route: ActivatedRoute
+  ) {}
+
+  ngOnInit() {
+    console.log(this.route.snapshot.queryParams);
+    console.log(this.route.snapshot.fragment);
+    ...
+  }
+
+  ...
+}
+```
