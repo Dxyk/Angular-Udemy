@@ -155,3 +155,45 @@ In `home.component.html`
 ```html
 <button class="btn btn-primary" (click)="onLoadServers()">Load Servers</button>
 ```
+
+### Lesson 131 - Using Relative Paths in Programmatic Navigation
+
+One difference between the `routerLink` property and the `Router.navigate()` method is that `routerLink` always know the current path the user is on, while `Router.navigate()` does not know the current path.
+
+In `servers.component.ts`
+
+1. `Router.navigate()` takes in an `NavigationExtras` object that has an attribute of `relativeTo`. This provides the router what the current route (path) is.
+2. `ActivatedRoute` provides information on the route when the object is injected. In this case, it is initialized to whatever the route `ServersComponent` corresponds to.
+
+```ts
+import { ... } from '...';
+
+@Component({
+  selector: 'app-servers',
+  templateUrl: './servers.component.html',
+  styleUrls: ['./servers.component.css'],
+})
+export class ServersComponent implements OnInit {
+  public servers: { id: number; name: string; status: string }[] = [];
+
+  constructor(
+    private serversService: ServersService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
+
+  ngOnInit() {
+    this.servers = this.serversService.getServers();
+  }
+
+  onReload() {
+    this.router.navigate(['.'], { relativeTo: this.route });
+  }
+}
+```
+
+In `servers.component.html`
+
+```html
+<button class="btn btn-primary" (click)="onReload()">Reload Page</button>
+```
