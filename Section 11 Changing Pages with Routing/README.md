@@ -197,3 +197,26 @@ In `servers.component.html`
 ```html
 <button class="btn btn-primary" (click)="onReload()">Reload Page</button>
 ```
+
+### Lesson 132 - Passing Parameters to Routes
+
+To setup a dynamic path in the Router, pass the `path` as `/path1/:dynamicPath` (e.g. `/users/:id`). The `:` in the path tells Angular that it is the dynamic part of the path, and the dynamic part should be retrievable as a string variable name.
+
+In `app.module.ts`
+
+```ts
+import { ... } from '...';
+
+const appRoutes: Routes = [
+  ...,
+  { path: 'users/:id', component: UserComponent },
+];
+
+@NgModule({
+  declarations: [...],
+  imports: [..., RouterModule.forRoot(appRoutes)],
+  providers: [ServersService],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+```
