@@ -424,3 +424,11 @@ export class EditServerComponent implements OnInit {
   ...
 }
 ```
+
+### Lesson 138 - Practicing and some Common Gotchas
+
+Some notes so far:
+
+- `[routerLink]` takes in a list. The list element can be string or expressions that can be converted to strings.
+- When a component needs to be instantiated using routing params, be careful not to instantiate it in the template with missing properties
+- `ActivatedRoute.snapshot.params` will return values of type string. Remember to convert them to the correct value types before referencing them.
