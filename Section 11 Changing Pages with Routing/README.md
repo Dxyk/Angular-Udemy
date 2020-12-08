@@ -482,3 +482,78 @@ Similarly, in `servers.component.html`
 <hr>
 <app-server></app-server> -->
 ```
+
+### Lesson 140 - Using Query Parameters - Practice
+
+Load edit server functionality by clicking on a edit button, and only allow edit when the query param `allowEdit=1`.
+
+In `servers.component.html`
+
+```html
+<a
+  [routerLink]="['/servers', server.id]"
+  [queryParams]="{allowEdit: server.id === 3 ? '1' : '0' }"
+  [fragment]="'Loading'"
+  href="#"
+  class="list-group-item"
+  *ngFor="let server of servers"
+>
+  {{ server.name }}
+</a>
+```
+
+In `server.component.ts`
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class ServerComponent implements OnInit, OnDestroy {
+  constructor( ..., private router: Router ) {}
+
+  ngOnInit() { ... }
+
+  ngOnDestroy() { ... }
+
+  onEdit() {
+    this.router.navigate(['edit'], { relativeTo: this.route });
+  }
+}
+```
+
+In `server.component.html`
+
+```html
+<button class="btn btn-primary" (click)="onEdit()">Edit Server</button>
+```
+
+In `edit-server.component.ts`
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class EditServerComponent implements OnInit {
+  ...
+  allowEdit = false;
+
+  constructor(..., private route: ActivatedRoute) {}
+
+  ngOnInit() {
+    ...
+    this.route.queryParams.subscribe((queryParams: Params) => {
+      this.allowEdit = queryParams['allowEdit'] === '1' ? true : false;
+    });
+  }
+  ...
+}
+```
+
+In `edit-server.component.html`
+
+```html
+<h4 *ngIf="!allowEdit">Unauthorized Action</h4>
+<div *ngIf="allowEdit">...</div>
+```
+
+Problem: on clicking the edit server button, the query parameter disappears, so the action is always unauthorized
