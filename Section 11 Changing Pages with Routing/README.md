@@ -433,7 +433,7 @@ Some notes so far:
 - When a component needs to be instantiated using routing params, be careful not to instantiate it in the template with missing properties
 - `ActivatedRoute.snapshot.params` will return values of type string. Remember to convert them to the correct value types before referencing them.
 
-### Lesson 139. Setting up Child (Nested) Routes
+### Lesson 139 - Setting up Child (Nested) Routes
 
 Goal: Load the component inside a component instantiated through routing, using Child (Nested) Routes
 
