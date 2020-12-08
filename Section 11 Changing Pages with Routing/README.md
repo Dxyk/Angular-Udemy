@@ -432,3 +432,53 @@ Some notes so far:
 - `[routerLink]` takes in a list. The list element can be string or expressions that can be converted to strings.
 - When a component needs to be instantiated using routing params, be careful not to instantiate it in the template with missing properties
 - `ActivatedRoute.snapshot.params` will return values of type string. Remember to convert them to the correct value types before referencing them.
+
+### Lesson 139. Setting up Child (Nested) Routes
+
+Goal: Load the component inside a component instantiated through routing, using Child (Nested) Routes
+
+In `app.module.ts`'s `Routes` list, it is possible to group multiple paths with the same parent. Each route in the group will inherit the parent's path, and Angular will consider them child routes of the parent route.
+
+```ts
+import { ... } from '...';
+
+const appRoutes: Routes = [
+  { path: '', component: HomeComponent },
+  { path: 'users',
+    component: UsersComponent,
+    children: [
+      { path: ':id/:name', component: UserComponent }
+    ],
+  },
+  {
+    path: 'servers',
+    component: ServersComponent,
+    children: [
+      { path: ':id', component: ServerComponent },
+      { path: ':id/edit', component: EditServerComponent },
+    ],
+  },
+];
+
+@NgModule({ ... })
+export class AppModule {}
+```
+
+The `router-outlet` directive is only responsible for loading the top-level route defined in the `Routes` list in `app.module.ts`. To render the next level, another `router-outlet` needs to be added in the rendered component's template.
+
+In `users.component.html`, comment out the original app-user since it will gain its route params, query params and fragments from the child router.
+
+```html
+<!-- <app-user></app-user> -->
+<router-outlet></router-outlet>
+```
+
+Similarly, in `servers.component.html`
+
+```html
+<router-outlet></router-outlet>
+<!-- <button class="btn btn-primary" (click)="onReload()">Reload Page</button>
+<app-edit-server></app-edit-server>
+<hr>
+<app-server></app-server> -->
+```
