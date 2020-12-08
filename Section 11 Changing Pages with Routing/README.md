@@ -557,3 +557,37 @@ In `edit-server.component.html`
 ```
 
 Problem: on clicking the edit server button, the query parameter disappears, so the action is always unauthorized
+
+### Lesson 141 - Configuring the Handling of Query Parameters
+
+To handle query parameters on navigation, use `Router.navigate(paths, { queryParamsHandling: string })`.
+
+`queryParamsHandling` takes in a string value of
+
+- `'merge'` to merge the old query param with the new
+- `'preserve'` to preserve the old query param, even there are new ones provided
+- `undefined` (default) to drop the query params on navigation
+
+In `server.component.ts`
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class ServerComponent implements OnInit, OnDestroy {
+  ...
+
+  constructor(..., private router: Router) {}
+
+  ngOnInit() { ... }
+
+  ngOnDestroy() { ... }
+
+  onEdit() {
+    this.router.navigate(['edit'], {
+      relativeTo: this.route,
+      queryParamsHandling: 'merge',
+    });
+  }
+}
+```
