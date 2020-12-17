@@ -606,6 +606,7 @@ In `app.module.ts`
 
 - `**` is the wildcard route that matches any route
 - The order of the routes matter, so the wildcard route must be the last route, or else it will override all existing routes
+- `redirectTo` takes in a string that represents the path to redirect to when the user accesses the route defined in `path`.
 
 ```ts
 const appRoutes: Routes = [
