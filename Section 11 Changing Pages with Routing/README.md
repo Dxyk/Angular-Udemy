@@ -591,3 +591,26 @@ export class ServerComponent implements OnInit, OnDestroy {
   }
 }
 ```
+
+### Lesson 142 - Redirecting and Wildcard Routes
+
+For now, if a user accesses a url that is not defined in the routes defined in AppModules, Angular throws an error. Goal: add a wildcard route so that when user accesses an invalid url, show a 404 page or redirect to another page.
+
+Create PageNotFoundComponent, and in `page-not-found.component.html`
+
+```html
+<h3>This page was not found!</h3>
+```
+
+In `app.module.ts`
+
+- `**` is the wildcard route that matches any route
+- The order of the routes matter, so the wildcard route must be the last route, or else it will override all existing routes
+
+```ts
+const appRoutes: Routes = [
+  { ... },
+  { path: 'not-found', component: PageNotFoundComponent },
+  { path: '**', redirectTo: '/not-found' }
+];
+```
