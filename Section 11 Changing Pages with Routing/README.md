@@ -615,3 +615,19 @@ const appRoutes: Routes = [
   { path: '**', redirectTo: '/not-found' }
 ];
 ```
+
+### Lesson 143 - Important: Redirection Path Matching
+
+By default, Angular matches paths by `"prefix"`.
+
+The following will ALWAYS redirect because the prefix always match up (is always `/`)
+
+```ts
+{ path: '', redirectTo: '/redirect-url' }
+```
+
+To specify the matching to full match, set the `pathMatch` property to `'full'`
+
+```ts
+{ path: '', redirectTo: '/redirect-url', pathMatch: 'full' }
+```
