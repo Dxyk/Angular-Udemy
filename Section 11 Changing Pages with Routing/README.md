@@ -631,3 +631,55 @@ To specify the matching to full match, set the `pathMatch` property to `'full'`
 ```ts
 { path: '', redirectTo: '/redirect-url', pathMatch: 'full' }
 ```
+
+### Lesson 144 - Outsourcing the Route Configuration
+
+If there are plenty of route configurations, putting them all in `app.module.ts` could be cumbersome.
+
+Create a separate module `app-routing.module.ts` in the `src` directory, and outsource the route declaration in this new module.
+
+In `app-routing.module.ts`
+
+- Move routes definition from `AppModule` to `AppRoutingModule`
+- Move import of `RouterModule.forRoot(appRoutes)` to `AppRoutingModule`
+- Export `RouterModule` so `AppModule` has access to it when importing `AppRoutingModule`
+
+```ts
+import { ... } from '...';
+
+const appRoutes: Routes = [
+  { path: '', component: HomeComponent },
+  {
+    path: 'users',
+    component: UsersComponent,
+    children: [{ path: ':id/:name', component: UserComponent }],
+  },
+  { ... },
+  { path: 'not-found', component: PageNotFoundComponent },
+  { path: '**', redirectTo: '/not-found' }
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(appRoutes)],
+  exports: [RouterModule],
+})
+export class AppRoutingModule {}
+```
+
+In `app.module.ts`
+
+- Remove routes declaration
+- Remove import for `RouterModule`
+- Import `AppRoutingModule`
+
+```ts
+import { ... } from '...';
+
+@NgModule({
+  declarations: [...],
+  imports: [BrowserModule, FormsModule, AppRoutingModule],
+  providers: [ServersService],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+```
