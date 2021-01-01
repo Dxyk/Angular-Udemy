@@ -683,3 +683,7 @@ import { ... } from '...';
 })
 export class AppModule {}
 ```
+
+### Lesson 145 - An Introduction to Guards
+
+**Route Guards** - functionalities / logic / code executed before entering or leaving a route. Usually used to check if a user has permission to access a route
