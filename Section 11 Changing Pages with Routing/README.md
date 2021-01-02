@@ -795,3 +795,67 @@ import { ... } from '...';
 })
 export class AppModule {}
 ```
+
+### Lesson 147 - Protecting Child (Nested) Routes with canActivateChild
+
+To manage how the child routes should be accessed, instead of adding multiple route guards for each route, we can have the guard implement `CanActivateChild`
+
+- `CanActivate` guards both the route and the child routes
+- `CanActivateChild` guards only the child routes
+
+In `auth-guard.service.ts`
+
+- Implement `CanActivateChild`
+- Implement the `canActivateChild` method
+  - For this app, use the same logic as canActivate, but in reality, child routes could have different logic than the parent route
+
+```ts
+import { ... } from '...';
+
+@Injectable({ providedIn: 'root' })
+export class AuthGuardService implements CanActivate, CanActivateChild {
+  constructor(private authService: AuthService, private router: Router) {}
+
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): Observable<boolean> | Promise<boolean> | boolean {
+    ...
+  }
+
+  canActivateChild(
+    childRoute: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): Observable<boolean> | Promise<boolean> | boolean {
+    return this.canActivate(childRoute, state);
+  }
+}
+```
+
+In `app-routing.module.ts`
+
+- Comment out the guards registered in the `canActivate` property
+- Register guards for child routes in the `canActivateChild` property
+- This makes `/server` unguarded, but guarded for all child routes under `/server` (e.g. `/server/edit/1`)
+
+```ts
+import { ... } from '...';
+
+const appRoutes: Routes = [
+  { ... },
+  {
+    path: 'servers',
+    // canActivate: [AuthGuardService],
+    canActivateChild: [AuthGuardService],
+    component: ServersComponent,
+    children: [ ... ],
+  },
+  { ... },
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(appRoutes)],
+  exports: [RouterModule],
+})
+export class AppRoutingModule {}
+```
