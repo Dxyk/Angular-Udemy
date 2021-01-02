@@ -690,7 +690,7 @@ export class AppModule {}
 
 ### Lesson 146 - Protecting Routes with canActivate
 
-In Angular, a route guard is a service that implements `CanActivate`.
+In Angular, services that implement `CanActivate` can be used as route guards when entering a route.
 
 For demo purposes, in this app, we will have an `AuthService` that returns a promise for a boolean. This boolean represents whether a user is logged. In the `AuthGuardService`, if the user is logged in, we let the user access the route. Otherwise, we navigate to the root url.
 
@@ -894,3 +894,118 @@ In `home.component.html`
 ```
 
 After clicking on the login button, the `loggedIn` flag in `AuthService` is set to true, so when navigating to the child routes in `/servers`, after 1 second (delayed in the promise), the route is accessed successfully.
+
+### Lesson 149 - Controlling Navigation with canDeactivate
+
+To control whether a user can leave a route, make the service extend `CanDeactivate`. Scenarios include when the user makes an edit and accidentally changes the url when the change has not been saved.
+
+Services implementing `CanDeactivate` is different from those implementing `CanActivate` because `CanDeactivate` may rely on logic defined in the component to determine whether or not it is ok to leave this component.
+
+Create a `CanDeactivateGuardService` in `app/servers/edit-server/can-deactivate-guard.service.ts`.
+
+In `can-deactivate-guard.service.ts`
+
+- Define an interface `CanComponentDeactivate` that will be implemented by the component
+- Define a service that implements `CanDeactivate<CanComponentDeactivate>`
+  - `CanDeactivate` takes in a generic component interface type
+
+```ts
+import { ... } from '...';
+
+export interface CanComponentDeactivate {
+  canDeactivate: () => Observable<boolean> | Promise<boolean> | boolean;
+}
+
+export class CanDeactivateGuardService implements CanDeactivate<CanComponentDeactivate> {
+  canDeactivate(
+    component: CanComponentDeactivate,
+    currentRoute: ActivatedRouteSnapshot,
+    currentState: RouterStateSnapshot,
+    nextState?: RouterStateSnapshot
+  ): Observable<boolean> | Promise<boolean> | boolean {
+    return component.canDeactivate();
+  }
+}
+```
+
+In `edit-server.component.ts`
+
+- Add a `changesSaved` flag that denotes whether the changes have been saved
+- On updating the server, set the flag and navigate to the parent level
+- Implement `CanComponentDeactivate`
+  - Shows confirmation box when there are edits not saved
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class EditServerComponent implements OnInit, CanComponentDeactivate {
+  ...
+  changesSaved = false;
+
+  constructor(..., private router: Router) {}
+
+  ngOnInit() { ... }
+
+  onUpdateServer() {
+    ...
+    this.changesSaved = true;
+    this.router.navigate(['..'], { relativeTo: this.route });
+  }
+
+  canDeactivate(): boolean | Observable<boolean> | Promise<boolean> {
+    if (!this.allowEdit) {
+      return true;
+    }
+    if ((this.serverName !== this.server.name || this.serverStatus !== this.server.status) && !this.changesSaved) {
+      return confirm('Do you want to discard the changes?');
+    } else {
+      return true;
+    }
+  }
+}
+```
+
+In `app-routing.module.ts`
+
+- Register the `CanDeactivateGuardService` for the edit path
+
+```ts
+import { ... } from '...';
+
+const appRoutes: Routes = [
+  { ... },
+  {
+    path: 'servers',
+    ...,
+    children: [
+      { ... },
+      {
+        path: ':id/edit',
+        component: EditServerComponent,
+        canDeactivate: [CanDeactivateGuardService],
+      },
+    ],
+  },
+  { ... },
+];
+
+@NgModule({ ... })
+export class AppRoutingModule {}
+```
+
+In `app.module.ts`
+
+- Register the newly created service
+
+```ts
+import { ... } from '...';
+
+@NgModule({
+  declarations: [ ... ],
+  imports: [ ... ],
+  providers: [..., CanDeactivateGuardService],
+  bootstrap: [...],
+})
+export class AppModule {}
+```
