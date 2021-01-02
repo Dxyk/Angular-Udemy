@@ -859,3 +859,38 @@ const appRoutes: Routes = [
 })
 export class AppRoutingModule {}
 ```
+
+### Lesson 148 - Using a Fake Auth Service
+
+Add calls to login and logout to make the `AuthService` and `AuthGuardService` functional
+
+In `home.component.ts`
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class HomeComponent implements OnInit {
+  constructor(private router: Router, private authService: AuthService) {}
+
+  ...
+
+  onLogin() {
+    this.authService.login();
+  }
+
+  onLogout() {
+    this.authService.logout();
+  }
+}
+```
+
+In `home.component.html`
+
+```html
+...
+<button class="btn btn-default" (click)="onLogin()">Login</button>
+<button class="btn btn-default" (click)="onLogout()">Logout</button>
+```
+
+After clicking on the login button, the `loggedIn` flag in `AuthService` is set to true, so when navigating to the child routes in `/servers`, after 1 second (delayed in the promise), the route is accessed successfully.
