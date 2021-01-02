@@ -687,3 +687,111 @@ export class AppModule {}
 ### Lesson 145 - An Introduction to Guards
 
 **Route Guards** - functionalities / logic / code executed before entering or leaving a route. Usually used to check if a user has permission to access a route
+
+### Lesson 146 - Protecting Routes with canActivate
+
+In Angular, a route guard is a service that implements `CanActivate`.
+
+For demo purposes, in this app, we will have an `AuthService` that returns a promise for a boolean. This boolean represents whether a user is logged. In the `AuthGuardService`, if the user is logged in, we let the user access the route. Otherwise, we navigate to the root url.
+
+Create 2 services, `auth-guard.service.ts` and `auth.service.ts` in the `src` directory.
+
+In `auth-guard.service.ts`
+
+- Create a service that implements `CanActivate` by implementing the `canActivate` method
+  - `canActivate` can be run synchronously (return `boolean`) or asynchronously (return `Observable<boolean> | Promise<boolean>`)
+  - Angular will call this method and provide the 2 arguments `route` and `state` when it tries to navigate to the routes that are registered with this route guard
+  - Upon resolving the promise, navigate to the correct route
+    - Allow the user to navigate to the original route if authenticated
+    - Disallow the user to navigate to the route and navigate to the root instead if not authenticated
+
+```ts
+import { ... } from '...';
+
+@Injectable({ providedIn: 'root' })
+export class AuthGuardService implements CanActivate {
+  constructor(private authService: AuthService, private router: Router) {}
+
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): Observable<boolean> | Promise<boolean> | boolean {
+    return this.authService.isAuthenticated().then((authenticated: boolean) => {
+      if (authenticated) {
+        return true;
+      } else {
+        this.router.navigate(['/']);
+      }
+    });
+  }
+}
+```
+
+In `auth.service.ts`
+
+- Implement a `isAuthenticated` method that returns a promise that executes the resolve method after 1 second
+
+```ts
+export class AuthService {
+  loggedIn = false;
+
+  isAuthenticated() {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(this.loggedIn);
+      }, 1000);
+    });
+  }
+
+  login() {
+    this.loggedIn = true;
+  }
+
+  logout() {
+    this.loggedIn = false;
+  }
+}
+```
+
+In `app-routing.module.ts`
+
+- Register the `AuthGuardService` to the `/servers` route and all its children
+- `Route.canActivate` is a list of route guards that implement `CanActivate`
+- If a route guard is registered to a route, it is also registered to the children of that route
+
+```ts
+import { ... } from '...';
+
+const appRoutes: Routes = [
+  { ... },
+  {
+    path: 'servers',
+    canActivate: [AuthGuardService],
+    component: ServersComponent,
+    children: [ ... ],
+  },
+  { ... },
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(appRoutes)],
+  exports: [RouterModule],
+})
+export class AppRoutingModule {}
+```
+
+In `app.module.ts`
+
+- Register the two newly created services as providers
+
+```ts
+import { ... } from '...';
+
+@NgModule({
+  declarations: [ ... ],
+  imports: [ ... ],
+  providers: [..., AuthService, AuthGuardService],
+  bootstrap: [...],
+})
+export class AppModule {}
+```

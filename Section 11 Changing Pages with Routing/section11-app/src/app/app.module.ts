@@ -3,6 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { AuthGuardService } from './auth-guard.service';
+import { AuthService } from './auth.service';
 import { HomeComponent } from './home/home.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { EditServerComponent } from './servers/edit-server/edit-server.component';
@@ -24,7 +26,7 @@ import { UsersComponent } from './users/users.component';
     PageNotFoundComponent,
   ],
   imports: [BrowserModule, FormsModule, AppRoutingModule],
-  providers: [ServersService],
+  providers: [ServersService, AuthService, AuthGuardService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
