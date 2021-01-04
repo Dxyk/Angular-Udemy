@@ -38,3 +38,20 @@ export class AppRoutingModule {}
 Update `app.module.ts` to import the `AppRoutingModule`.
 
 Use `<router-outlet></router-outlet>` to display the corresponding components
+
+### Lesson 156 - Adding Navigation to the App
+
+Goal
+
+- Make header buttons point to correct routes
+
+In `header.component.html`
+
+```html
+<ul class="nav navbar-nav">
+  <li><a routerLink="/recipes">Recipes</a></li>
+  <li><a routerLink="/shopping-list">Shopping List</a></li>
+</ul>
+```
+
+Remove redundant event listener ane event emitter in `header.component.ts`
