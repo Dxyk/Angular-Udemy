@@ -1162,3 +1162,31 @@ export class ServerComponent implements OnInit, OnDestroy {
   ...
 }
 ```
+
+### Lesson 152 - Understanding Location Strategies
+
+For production environment, we need to configure the server such that when it wants to throw a 404 error, it shows the `index.html` in our Angular app.
+
+This is because before Angular gets to parse the route, the server will try to access the route first.
+
+E.g. By accessing`<ip>/servers`, the server will first try to find the `/servers` directory in it. It will unlikely to find it because we usually only host the `index.html` file on the server. Before Angular takes over, the server will throw a 404 error.
+
+This is usually a problem with older browsers, and to overcome it, we can use **hash mode**: adding a hash `#` to tell the web server to only parse the part before the hash, and leave the rest (after the hash) to Angular.
+
+E.g. `<ip>/#/servers`. Only the `<ip>` part will be parsed by the web server, and `/servers` is parsed by Angular
+
+In `app-routing.module.ts`
+
+- Set `useHash` to true to enable hash mode
+
+```ts
+import { ... } from '...';
+
+const appRoutes: Routes = [ ... ];
+
+@NgModule({
+  imports: [RouterModule.forRoot(appRoutes, { useHash: true })],
+  exports: [RouterModule],
+})
+export class AppRoutingModule {}
+```
