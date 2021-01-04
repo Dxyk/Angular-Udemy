@@ -1080,3 +1080,85 @@ In `error-page.component.html`
 ```html
 <h4>{{ errorMessage }}</h4>
 ```
+
+### Lesson 151 - Resolving Dynamic Data with the resolve Guard
+
+**Resolver** is a service that will pre-load a route. It is a guard, but it does not decide whether a path can be accessed. It helps pre-compute the data so that when the component loads, dynamic data can be passed in.
+
+Create `/servers/server/server-resolver.service.ts`
+
+- Implements `Resolve`, which implements a `resolve` method
+- This method will run each time the route is re-rendered
+- Can be called synchronously or asynchronously
+
+```ts
+import { ... } from '...';
+
+interface Server { id: number; name: string; status: string; }
+
+@Injectable({ providedIn: 'root' })
+export class ServerResolverService implements Resolve<Server> {
+  constructor(private serversService: ServersService) {}
+
+  resolve(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): Observable<Server> | Promise<Server> | Server {
+    return this.serversService.getServer(+route.params['id']);
+  }
+}
+
+```
+
+In `app-routing.module.ts`
+
+- Register the `ServerResolverService` as a key-value pair in the `resolve` attribute for the corresponding component
+
+```ts
+import { ... } from '...';
+
+const appRoutes: Routes = [
+  { ... },
+  {
+    path: 'servers',
+    canActivateChild: [AuthGuardService],
+    component: ServersComponent,
+    children: [
+      {
+        path: ':id',
+        component: ServerComponent,
+        resolve: { server: ServerResolverService },
+      },
+      ...
+    ],
+  },
+  { ... },
+];
+
+@NgModule({ ... })
+export class AppRoutingModule {}
+```
+
+In `server.component.ts`
+
+- Set the server by subscribing to the `ActivatedRoute.data` object
+- Use the key set in the `resolve` parameter in `app-routing.module.ts`.
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class ServerComponent implements OnInit, OnDestroy {
+  server: { id: number; name: string; status: string };
+  paramsSubscription: Subscription;
+
+  constructor(..., private route: ActivatedRoute) {}
+
+  ngOnInit() {
+    this.route.data.subscribe((data: Data) => {
+      this.server = data['server'];
+    });
+  }
+  ...
+}
+```
