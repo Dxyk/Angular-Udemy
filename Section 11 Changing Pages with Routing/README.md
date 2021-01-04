@@ -1191,7 +1191,7 @@ const appRoutes: Routes = [ ... ];
 export class AppRoutingModule {}
 ```
 
-### Lesson - 153. Wrap Up
+### Lesson 153 - Wrap Up
 
 Topics covered
 
