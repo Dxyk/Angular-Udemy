@@ -1009,3 +1009,74 @@ import { ... } from '...';
 })
 export class AppModule {}
 ```
+
+### Lesson 150 - Passing Static Data to a Route
+
+It is possible to pass static data to a route. One example scenario is getting the error message in the error page according to the route.
+
+Create a new error-page component
+
+```sh
+ng g c error-page
+```
+
+In `app-routing.module.ts`
+
+- Pass in the `data` object in the route definition
+  - The key-value pair in the `data` object can be arbitrary
+
+```ts
+import { ... } from '...';
+
+const appRoutes: Routes = [
+  { ... },
+  {
+    path: 'not-found',
+    component: ErrorPageComponent,
+    data: {
+      message: 'From Route: Page Not Found!'
+    }
+  },
+  { ... },
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(appRoutes)],
+  exports: [RouterModule],
+})
+export class AppRoutingModule {}
+```
+
+In `error-page.component.ts`
+
+- Use `ActivatedRoute` to fetch the currently activated route
+- Use `route.snapshot.data` to fetch the static `data` object defined in the route
+- Use `route.data` to subscribe to the static `data` object, which could change in run time.
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class ErrorPageComponent implements OnInit {
+  errorMessage: string;
+
+  constructor(private route: ActivatedRoute) {}
+
+  ngOnInit() {
+    // for static data.message which the value will not change
+    // this.errorMessage = this.route.snapshot.data['message'];
+    // for static data.message which the value may change
+    this.route.data.subscribe((data: Data) => {
+      this.errorMessage = data['message'];
+    });
+  }
+}
+```
+
+In `error-page.component.html`
+
+- Reflect the error message through string interpolation
+
+```html
+<h4>{{ errorMessage }}</h4>
+```

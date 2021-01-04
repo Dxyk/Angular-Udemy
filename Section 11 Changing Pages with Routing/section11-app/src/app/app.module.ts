@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthGuardService } from './auth-guard.service';
 import { AuthService } from './auth.service';
+import { ErrorPageComponent } from './error-page/error-page.component';
 import { HomeComponent } from './home/home.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { CanDeactivateGuardService } from './servers/edit-server/can-deactivate-guard.service';
@@ -25,9 +26,15 @@ import { UsersComponent } from './users/users.component';
     EditServerComponent,
     ServerComponent,
     PageNotFoundComponent,
+    ErrorPageComponent,
   ],
   imports: [BrowserModule, FormsModule, AppRoutingModule],
-  providers: [ServersService, AuthService, AuthGuardService, CanDeactivateGuardService],
+  providers: [
+    ServersService,
+    AuthService,
+    AuthGuardService,
+    CanDeactivateGuardService,
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
