@@ -1190,3 +1190,15 @@ const appRoutes: Routes = [ ... ];
 })
 export class AppRoutingModule {}
 ```
+
+### Lesson - 153. Wrap Up
+
+Topics covered
+
+- Routing
+- Setting up routes and child routes
+- Navigating to routes
+- Passing parameters and query parameters
+- Extracting parameters (statically and dynamically)
+- Using different types of guards
+- Passing and resolving data through routes
