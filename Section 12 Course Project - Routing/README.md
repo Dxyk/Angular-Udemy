@@ -55,3 +55,24 @@ In `header.component.html`
 ```
 
 Remove redundant event listener ane event emitter in `header.component.ts`
+
+### Lesson 157 - Marking Active Routes
+
+Goal
+
+- Mark the active route using bootstrap css
+
+In `header.component.html`
+
+- Add attribute `routerLinkActive="active"` to `<li>` tags
+
+```html
+<ul class="nav navbar-nav">
+  <li routerLinkActive="active">
+    <a routerLink="/recipes">Recipes</a>
+  </li>
+  <li routerLinkActive="active">
+    <a routerLink="/shopping-list">Shopping List</a>
+  </li>
+</ul>
+```
