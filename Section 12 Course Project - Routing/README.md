@@ -191,3 +191,35 @@ export class RecipeEditComponent implements OnInit {
   }
 }
 ```
+
+### Lesson 166 - Programmatic Navigation to the Edit Page
+
+Goal
+
+- Make the new recipe and edit recipe buttons functional
+
+In both `recipe-list.component.html` and `recipe-detail.component.html`, add a click event listener to thew corresponding buttons
+
+In both `recipe-list.component.ts` and `recipe-detail.component.ts`, navigate to the corresponding path.
+
+In `recipe-detail.component.ts`
+
+- Inject both `ActivatedRoute` and `Router`
+- Use `Router` to navigate, and use `ActivatedRoute` to indicate the current route in `relativeTo`
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class RecipeListComponent implements OnInit {
+  ...
+
+  constructor(private recipeService: RecipeService, private route: ActivatedRoute, private router: Router) {}
+
+  ...
+
+  onNewRecipe() {
+    this.router.navigate(['new'], { relativeTo: this.route });
+  }
+}
+```
