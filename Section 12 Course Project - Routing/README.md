@@ -84,3 +84,11 @@ Goal
 - Fix all `<a href="#">` page reload issues in `recipe-item.component.html`
 
 In `<a href="">`, the `href` attribute sends a request to the web server, thus reloading the page. This is not desired, and we should replace this `href` with `style:"cursor:pointer;"`.
+
+### Lesson 159 - Child Routes: Challenge
+
+Goal
+
+- Instead of using event listener to load the components, use child routes
+  - E.g. `/recipes/{id}`
+- Build a recipe edit component for creating and editing the recipes
