@@ -92,3 +92,19 @@ Goal
 - Instead of using event listener to load the components, use child routes
   - E.g. `/recipes/{id}`
 - Build a recipe edit component for creating and editing the recipes
+
+### Lesson 160 - Adding Child Routing Together
+
+Goal
+
+- Add child routes for recipes
+
+Create a `recipe-start` component by
+
+```sh
+ng g c recipes/recipe-start
+```
+
+Update `app-routing.module.ts` to contain the recipe-start child route
+
+Update `recipes.component.html` to use a `<router-outlet></router-outlet>` as place holders for the components depending on the routes
