@@ -118,3 +118,27 @@ Goal
 Update `RecipeItemComponent` to remove the logic for passing the recipe id to `RecipeDetailComponent`
 
 Update `RecipeDetailComponent` to subscribe to the `ActivatedRoute.param` observable and update the recipe during runtime.
+
+### Lesson 162 - Passing Dynamic Parameters to Links
+
+Goal
+
+- Pass in the `id` of the recipe when we click on them
+
+Update `recipe-item.component.html` to append the id in the router link
+
+```html
+<a ... [routerLink]="[index]">...</a>
+```
+
+Update `recipe-item.component.ts` to take in `index` through property binding
+
+Update `recipe-list.component.html` to pass the index of the recipe through the `*ngFor` directive
+
+```html
+<app-recipe-item
+  *ngFor="let recipeEl of recipes; let i = index"
+  [recipe]="recipeEl"
+  [index]="i"
+></app-recipe-item>
+```
