@@ -76,3 +76,11 @@ In `header.component.html`
   </li>
 </ul>
 ```
+
+### Lesson 158 - Fixing Page Reload Issues
+
+Goal
+
+- Fix all `<a href="#">` page reload issues in `recipe-item.component.html`
+
+In `<a href="">`, the `href` attribute sends a request to the web server, thus reloading the page. This is not desired, and we should replace this `href` with `style:"cursor:pointer;"`.
