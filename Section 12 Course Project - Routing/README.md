@@ -160,3 +160,34 @@ Goal
 Add two routes `/recipes/:id/edit` and `/recipes/new`. The `/new` route will not work because `/recipes/:id` comes before it, and Angular will try to parse `new` as the `id`.
 
 To resolve this, put the `/new` route before the `/:id` route.
+
+### Lesson 165 - Retrieving Route Parameters
+
+Goal
+
+- Retrieve the id of the recipe in the `RecipeEditComponent`
+- Determine whether the mode is edit mode or new mode by checking whether the route contains the id
+
+In `recipe-edit.component.ts`
+
+- Subscribe to the `ActivatedRoute.params` observable
+- Update `id` and `editMode` whenever params change
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class RecipeEditComponent implements OnInit {
+  id: number;
+  editMode = false;
+
+  constructor(private route: ActivatedRoute) {}
+
+  ngOnInit(): void {
+    this.route.params.subscribe((params: Params) => {
+      this.id = +params['id'];
+      this.editMode = params['id'] != null;
+    });
+  }
+}
+```
