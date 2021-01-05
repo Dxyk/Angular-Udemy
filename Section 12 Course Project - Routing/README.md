@@ -108,3 +108,13 @@ ng g c recipes/recipe-start
 Update `app-routing.module.ts` to contain the recipe-start child route
 
 Update `recipes.component.html` to use a `<router-outlet></router-outlet>` as place holders for the components depending on the routes
+
+### Lesson 161 - Configuring Route Parameters
+
+Goal
+
+- Currently, the `recipe` property in the `RecipeDetailComponent` is set through property binding. We wish to retrieve the recipe on route change
+
+Update `RecipeItemComponent` to remove the logic for passing the recipe id to `RecipeDetailComponent`
+
+Update `RecipeDetailComponent` to subscribe to the `ActivatedRoute.param` observable and update the recipe during runtime.
