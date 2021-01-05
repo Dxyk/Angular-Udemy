@@ -1,4 +1,4 @@
-# Section 11 - Changing Pages with Routing
+# Section 11 Changing Pages with Routing
 
 ## Routing
 
