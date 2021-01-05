@@ -150,3 +150,13 @@ Goal
 - Add style to mark the selected recipe
 
 Update `recipe-item.component.html` to use `routerLink="active"`
+
+### Lesson 164 - Adding Editing Routes
+
+Goal
+
+- Be able to create new recipes and edit existing ones
+
+Add two routes `/recipes/:id/edit` and `/recipes/new`. The `/new` route will not work because `/recipes/:id` comes before it, and Angular will try to parse `new` as the `id`.
+
+To resolve this, put the `/new` route before the `/:id` route.
