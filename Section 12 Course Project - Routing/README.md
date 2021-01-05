@@ -142,3 +142,11 @@ Update `recipe-list.component.html` to pass the index of the recipe through the 
   [index]="i"
 ></app-recipe-item>
 ```
+
+### Lesson 163 - Styling Active Recipe Items
+
+Goal
+
+- Add style to mark the selected recipe
+
+Update `recipe-item.component.html` to use `routerLink="active"`
