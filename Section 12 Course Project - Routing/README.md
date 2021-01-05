@@ -223,3 +223,7 @@ export class RecipeListComponent implements OnInit {
   }
 }
 ```
+
+### Lesson 167 - One Note about Route Observables
+
+We don't need to clean up subscriptions for Angular observables (e.g. `ActivatedRoute.params`), but remember to clean up subscriptions made for custom observables.
