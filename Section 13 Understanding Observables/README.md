@@ -296,6 +296,20 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 ```
 
+### Lesson 177 - Wrap Up
+
+Topics covered through this module
+
+- Building `Observables`
+- Subscribing to `Observables`
+- Operators
+  - Introduction to the `pipe` method
+- Subjects
+
+### Lesson 178 - Useful Resources & Links
+
+[RxJS Official Docs](https://rxjs-dev.firebaseapp.com/)
+
 ## Appendix
 
 ### Promise vs Observable
