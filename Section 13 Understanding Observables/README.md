@@ -213,6 +213,89 @@ export class HomeComponent implements OnInit, OnDestroy {
 }
 ```
 
+### Lesson 176 - Subjects
+
+**Subject** from the RxJS package is a special kind of observable.
+
+- It is more active because it provides a `next()` method. This `next()` method provides opportunity for consumers to call the `Subscriber.next()` method from outside the Observable.
+- It is commonly used to replace cross-component `EventEmitter` pattern.
+- It is better than EventEmitter because it is more efficient.
+
+Note:
+
+- Subject is also an Observable, so remember to unsubscribe after we're done with them.
+- Do not replace `EventEmitter` when they are used as `@Output()`. Only use `Subject` to communicate across components.
+
+Create `user.service.ts`
+
+```ts
+import { ... } from '';
+
+@Injectable({ providedIn: 'root' })
+export class UserService {
+  activatedEmitter: Subject<boolean> = new Subject<boolean>();
+
+  constructor() {}
+}
+```
+
+In `user.component.html`
+
+```html
+<button class="btn btn-primary" (click)="onActivate()">Activate</button>
+```
+
+In `user.component.ts`
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class UserComponent implements OnInit {
+  id: number;
+
+  constructor(private route: ActivatedRoute, private userService: UserService) {}
+
+  ngOnInit() { ... }
+
+  onActivate() {
+    this.userService.activatedEmitter.next(true);
+  }
+}
+```
+
+In `app.component.html`
+
+```html
+<p *ngIf="this.userActivated">Activated!</p>
+```
+
+In `app.component.ts`
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class AppComponent implements OnInit, OnDestroy {
+  userActivated = false;
+
+  private activatedSub: Subscription;
+
+  constructor(private userService: UserService) {}
+
+  ngOnInit() {
+    this.activatedSub = this.userService.activatedEmitter.subscribe(
+      (activated: boolean) => {
+        this.userActivated = activated;
+      }
+    );
+  }
+
+  ngOnDestroy() {
+    this.activatedSub.unsubscribe();
+  }
+```
+
 ## Appendix
 
 ### Promise vs Observable
