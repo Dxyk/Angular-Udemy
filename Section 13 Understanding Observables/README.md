@@ -123,6 +123,58 @@ export class HomeComponent implements OnInit, OnDestroy {
 }
 ```
 
+### Lesson 173 - Errors & Completion
+
+**Error Handling** - Sometimes there might be errors thrown in the `Observable` (e.g. HTTP request failed). To handle these errors, use `Subscriber.error(err)`, and pass in the error handling logic as a function as the second argument of the subscribe method.
+
+**Observer Completion** - Sometimes the `Observable` should indicate that they're complete (e.g. HTTP request completes when they pass back data). To indicate the completion, use `Subscriber.complete()`. The subscriber can choose to implement logic in the complete method and pass it as the third argument of the subscribe method.
+
+Note that if the observable throws an error before it marks it complete, the state of the observable is _cancelled_, instead of _completed_, so the `complete` method will never be called.
+
+In `home.component.ts`
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class HomeComponent implements OnInit, OnDestroy {
+  ...
+
+  ngOnInit() {
+    const customIntervalObservable: Observable<number> = new Observable(
+      (subscriber: Subscriber<number>) => {
+        let count = 0;
+        setInterval(() => {
+          // next
+          subscriber.next(count);
+          // complete
+          if (count === 3) {
+            subscriber.complete();
+          }
+          // error
+          if (count > 3) {
+            subscriber.error(new Error('Count is greater than 3!'));
+          }
+          count++;
+        }, 1000);
+      }
+    );
+
+    this.firstObsSubscription = customIntervalObservable.subscribe(
+      (count) => {
+        console.log(count);
+      },
+      (error: Error) => {
+        console.error(error.message);
+      },
+      () => {
+        console.log('Completed!');
+      }
+    );
+  }
+}
+```
+
 ## Appendix
 
 ### Promise vs Observable
