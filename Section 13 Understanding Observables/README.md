@@ -85,6 +85,44 @@ export class HomeComponent implements OnInit, OnDestroy {
 }
 ```
 
+### Lesson 172 - Building a Custom Observable
+
+To build a custom `Observable`, use the `Observable()` constructor. Note that `Observable.create()` is deprecated.
+
+- The constructor takes in a function with the `Subscriber` as argument.
+- In the function, the Observable can call `Subscriber.next()` or `Subscriber.error()` or `Subscriber.complete()` to execute the logic implemented by the subscriber.
+
+In `home.component.ts`
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class HomeComponent implements OnInit, OnDestroy {
+  private firstObsSubscription: Subscription;
+
+  ngOnInit() {
+    const customIntervalObservable: Observable<number> = new Observable(
+      (subscriber: Subscriber<number>) => {
+        let count = 0;
+        setInterval(() => {
+          subscriber.next(count);
+          count++;
+        }, 1000);
+      }
+    );
+
+    this.firstObsSubscription = customIntervalObservable.subscribe((count) => {
+      console.log(count);
+    });
+  }
+
+  ngOnDestroy() {
+    this.firstObsSubscription.unsubscribe();
+  }
+}
+```
+
 ## Appendix
 
 ### Promise vs Observable
