@@ -47,6 +47,44 @@ export class UserComponent implements OnInit {
 }
 ```
 
+### Lesson 171. Getting Closer to the Core of Observables
+
+The Observable is a part of the RxJS package. This package needs to be included as one of the dependencies in `package.json`.
+
+One way to get an Observable from RxJS is through the `interval()` method.
+
+- `interval()` takes in an int, which denotes the number of milliseconds
+- `interval()` returns an Observable that emits the number of iterations (count) as its data.
+- The observable emits the count periodically
+
+Note that for custom observables, we need to unsubscribe from the observable to prevent memory leak.
+
+- `Observable.subscribe()` method returns a `Subscription`, which we can keep track of
+- Unsubscribe from the subscription when we don't need to keep track the observable (onDestroy)
+- For Observables provided by Angular, there is no need to unsubscribe since Angular does that in the background
+
+In `home.component.ts`
+
+```ts
+import { ... } from '...';
+import { interval, Subscription } from 'rxjs';
+
+@Component({ ... })
+export class HomeComponent implements OnInit, OnDestroy {
+  private firstObsSubscription: Subscription;
+
+  ngOnInit() {
+    this.firstObsSubscription = interval(1000).subscribe((count) => {
+      console.log(count);
+    });
+  }
+
+  ngOnDestroy() {
+    this.firstObsSubscription.unsubscribe();
+  }
+}
+```
+
 ## Appendix
 
 ### Promise vs Observable
