@@ -179,6 +179,40 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 In reality, building custom observables is not a common practice. Developers usually use observables that come with packages.
 
+### Lesson 175 - Understanding Operators
+
+**Operators** are included in RxJS as a convenient set of tools that can help preprocess data before the `Subscriber` processes data from the `Observable`.
+
+To preprocess the data emitted by `Observable`, use the `Observable.pipe()` method. The method takes in unlimited amount of operator functions that takes in data from the previous operator, and returns the processed data.
+
+One operator that is useful is `map`. It maps the input data to transformed output data (like `map` in Python)
+
+In `home.component.ts`
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class HomeComponent implements OnInit, OnDestroy {
+  ...
+
+  ngOnInit() {
+    const customIntervalObservable = new Observable(...);
+
+    this.firstObsSubscription = customIntervalObservable
+      .pipe(
+        filter((count: number) => {
+          return count > 0;
+        }),
+        map((count: number) => {
+          return 'Round: ' + count;
+        })
+      )
+      .subscribe(...);
+  }
+}
+```
+
 ## Appendix
 
 ### Promise vs Observable
