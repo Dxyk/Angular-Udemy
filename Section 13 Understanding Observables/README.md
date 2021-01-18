@@ -175,6 +175,10 @@ export class HomeComponent implements OnInit, OnDestroy {
 }
 ```
 
+### Lesson 174 - Observables & You
+
+In reality, building custom observables is not a common practice. Developers usually use observables that come with packages.
+
 ## Appendix
 
 ### Promise vs Observable
