@@ -21,3 +21,270 @@ Observers can handle 3 types of events or data. The observers can write logic (c
 - Completion
   - An observable does not have to complete. E.g. a button emits data, but the observer will never know when the button is complete, since it may be clicked multiple times.
   - An HTTP request will have a clear END, which tells observers that the request is complete.
+
+### Lesson 170 - Analyzing Angular Observables
+
+In `user.component.ts`
+
+- `ActivatedRoute.params` is an observable, so it can be subscribed
+- When a new piece of data (`Params` - parameter in the url changes) is emitted, the function passed to subscribe to the observable is executed
+- In the function, the id is updated according to the id value contained in the `Params`
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class UserComponent implements OnInit {
+  id: number;
+
+  constructor(private route: ActivatedRoute) {}
+
+  ngOnInit() {
+    this.route.params.subscribe((params: Params) => {
+      this.id = +params.id;
+    });
+  }
+}
+```
+
+## Appendix
+
+### Promise vs Observable
+
+Source: [Medium - Promise vs Observable](https://medium.com/javascript-everyday/javascript-theory-promise-vs-observable-d3087bc1239a)
+
+4 main differences
+
+1. Eager vs Lazy
+
+   1. Promise is eager
+
+      ```ts
+      const greetingPoster = new Promise((resolve, reject) => {
+        console.log('Inside Promise (proof of being eager)');
+        resolve('Welcome! Nice to meet you.');
+      });
+
+      console.log('Before calling then on Promise');
+
+      greetingPoster.then((res) =>
+        console.log(`Greeting from promise: ${res}`)
+      );
+      ```
+
+      Output
+
+      1. The code in the Promise constructor is executed
+      2. The code (log) in the main body is executed
+      3. The code that carries the resolve logic is executed in the `Promise.then()` method
+
+      ```txt
+      Inside Promise (proof of being eager)
+      Before calling then on Promise
+      Greeting from promise: Welcome! Nice to meet you.
+      ```
+
+   2. Observable is lazy
+
+      ```ts
+      const { Observable } = rxjs;
+
+      const greetingLady$ = new Observable((observer) => {
+        console.log('Inside Observable (proof of being lazy)');
+        observer.next('Hello! I am glad to get to know you.');
+        observer.complete();
+      });
+
+      console.log('Before calling subscribe on Observable');
+
+      greetingLady$.subscribe({
+        next: console.log,
+        complete: () => console.log('End of conversation with pretty lady'),
+      });
+      ```
+
+      Output
+
+      1. The code (log) in the main body is executed
+      2. The log in the observable is within the callback function. This will be executed when the `Observable.subscribe()` method is called
+      3. The `next` function (in this case, `console.log`) is called
+      4. The complete function is called
+
+      ```txt
+      Before calling subscribe on Observable
+      Inside Observable (proof of being lazy)
+      Hello! I am glad to get to know you.
+      End of conversation with pretty lady
+      ```
+
+2. Asynchronous vs Synchronous
+
+   1. Promise is **always** asynchronous, even if immediately resolved
+
+      ```ts
+      const greetingPoster = new Promise((resolve, reject) => {
+        resolve('Welcome! Nice to meet you.');
+      });
+
+      console.log('Before calling then on Promise');
+
+      greetingPoster.then((res) =>
+        console.log(`Greeting from promise: ${res}`)
+      );
+
+      console.log(
+        'After calling then on Promise (proof of being always async)'
+      );
+      ```
+
+      Output
+
+      1. The code (first log) in the main body is executed
+      2. The promise is resolved
+      3. The code (second log) in the main body is executed
+      4. The code in the resolve method is executed async
+
+      ```txt
+      Before calling then on Promise
+      After calling then on Promise (proof of being always async)
+      Greeting from promise: Welcome! Nice to meet you.
+      ```
+
+   2. Observable can be synchronous or asynchronous
+
+      - Synchronous version
+
+        ```ts
+        const { Observable } = rxjs;
+
+        const greetingLady$ = new Observable((observer) => {
+          observer.next('Hello! I am glad to get to know you.');
+          observer.complete();
+        });
+
+        console.log('Before calling subscribe on Observable');
+
+        greetingLady$.subscribe({
+          next: console.log,
+          complete: () => console.log('End of conversation with pretty lady'),
+        });
+
+        console.log(
+          'After calling subscribe on Observable (proof of being able to execute sync)'
+        );
+        ```
+
+        Output
+
+        1. The first log in the main body is executed
+        2. The observer next method is executed
+        3. The observer complete method is executed
+        4. The second log in the main body is executed
+
+        ```txt
+        Before calling subscribe on Observable
+        Hello! I am glad to get to know you.
+        End of conversation with pretty lady
+        After calling subscribe on Observable (proof of being able to execute sync)
+        ```
+
+      - Asynchronous version
+
+        ```ts
+        const tiredGreetingLady$ = new Observable((observer) => {
+          setTimeout(() => {
+            observer.next('Hello! I am glad to get to know you.');
+            observer.complete();
+          }, 2000);
+        });
+
+        console.log('Before calling subscribe on Observable');
+
+        tiredGreetingLady$.subscribe({
+          next: console.log,
+          complete: () =>
+            console.log('End of conversation with tired pretty lady'),
+        });
+
+        console.log(
+          'After calling subscribe on Observable (proof of being able to execute async)'
+        );
+        ```
+
+        Output
+
+        1. The first log in the main body is executed
+        2. The observable is subscribed, and the timeout is set
+        3. The second log in the main body is executed
+        4. The timeout ends, and the next function is executed
+        5. The complete function is executed
+
+        ```txt
+        Before calling subscribe on Observable
+        After calling subscribe on Observable (proof of being able to execute async)
+        Hello! I am glad to get to know you.
+        End of conversation with tired pretty lady
+        ```
+
+3. Observables can emit multiple values
+
+   1. Promise may provide only a single value
+
+   2. Observable may provide multiple values over time
+
+      ```ts
+      const { Observable } = rxjs;
+
+      const notifications$ = new Observable((observer) => {
+        const interval = setInterval(() => {
+          observer.next('New notification');
+        }, 2000);
+
+        return () => clearInterval(interval);
+      });
+
+      const subscription = notifications$.subscribe(console.log);
+
+      setTimeout(() => subscription.unsubscribe(), 8000);
+      ```
+
+      Output
+
+      1. The Observable provides a new notification every 2 second
+      2. The subscription is cancelled after 8 seconds
+
+      ```txt
+      New notification
+      New notification
+      New notification
+      New notification
+      ```
+
+4. Operators
+
+   1. RxJS has operators that can be applied to Observables
+
+      ```ts
+      const { Observable } = rxjs;
+      const { map } = rxjs.operators;
+
+      const notifications$ = new Observable((observer) => {
+        const interval = setInterval(() => {
+          observer.next('New notification');
+        }, 2000);
+
+        return () => clearInterval(interval);
+      });
+
+      const enhancedNotifications$ = notifications$.pipe(
+        map((message) => `${message} ${new Date()}`)
+      );
+
+      const subscription = enhancedNotifications$.subscribe(console.log);
+
+      setTimeout(() => subscription.unsubscribe(), 8000);
+      ```
+
+      Output
+
+      1. The `map` operator helps append the current date to the notifications
