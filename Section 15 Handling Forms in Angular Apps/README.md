@@ -9,3 +9,16 @@ Angular helps submit forms in the HTML page. Since Angular apps are single-paged
 ### Lesson 182 - Why do we Need Angular's Help
 
 Angular's forms module can convert HTML form label and input to JS/TS objects. Through this, it allows additional features such as input validation.
+
+### Lesson 183. Template-Driven (TD) vs Reactive Approach
+
+Angular offers 2 approaches to handle forms
+
+- Template Driven (TD)
+  - Set up the form in HTML template
+  - Angular infers the form structure
+  - Less complex, but less control
+- Reactive
+  - Set up the form programmatically in TS and HTML code
+  - Connect the TS and HTML code manually
+  - More complex, but more control
