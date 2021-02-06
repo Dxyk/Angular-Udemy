@@ -103,3 +103,13 @@ export class AppComponent {
   }
 }
 ```
+
+### Lesson 187 - TD: Understanding Form State
+
+The `NgForm` object created by Angular has some very useful fields.
+
+- `controls` is an object of key value pairs. Each pair is a element that we registered as control using `ngModel`, where the key is the `name`, and the value is the `FormControl` object
+- `dirty` is a boolean. It returns true if the form has been edited, and false otherwise.
+- `disabled` is a boolean. It returns true if the submit button is disabled, and false if it is enabled.
+- `invalid` is a boolean. If there are no validators registered, it returns false by default. If there are registered validators, it returns true if the all fields are valid.
+- `touched` is a boolean. It returns true if the user clicks into one of the fields.
