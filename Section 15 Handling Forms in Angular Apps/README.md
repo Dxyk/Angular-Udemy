@@ -113,3 +113,25 @@ The `NgForm` object created by Angular has some very useful fields.
 - `disabled` is a boolean. It returns true if the submit button is disabled, and false if it is enabled.
 - `invalid` is a boolean. If there are no validators registered, it returns false by default. If there are registered validators, it returns true if the all fields are valid.
 - `touched` is a boolean. It returns true if the user clicks into one of the fields.
+
+### Lesson 188 - TD: Accessing the Form with @ViewChild
+
+It is also possible to access the form object through `@ViewChild`. Recall that `@ViewChild` allows TS code to access a local reference defined in the HTML template.
+
+Compared to accessing form using only the local reference and the `(ngSubmit)` event listener, `@ViewChild` allows the code to access the form object before submission.
+
+In `app.component.ts`
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class AppComponent {
+  @ViewChild('formElement')
+  signUpForm: NgForm;
+
+  onSubmit(): void {
+    console.log(this.signUpForm);
+  }
+}
+```
