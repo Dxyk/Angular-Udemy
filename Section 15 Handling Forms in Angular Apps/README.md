@@ -75,3 +75,31 @@ In `app.component.html`
   </select>
 </form>
 ```
+
+### Lesson 186 - TD: Submitting and Using the Form
+
+To submit a form, it is easy to consider adding a eventListener on the button of type `submit` (e.g. `<button type="submit">Submit</button>`). However, this is not the best way do it. By clicking on the button, it triggers the default HTML behavior, which submits the request as well as emits a JS form submit event built into JS/HTML.
+
+Angular provides a wrapper directive that utilizes this JS event. By putting `(ngSubmit)` event listener in the `<form>` tag, the event bound to it will be triggered whenever the default JS form submit event is triggered.
+
+Using the Template Driven approach, we need to access the form data object through the template. To do so, use a local reference and assign it to `"ngForm"`. A local reference returns the form elements as HTML, but assigning it to the ngForm directive returns the JS object Angular constructs base on the controls we define.
+
+In `app.component.html`
+
+```html
+<form (ngSubmit)="onSubmit(formElement)" #formElement="ngForm">...</form>
+```
+
+In `app.component.ts`
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class AppComponent {
+  ...
+  onSubmit(formElement: NgForm): void {
+    console.log(formElement);
+  }
+}
+```
