@@ -217,3 +217,35 @@ input.ng-invalid.ng-touched {
 ```
 
 One remaining problem: How do we retrieve the state of the form and its controls in TS code?
+
+### Lesson 192 - TD: Outputting Validation Error Messages
+
+To access the state of the form and its controls in TS code, use local references in HTML.
+
+- To access the form, add a local reference and assign it to `ngForm`
+  - `<form #formElement="ngForm">`
+- To access the form control, add a local reference and assign it to `ngModel`
+  - `<input #field="ngModel">`
+
+In `app.component.html`
+
+- Show a help-block prompt if the user has touched the email field and the email field is invalid
+
+```html
+<form (ngSubmit)="onSubmit(formElement)" #formElement="ngForm">
+  <label for="email">Mail</label>
+  <input
+    type="email"
+    id="email"
+    class="form-control"
+    ngModel
+    name="email"
+    required
+    email
+    #email="ngModel"
+  />
+  <span class="help-block" *ngIf="email.touched && !email.valid"
+    >Please enter a valid email!</span
+  >
+</form>
+```
