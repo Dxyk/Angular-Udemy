@@ -12,6 +12,8 @@ export class AppComponent {
 
   defaultQuestion = 'pet';
 
+  answer = '';
+
   suggestUserName(): void {
     const suggestedName = 'Superuser';
   }

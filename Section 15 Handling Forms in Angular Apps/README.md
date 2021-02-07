@@ -244,16 +244,15 @@ In `app.component.html`
     email
     #email="ngModel"
   />
-  <span class="help-block" *ngIf="email.touched && !email.valid"
-    >Please enter a valid email!</span>
+  <span class="help-block" *ngIf="email.touched && !email.valid">
+    Please enter a valid email!
+  </span>
 </form>
 ```
 
 ### Lesson 193 - TD: Set Default Values with ngModel Property Binding
 
 To set a default value for a control field, use property binding with the `ngModel` directive. Note that previously, to register a field as control, the `ngModel` was added as a property only (without the square brackets `[]`)
-
-Having property binding on a field also tracks the value of the field.
 
 In `app.component.html`
 
@@ -274,7 +273,7 @@ In `app.component.html`
 In `app.component.ts`
 
 ```ts
-import { . } from '...';
+import { ... } from '...';
 
 @Component({ ... })
 export class AppComponent {
@@ -283,3 +282,45 @@ export class AppComponent {
   ...
 }
 ```
+
+### Lesson 194 - TD: Using ngModel with Two-Way-Binding
+
+Two-Way-Binding with `ngModel` on a field not only allows us to populate a default value, but also allow us to track the change of value.
+
+In `app.component.html`
+
+```html
+<form (ngSubmit)="onSubmit(formElement)" #formElement="ngForm">
+  <div class="form-group">
+    <textarea
+      name="questionAnswer"
+      rows="3"
+      class="form-control"
+      [(ngModel)]="answer"
+    ></textarea>
+    <p>Your reply: {{ answer }}</p>
+  </div>
+</form>
+```
+
+In `app.component.ts`
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class AppComponent {
+  ...
+  answer = '';
+  ...
+}
+```
+
+Three uses of `ngModel`
+
+- No binding (`ngModel`)
+  - Only tells Angular that a field is a control
+- One-Way-Binding (`[ngModel]`)
+  - Set the default value for the control
+- Two-Way-Binding (`[(ngModel)]`)
+  - Set the default value, and be able to react to the value of the control
