@@ -135,3 +135,48 @@ export class AppComponent {
   }
 }
 ```
+
+### Lesson 189 - TD: Adding Validation to check User Input
+
+Sometimes it is desired to validate the input fields in the form. For example, we may want all fields to be non-empty, and the value in the email field to be of a valid email format.
+
+In a TD approach, validators are added in the HTML template. Some Angular built-in validator selectors include `required` and `email`.
+
+Validators control several locations
+
+- `NgForm.valid` - form-level valid field.
+  - Set to true if all fields are valid.
+  - Set to false if any of the fields are invalid.
+- `NgForm.controls.field.valid` - field level valid field.
+  - Set to true if the corresponding validator returns true.
+  - Set to false if the corresponding validator returns false.
+- The HTML element's `class`.
+  - Appends `ng-valid` if the field is valid.
+  - Appends `ng-invalid` if the field is invalid.
+  - We can use these classes to style the field to provide a more straightforward feedback
+
+In `app.component.html`
+
+```html
+<form (ngSubmit)="onSubmit(formElement)" #formElement="ngForm">
+  <label for="username">Username</label>
+  <input
+    type="text"
+    id="username"
+    class="form-control"
+    ngModel
+    name="username"
+    required
+  />
+  <label for="email">Mail</label>
+  <input
+    type="email"
+    id="email"
+    class="form-control"
+    ngModel
+    name="email"
+    required
+    email
+  />
+</form>
+```
