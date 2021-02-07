@@ -324,3 +324,86 @@ Three uses of `ngModel`
   - Set the default value for the control
 - Two-Way-Binding (`[(ngModel)]`)
   - Set the default value, and be able to react to the value of the control
+
+### Lesson 195 - TD: Grouping Form Controls
+
+To gain some structure for in the JS form object, we may wish to group some fields. E.g. We may wish to group the question dropdown and the answer text area together since they are related.
+
+To do so, use the `ngModelGroup` selector and assign a groupName as its value.
+
+The `ngModelGroup` will
+
+- Create a separate object in the `NgForm.value` object with the group name
+
+  ```ts
+  NgForm = {
+    value: {
+      groupName: {
+        field1: 'value',
+        field2: 'value',
+      },
+    },
+  };
+  ```
+
+- Create a separate object in the `NgForm.controls` object with the groupName
+
+  ```ts
+  NgForm = {
+    controls: {
+      groupName: {
+        controls: {
+          field1Control: {...},
+          field2Control: {...}
+        }
+      }
+    }
+  }
+  ```
+
+- Create Angular generated classes on the group wrapper.
+  - `ng-dirty`, `ng-touched`, `ng-valid` etc.
+
+With a local reference that is assigned to `"ngModelGroup"`, it is also possible to access it in the template or in TS code.
+
+In `app.component.html`
+
+```html
+<form (ngSubmit)="onSubmit(formElement)" #formElement="ngForm">
+  <div id="user-data" ngModelGroup="userData" #userDataGroup="ngModelGroup">
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input
+        type="text"
+        id="username"
+        class="form-control"
+        ngModel
+        name="username"
+        required
+      />
+    </div>
+    <div class="form-group">
+      <label for="email">Mail</label>
+      <input
+        type="email"
+        id="email"
+        class="form-control"
+        ngModel
+        name="email"
+        required
+        email
+        #email="ngModel"
+      />
+      <span class="help-block" *ngIf="email.touched && !email.valid">
+        Please enter a valid email!
+      </span>
+    </div>
+  </div>
+  <span
+    class="help-block"
+    *ngIf="userDataGroup.touched && !userDataGroup.valid"
+  >
+    User data Invalid
+  </span>
+</form>
+```

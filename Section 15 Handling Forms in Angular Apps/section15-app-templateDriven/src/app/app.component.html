@@ -5,7 +5,11 @@
         (ngSubmit)="onSubmit(formElement)"
         #formElement="ngForm"
       >
-        <div id="user-data">
+        <div
+          id="user-data"
+          ngModelGroup="userData"
+          #userDataGroup="ngModelGroup"
+        >
           <div class="form-group">
             <label for="username">Username</label>
             <input
@@ -39,6 +43,10 @@
             >Please enter a valid email!</span>
           </div>
         </div>
+        <span
+          class="help-block"
+          *ngIf="userDataGroup.touched && !userDataGroup.valid"
+        >User data Invalid</span>
         <div class="form-group">
           <label for="secret">Secret Questions</label>
           <select
