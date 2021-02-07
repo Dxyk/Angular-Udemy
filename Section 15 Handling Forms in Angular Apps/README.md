@@ -245,7 +245,41 @@ In `app.component.html`
     #email="ngModel"
   />
   <span class="help-block" *ngIf="email.touched && !email.valid"
-    >Please enter a valid email!</span
-  >
+    >Please enter a valid email!</span>
 </form>
+```
+
+### Lesson 193 - TD: Set Default Values with ngModel Property Binding
+
+To set a default value for a control field, use property binding with the `ngModel` directive. Note that previously, to register a field as control, the `ngModel` was added as a property only (without the square brackets `[]`)
+
+Having property binding on a field also tracks the value of the field.
+
+In `app.component.html`
+
+```html
+<form (ngSubmit)="onSubmit(formElement)" #formElement="ngForm">
+  <select
+    id="secret"
+    class="form-control"
+    [ngModel]="defaultQuestion"
+    name="secret"
+  >
+    <option value="pet">Your first Pet?</option>
+    <option value="teacher">Your first teacher?</option>
+  </select>
+</form>
+```
+
+In `app.component.ts`
+
+```ts
+import { . } from '...';
+
+@Component({ ... })
+export class AppComponent {
+  ...
+  defaultQuestion = 'pet';
+  ...
+}
 ```
