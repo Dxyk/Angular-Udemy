@@ -180,3 +180,9 @@ In `app.component.html`
   />
 </form>
 ```
+
+### Lesson 190 - Built-in Validators & Using HTML5 Validation
+
+Some Angular built-in validators can be found on Angular's [Validator Documentation Page](https://angular.io/api/forms/Validators)
+
+By default, Angular disables HTML5's native validation. To enable it, add `ngNativeValidate` directive to a control in the template.
