@@ -186,3 +186,34 @@ In `app.component.html`
 Some Angular built-in validators can be found on Angular's [Validator Documentation Page](https://angular.io/api/forms/Validators)
 
 By default, Angular disables HTML5's native validation. To enable it, add `ngNativeValidate` directive to a control in the template.
+
+### Lesson 191 - TD: Using the Form State
+
+We can control the form bases on its state. Some examples are
+
+- Setting the submit button as disabled if any of the fields are invalid.
+- Adding Styling base on the validity of the field
+
+In `app.component.html`
+
+- Using property binding, Set `disabled` if the `formElement` (local reference) is invalid
+
+```html
+<form (ngSubmit)="onSubmit(formElement)" #formElement="ngForm">
+  <button class="btn btn-primary" type="submit" [disabled]="!formElement.valid">
+    Submit
+  </button>
+</form>
+```
+
+In `app.component.css`
+
+- Add a red boarder to the input fields if the field is touched (clicked into) and invalid.
+
+```css
+input.ng-invalid.ng-touched {
+  border: 1px solid red;
+}
+```
+
+One remaining problem: How do we retrieve the state of the form and its controls in TS code?
