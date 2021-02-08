@@ -433,5 +433,60 @@ import { ... } from '...';
 export class AppComponent {
   ...
   genders = ['male', 'female'];
+  ...
+}
+```
+
+### Lesson 197 - TD: Setting and Patching Form Values
+
+It is possible to set or patch the form values programmatically through TS code.
+
+To access the form, use the form's local reference as `NgForm`, access it in TS code using `@ViewChild`.
+
+To set the value of the form, there are 2 ways
+
+1. Use `NgForm.setValue()` method and pass in the exact copy of the entire form object
+   1. This method sets the values of all controls with one command
+   2. It will override all existing values for all fields
+2. Use `NgForm.form.patchValue()` method to patch the form with only the fields provided in the input object
+   1. This method sets the values of only the provided controls
+   2. It will not modify existing values for other fields
+
+In `app.component.html`
+
+```html
+<form (ngSubmit)="onSubmit(formElement)" #formElement="ngForm">
+  <button class="btn btn-default" type="button" (click)="suggestUserName()">
+    Suggest an Username
+  </button>
+</form>
+```
+
+In `app.component.ts`
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class AppComponent {
+  ...
+  suggestUserName(): void {
+    const suggestedName = 'Superuser';
+    // this.signUpForm.setValue({
+    //   userData: {
+    //     username: suggestedName,
+    //     email: ''
+    //   },
+    //   secret: 'pet',
+    //   questionAnswer: '',
+    //   gender: 'male'
+    // });
+    this.signUpForm.form.patchValue({
+      userData: {
+        username: suggestedName
+      }
+    });
+  }
+  ...
 }
 ```
