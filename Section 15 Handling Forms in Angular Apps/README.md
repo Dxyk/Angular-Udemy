@@ -407,3 +407,31 @@ In `app.component.html`
   </span>
 </form>
 ```
+
+### Lesson 196 - TD: Handling Radio Buttons
+
+Radio buttons may look like a special case since they do not have input fields, but in a TD approach, they work just like any other fields.
+
+In `app.component.html`
+
+```html
+<form (ngSubmit)="onSubmit(formElement)" #formElement="ngForm">
+  <div class="radio" *ngFor="let gender of genders">
+    <label>
+      <input type="radio" name="gender" ngModel [value]="gender" />{{ gender }}
+    </label>
+  </div>
+</form>
+```
+
+In `app.component.ts`
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class AppComponent {
+  ...
+  genders = ['male', 'female'];
+}
+```

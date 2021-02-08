@@ -12,6 +12,8 @@ export class AppComponent {
 
   defaultQuestion = 'pet';
 
+  genders = ['male', 'female'];
+
   answer = '';
 
   suggestUserName(): void {
