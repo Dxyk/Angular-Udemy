@@ -728,3 +728,60 @@ In `app.component.html`
   Please enter valid data!
 </span>
 ```
+
+### Lesson 208 - Reactive: Grouping Controls
+
+The `FormGroup` object can be nested to achieve group controls.
+
+To add a nested `FormGroup`, the updated the following
+
+- In TS
+  - Add a new `FormGroup` object in the JS form object, and update the controls that should be grouped
+- In HTML
+  - Use a `<div formGroupName="groupName"></div>` to wrap around the control fields that need to be grouped
+  - Update all existing `FormGroup.get()` to access the control through a path. The path is the `FormGroup`s and `FormControl` concatenated by a dot `.`
+
+In `app.component.html`
+
+```html
+<div formGroupName="userData">
+  <div class="form-group">
+    ...
+    <span
+      *ngIf="signUpForm.get('userData.username').touched && !signUpForm.get('userData.username').valid"
+      class="help-block"
+    >
+      Please enter a valid username!
+    </span>
+  </div>
+  <div class="form-group">
+    ...
+    <span
+      *ngIf="signUpForm.get('userData.email').touched && !signUpForm.get('userData.email').valid"
+      class="help-block"
+    >
+      Please enter a valid email!
+    </span>
+  </div>
+</div>
+```
+
+In `app.component.ts`
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class AppComponent implements OnInit {
+  ...
+  ngOnInit(): void {
+    this.signUpForm = new FormGroup({
+      userData: new FormGroup({
+        username: new FormControl(null, Validators.required),
+        email: new FormControl(null, [Validators.required, Validators.email]),
+      }),
+      gender: new FormControl('male'),
+    });
+  }
+}
+```
