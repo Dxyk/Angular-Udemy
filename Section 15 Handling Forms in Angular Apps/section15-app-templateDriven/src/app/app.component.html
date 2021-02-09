@@ -90,4 +90,18 @@
       </form>
     </div>
   </div>
+  <hr>
+  <div
+    class="row"
+    *ngIf="submitted"
+  >
+    <div class="col-xs-12">
+      <h3>Your Data</h3>
+      <p>User Name: {{user.username}}</p>
+      <p>Email Address: {{user.email}}</p>
+      <p>Secret Question: {{user.secretQuestion}}</p>
+      <p>Secret Answer: {{user.secretAnswer}}</p>
+      <p>Gender: {{user.gender}}</p>
+    </div>
+  </div>
 </div>

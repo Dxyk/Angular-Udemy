@@ -490,3 +490,51 @@ export class AppComponent {
   ...
 }
 ```
+
+### Lesson 198 - 199. TD: Using Form Data
+
+To use or persist the data in the form, create a separate object in the TS code, and copy all the fields when desired (e.g. on submit).
+
+In `app.component.html`
+
+```html
+<hr />
+<div class="row" *ngIf="submitted">
+  <div class="col-xs-12">
+    <h3>Your Data</h3>
+    <p>User Name: {{user.username}}</p>
+    <p>Email Address: {{user.email}}</p>
+    <p>Secret Question: {{user.secretQuestion}}</p>
+    <p>Secret Answer: {{user.secretAnswer}}</p>
+    <p>Gender: {{user.gender}}</p>
+  </div>
+</div>
+```
+
+In `app.component.ts`
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class AppComponent {
+  ...
+  submitted = false;
+  user = {
+    username: '',
+    email: '',
+    secretQuestion: '',
+    secretAnswer: '',
+    gender: '',
+  };
+  ...
+  onSubmit(): void {
+    this.submitted = true;
+    this.user.username = this.signUpForm.value.userData.username;
+    this.user.email = this.signUpForm.value.userData.email;
+    this.user.secretQuestion = this.signUpForm.value.secret;
+    this.user.secretAnswer = this.signUpForm.value.questionAnswer;
+    this.user.gender = this.signUpForm.value.gender;
+  }
+}
+```
