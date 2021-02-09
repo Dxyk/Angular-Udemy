@@ -670,9 +670,7 @@ To submit the form, similar to the Template Driven approach, use event binding o
 In `app.component.html`
 
 ```html
-<form [formGroup]="signUpForm" (ngSubmit)="onSubmit()">
-  ...
-</form>
+<form [formGroup]="signUpForm" (ngSubmit)="onSubmit()">...</form>
 ```
 
 In `app.component.ts`
@@ -685,6 +683,30 @@ export class AppComponent implements OnInit {
   ...
   onSubmit(): void {
     console.log(this.signUpForm);
+  }
+}
+```
+
+### Lecture 205 - Reactive: Adding Validation
+
+In the Reactive approach, all form configurations happen in the TS code, including validation.
+
+The second input in the `FormControl` constructor specifies a single or a list of validator(s). These should be method references. The `Validators` object also includes some convenient built-in validator methods such as `required`,
+
+In `app.component.ts`
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class AppComponent implements OnInit {
+  ...
+  ngOnInit(): void {
+    this.signUpForm = new FormGroup({
+      username: new FormControl(null, Validators.required),
+      email: new FormControl(null, [Validators.required, Validators.email]),
+      gender: new FormControl('male'),
+    });
   }
 }
 ```
