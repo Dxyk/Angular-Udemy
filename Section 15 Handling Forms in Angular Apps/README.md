@@ -493,7 +493,7 @@ export class AppComponent {
 
 ### Lesson 198 - 199. TD: Using Form Data
 
-To use or persist the data in the form, create a separate object in the TS code, and copy all the fields when desired (e.g. on submit).
+To use or persist the data in the form, create a separate object in the TS code, and copy all the field values using `NgForm.value` when desired (e.g. on submit).
 
 In `app.component.html`
 
@@ -535,6 +535,25 @@ export class AppComponent {
     this.user.secretQuestion = this.signUpForm.value.secret;
     this.user.secretAnswer = this.signUpForm.value.questionAnswer;
     this.user.gender = this.signUpForm.value.gender;
+  }
+}
+```
+
+### Lesson 199 - TD: Resetting Forms
+
+To reset the value and state of the form, use `NgForm.reset()`. Note that this will not only reset the value in the form, but also the state of the form. E.g. the ng classes will be reset as well.
+
+In `app.component.ts`
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class AppComponent {
+  ...
+  onSubmit(): void {
+    ...
+    this.signUpForm.reset();
   }
 }
 ```
