@@ -710,3 +710,21 @@ export class AppComponent implements OnInit {
   }
 }
 ```
+
+### Lesson 207 - Reactive: Getting Access to Controls
+
+To access the controls defined in the TS code and their states in HTML, use the form object's `FormGroup.get()` method. The method takes in either the name or the path of the control .
+
+In `app.component.html`
+
+```html
+<span
+  *ngIf="signUpForm.get('email').touched && !signUpForm.get('email').valid"
+  class="help-block"
+>
+  Please enter a valid email!
+</span>
+<span *ngIf="signUpForm.touched && !signUpForm.valid" class="help-block">
+  Please enter valid data!
+</span>
+```
