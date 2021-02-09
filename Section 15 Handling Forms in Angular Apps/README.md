@@ -571,3 +571,34 @@ Compared to the Template Driven Approach, the Reactive Approach
 - Allows the form to be created with more detail
 - Allows custom Validators
 - Creates the form programmatically through TS code
+
+### Lesson 202 - Reactive: Setup
+
+In the Reactive Approach, `FormModule` is no longer needed to be imported in `app.module.ts`. Instead, import `ReactiveFormsModule`.
+
+Angular creates forms programmatically in the TS code using the `FormGroup` object. In Angular, a form is represented as a group of controls, thus the class name.
+
+In `app.module.ts`
+
+```ts
+import { ... } from '...';
+
+@NgModule({
+  ...,
+  imports: [BrowserModule, ReactiveFormsModule],
+  ...
+})
+export class AppModule {}
+```
+
+In `app.component.ts`
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class AppComponent {
+  ...
+  signUpForm: FormGroup;
+}
+```
