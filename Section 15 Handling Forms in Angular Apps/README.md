@@ -687,7 +687,7 @@ export class AppComponent implements OnInit {
 }
 ```
 
-### Lecture 205 - Reactive: Adding Validation
+### Lecture 206 - Reactive: Adding Validation
 
 In the Reactive approach, all form configurations happen in the TS code, including validation.
 
