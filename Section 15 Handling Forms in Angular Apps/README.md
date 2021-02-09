@@ -561,3 +561,5 @@ export class AppComponent {
 ## Assignment 6
 
 See [assignment-6](./assignment-6)
+
+## Reactive Approach
