@@ -618,3 +618,23 @@ If the key in the `FormGroup` is the name of the a form control, the value will 
 3. Asynchronous validator(s) for the control
 
 Note that no matter what type of input (input, radio, selector, etc), Angular treats them the same, all as `FormControl`
+
+In `app.component.ts`
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class AppComponent implements OnInit {
+  ...
+  signUpForm: FormGroup;
+
+  ngOnInit(): void {
+    this.signUpForm = new FormGroup({
+      username: new FormControl(null),
+      email: new FormControl(null),
+      gender: new FormControl('male'),
+    });
+  }
+}
+```
