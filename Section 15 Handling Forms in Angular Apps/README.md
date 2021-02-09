@@ -662,3 +662,29 @@ With the previous `FormGroup` set up in `app.component.ts`, in `app.component.ht
   <input type="radio" formControlName="gender" [value]="gender" />{{ gender }}
 </form>
 ```
+
+### Lecture 205 - Reactive: Submitting the Form
+
+To submit the form, similar to the Template Driven approach, use event binding on `(ngSubmit)`. The difference is that in the Reactive approach, we do not reference the local reference of the form, because we are no longer using Angular's auto-creation mechanism. To reference the form, simply use the `FormGroup` object created in the TS code.
+
+In `app.component.html`
+
+```html
+<form [formGroup]="signUpForm" (ngSubmit)="onSubmit()">
+  ...
+</form>
+```
+
+In `app.component.ts`
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class AppComponent implements OnInit {
+  ...
+  onSubmit(): void {
+    console.log(this.signUpForm);
+  }
+}
+```
