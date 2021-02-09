@@ -563,3 +563,11 @@ export class AppComponent {
 See [assignment-6](./assignment-6)
 
 ## Reactive Approach
+
+### Lesson 201 - Introduction to the Reactive Approach
+
+Compared to the Template Driven Approach, the Reactive Approach
+
+- Allows the form to be created with more detail
+- Allows custom Validators
+- Creates the form programmatically through TS code
