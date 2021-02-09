@@ -638,3 +638,27 @@ export class AppComponent implements OnInit {
   }
 }
 ```
+
+### Lecture 204 - Reactive: Syncing HTML and Form
+
+For the reactive approach to work, we need to use the `[formGroup]` to let Angular know which `<form>` element correspond to which `FormGroup` object.
+
+To let Angular know which HTML field correspond to which FormControl, use the `formControlName` directive. Note this can be done through either setting the property or property binding. To set the property, use `formControlName="nameString"`, and to use property binding, use `[formControlName]="'nameString'"`.
+
+With the previous `FormGroup` set up in `app.component.ts`, in `app.component.html`
+
+```html
+<form [formGroup]="signUpForm">
+  ...
+  <input
+    type="text"
+    id="username"
+    formControlName="username"
+    class="form-control"
+  />
+  ...
+  <input type="text" id="email" formControlName="email" class="form-control" />
+  ...
+  <input type="radio" formControlName="gender" [value]="gender" />{{ gender }}
+</form>
+```
