@@ -602,3 +602,19 @@ export class AppComponent {
   signUpForm: FormGroup;
 }
 ```
+
+### Lesson 203 - Reactive: Creating a Form in Code
+
+Creating a form using the code will require the form to be created before the template is rendered, so it is common to initialize the form object in the `ngOnInit()` method.
+
+The `FormGroup` constructor takes in a JS object that represents the group. Note that the keys should be of type string, so when the code is minified, the key values are kept.
+
+If the key in the `FormGroup` is the name of the a form control, the value will be the `FormControl`. The `FormControl` constructor will take in 3 arguments
+
+1. The initial state of the control
+   1. `null` - empty string
+   2. Any string
+2. Validator(s) for the control
+3. Asynchronous validator(s) for the control
+
+Note that no matter what type of input (input, radio, selector, etc), Angular treats them the same, all as `FormControl`
