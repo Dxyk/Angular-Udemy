@@ -837,3 +837,49 @@ export class AppComponent implements OnInit {
     (<FormArray>this.signUpForm.get('hobbies')).push(control);
   }
 ```
+
+### Lesson 211 - Reactive: Creating Custom Validators
+
+A custom validator is a TS method that follows a specific signature.
+
+In `app.component.ts`
+
+- The validator method must take in a `FormControl` object
+- If validation passes, the validator method must return `null`
+- If validation fails, the validator must return an error object of form `{ [s: string]: boolean }`
+  - The key will be the description of the error object
+  - The value must be true, indicating the error occurred
+- To add the custom validator to the form control, append it to the `Validator[]` list
+  - Note that when Angular calls the custom validator, the `this` object will not be `AppComponent`, so it is necessary to add `.bind(this)` to bind the method to the component.
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class AppComponent implements OnInit {
+  ...
+  forbiddenUsernames = ['admin', 'staff'];
+  signUpForm: FormGroup;
+
+  ngOnInit(): void {
+    this.signUpForm = new FormGroup({
+      userData: new FormGroup({
+        username: new FormControl(null, [
+          Validators.required,
+          this.forbiddenNames.bind(this),
+        ]),
+        ...
+      }),
+      ...
+    });
+  }
+
+  forbiddenNames(control: FormControl): { [s: string]: boolean } {
+    if (this.forbiddenUsernames.indexOf(control.value) !== -1) {
+      return { nameIsForbidden: true };
+    }
+    return null;
+  }
+  ...
+}
+```
