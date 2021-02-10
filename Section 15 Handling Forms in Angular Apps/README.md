@@ -883,3 +883,24 @@ export class AppComponent implements OnInit {
   ...
 }
 ```
+
+### Lesson 212 - Reactive: Using Error Codes
+
+If a control's value is invalid because of its validators, the `FormControl.errors` object will be set. By checking if the error corresponding to the error name exists, we can fine-tune the error message.
+
+In `app.component.html`
+
+````html
+<span
+  *ngIf="signUpForm.get('userData.username').touched && !signUpForm.get('userData.username').valid"
+  class="help-block"
+>
+  <span *ngIf="signUpForm.get('userData.username').errors['nameIsForbidden']">
+    This name is invalid!
+  </span>
+  <span *ngIf="signUpForm.get('userData.username').errors['required']">
+    This field is required!
+  </span>
+</span>
+```
+````
