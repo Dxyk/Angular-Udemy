@@ -733,15 +733,10 @@ In `app.component.html`
 
 The `FormGroup` object can be nested to achieve group controls.
 
-To add a nested `FormGroup`, the updated the following
-
-- In TS
-  - Add a new `FormGroup` object in the JS form object, and update the controls that should be grouped
-- In HTML
-  - Use a `<div formGroupName="groupName"></div>` to wrap around the control fields that need to be grouped
-  - Update all existing `FormGroup.get()` to access the control through a path. The path is the `FormGroup`s and `FormControl` concatenated by a dot `.`
-
 In `app.component.html`
+
+- Use a `<div formGroupName="groupName"></div>` to wrap around the control fields that need to be grouped
+- Update all existing `FormGroup.get()` to access the control through a path. The path is the `FormGroup`s and `FormControl` concatenated by a dot `.`
 
 ```html
 <div formGroupName="userData">
@@ -768,6 +763,8 @@ In `app.component.html`
 
 In `app.component.ts`
 
+- Add a new `FormGroup` object in the JS form object, and update the controls that should be grouped
+
 ```ts
 import { ... } from '...';
 
@@ -784,4 +781,59 @@ export class AppComponent implements OnInit {
     });
   }
 }
+```
+
+### Lesson 209 - Fixing a Bug
+
+### Lesson 210 - Reactive: Arrays of Form Controls (FormArray)
+
+It is also possible to have an array of form controls in the form with the Reactive approach.
+
+In `app.component.html`
+
+- Use `<div formArrayName=""></div>` to wrap around the `FormArray`
+- Use `*ngFor` to iterate on `FormArray.controls`
+
+```html
+<div formArrayName="hobbies">
+  <h4>Your hobbies:</h4>
+  <button class="btn btn-default" type="button" (click)="onAddHobby()">
+    Add Hobby
+  </button>
+  <div
+    class="form-group"
+    *ngFor="let hobbyControl of getControls(); let i = index"
+  >
+    <input type="text" class="form-control" [formControlName]="i" />
+  </div>
+</div>
+```
+
+In `app.component.ts`
+
+- The constructor of `FormArray` takes in an array of `FormControl`s
+- Use `FormArray.push()` to append more controls to the array
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class AppComponent implements OnInit {
+  signUpForm: FormGroup;
+
+  ngOnInit(): void {
+    this.signUpForm = new FormGroup({
+      ...,
+      hobbies: new FormArray([]),
+    });
+  }
+
+  getControls(): AbstractControl[] {
+    return (<FormArray>this.signUpForm.get('hobbies')).controls;
+  }
+
+  onAddHobby(): void {
+    const control = new FormControl(null, Validators.required);
+    (<FormArray>this.signUpForm.get('hobbies')).push(control);
+  }
 ```
