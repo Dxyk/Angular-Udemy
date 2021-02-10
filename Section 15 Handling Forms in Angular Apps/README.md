@@ -890,7 +890,7 @@ If a control's value is invalid because of its validators, the `FormControl.erro
 
 In `app.component.html`
 
-````html
+```html
 <span
   *ngIf="signUpForm.get('userData.username').touched && !signUpForm.get('userData.username').valid"
   class="help-block"
@@ -903,4 +903,3 @@ In `app.component.html`
   </span>
 </span>
 ```
-````
