@@ -977,3 +977,34 @@ export class AppComponent implements OnInit {
   }
 }
 ```
+
+### Lesson 215 - Reactive: Setting and Patching Values
+
+Similar to TD approach, the `FormGroup` object also supports `setValue()`, `patchValue()` and `reset()` methods
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class AppComponent implements OnInit {
+  ngOnInit(): void {
+    ...
+    this.signUpForm.setValue({
+      userData: {
+        username: 'testUsername',
+        email: 'testEmail@email.com'
+      },
+      gender: 'male',
+      hobbies: []
+    })
+    this.signUpForm.patchValue({
+      userData: {
+        username: 'testNewUserName',
+      },
+    });
+  }
+  onSubmit(): void {
+    this.signUpForm.reset();
+  }
+}
+```

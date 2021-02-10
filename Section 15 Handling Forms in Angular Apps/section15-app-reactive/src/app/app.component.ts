@@ -42,6 +42,19 @@ export class AppComponent implements OnInit {
     this.signUpForm.statusChanges.subscribe((status) => {
       console.log(status);
     });
+    this.signUpForm.setValue({
+      userData: {
+        username: 'testUsername',
+        email: 'testEmail@email.com'
+      },
+      gender: 'male',
+      hobbies: []
+    })
+    this.signUpForm.patchValue({
+      userData: {
+        username: 'testNewUserName',
+      },
+    });
   }
 
   getControls(): AbstractControl[] {
@@ -55,6 +68,7 @@ export class AppComponent implements OnInit {
 
   onSubmit(): void {
     console.log(this.signUpForm);
+    this.signUpForm.reset();
   }
 
   forbiddenNames(control: FormControl): { [s: string]: boolean } {
