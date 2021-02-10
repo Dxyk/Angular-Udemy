@@ -1008,3 +1008,9 @@ export class AppComponent implements OnInit {
   }
 }
 ```
+
+## Assignment 7
+
+See [assignment-7](./assignment-7)
+
+### Lesson 216 - [OPTIONAL] Assignment Solution
