@@ -954,3 +954,26 @@ export class AppComponent implements OnInit {
   ...
 }
 ```
+
+### Lesson 214 - Reactive: Reacting to Status or Value Changes
+
+The `FormGroup` and `FormControl` objects provide two observables so that we can subscribe to them and monitor and react to them, `statusChanges` and `valueChanges`.
+
+In `app.component.ts`
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class AppComponent implements OnInit {
+  ngOnInit(): void {
+    ...
+    this.signUpForm.valueChanges.subscribe((value) => {
+      console.log(value);
+    });
+    this.signUpForm.statusChanges.subscribe((status) => {
+      console.log(status);
+    });
+  }
+}
+```
