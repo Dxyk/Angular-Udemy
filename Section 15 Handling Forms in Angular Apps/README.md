@@ -903,3 +903,54 @@ In `app.component.html`
   </span>
 </span>
 ```
+
+### Lesson 213 - Reactive: Creating a Custom Async Validator
+
+Sometimes validators need to reach out to servers to validate a control. These validations will be Asynchronous, and thus these validators are asynchronous.
+
+In `app.component.ts`
+
+- Async validators also take in a `FormControl` as input
+- Async validators return a `Promise<any>` or an `Observable<any>`
+- If validation succeeded, the promise will resolve null
+- If validation failed, the promise will resolve the same error object as synchronous validators
+  - The key is the validation error name
+  - The value is true
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class AppComponent implements OnInit {
+  ...
+  signUpForm: FormGroup;
+
+  ngOnInit(): void {
+    this.signUpForm = new FormGroup({
+      userData: new FormGroup({
+       email: new FormControl(
+          null,
+          [Validators.required, Validators.email],
+          this.forbiddenEmails
+        ),
+        ...
+      }),
+      ...
+    });
+  }
+
+  forbiddenEmails(control: FormControl): Promise<any> | Observable<any> {
+    const promise = new Promise<any>((resolve, reject) => {
+      setTimeout(() => {
+        if (control.value === 'test@test.com') {
+          resolve({ emailIsForbidden: true });
+        } else {
+          resolve(null);
+        }
+      }, 1500);
+    });
+    return promise;
+  }
+  ...
+}
+```
