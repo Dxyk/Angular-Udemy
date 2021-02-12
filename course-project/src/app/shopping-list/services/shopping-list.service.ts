@@ -17,16 +17,20 @@ export class ShoppingListService {
 
   constructor() {}
 
-  getIngredients() {
+  getIngredients(): Ingredient[] {
     return this.ingredients.slice();
   }
 
-  addIngredient(ingredient: Ingredient) {
+  getIngredient(index: number): Ingredient {
+    return this.ingredients[index];
+  }
+
+  addIngredient(ingredient: Ingredient): void {
     this.ingredients.push(ingredient);
     this.ingredientsChanged.next(this.ingredients.slice());
   }
 
-  addIngredients(ingredients: Ingredient[]) {
+  addIngredients(ingredients: Ingredient[]): void {
     // an ES6 operator to spread an array into multiple single elements
     this.ingredients.push(...ingredients);
     this.ingredientsChanged.next(this.ingredients.slice());

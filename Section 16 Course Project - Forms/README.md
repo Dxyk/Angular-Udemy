@@ -57,3 +57,16 @@ In `shopping-list.component.html`
 In `shopping-list.component.ts`
 
 - Emit the `ShoppingListService.startedEditing` when a list item is clicked
+
+### Lesson 221 - Loading the Shopping List Items into the Form
+
+Goal: On selecting a list item, load it into the edit form
+
+In `shopping-list.service.ts`
+
+- Add a `getIngredient(index)` method to get the ingredient object base on the index
+
+In `shopping-edit.component.ts`
+
+- Set the `editedItem` ingredient on receiving the emitted event
+- Use the form reference to set the value of the form base on the `editedItem` using `NgForm.setValue()`
