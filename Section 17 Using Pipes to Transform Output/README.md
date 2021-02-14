@@ -37,3 +37,15 @@ In `app.component.html`
 ```html
 {{ server.instanceType | uppercase }} | {{ server.started | date }}
 ```
+
+### Lesson 242 - Parametrizing Pipes
+
+**Parametrizing pipes** - Some pipes have options / parameters so users can configure them. These parameters determine how the pipes will function.
+
+To parametrize a pipe, use the format of `originalOutput | pipeMethod: parameterInput1: parameterInput2`
+
+In `app.component.html`
+
+```html
+{{ server.started | date: 'fullDate' }}
+```
