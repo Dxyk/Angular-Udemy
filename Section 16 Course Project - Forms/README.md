@@ -70,3 +70,20 @@ In `shopping-edit.component.ts`
 
 - Set the `editedItem` ingredient on receiving the emitted event
 - Use the form reference to set the value of the form base on the `editedItem` using `NgForm.setValue()`
+
+### Lesson 222 - Updating existing Items
+
+Goal: Make editing an item functional and make sure to edit instead of add a new item
+
+In `shopping-edit.component.html`
+
+- Use the `editMode` to generate the text on the button using string interpolation
+
+In `shopping-list.service.ts`
+
+- Add a `updateIngredient(index, newIngredient)` method to update the ingredient of index, and emit a `ingredientsChanged` event
+
+In `shopping-edit.component.ts`
+
+- Call `ShoppingListService.updateIngredient()` if the mode is in edit
+- Call `ShoppingListService.addIngredient()` if the mode is not in edit
