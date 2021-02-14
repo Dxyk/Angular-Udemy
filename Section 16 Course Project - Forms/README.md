@@ -192,3 +192,16 @@ In `recipe-edit.component.html`
 - Add `*ngFor` to loop through the ingredient controls
 - Add `[formGroupName]="i` to assign the `FormGroup`s to the corresponding index in the `*ngFor`
 - Add `[formControlName]="'name'"` to register the controls in the `FormGroup`s
+
+### Lesson 231 - Adding new Ingredient Controls
+
+Goal: Add a button to allow adding new ingredient to the `FormArray`
+
+In `recipe-edit.component.ts`
+
+- Create `onAddIngredient()` method that creates an empty `FormGroup` and pushes it to the `FormArray`
+
+In `recipe-edit.component.html`
+
+- Add a add button at the end of the array area
+  - Bind `onAddIngredient()` method to click event
