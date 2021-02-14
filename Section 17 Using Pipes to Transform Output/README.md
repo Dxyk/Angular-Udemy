@@ -69,3 +69,41 @@ In `app.component.html`
 ```html
 {{ server.started | date: 'fullDate' | uppercase }}
 ```
+
+### Lesson 245 - Creating a Custom Pipe
+
+To create a pipe, use the command
+
+```sh
+ng generate pipe <pipe-name>
+```
+
+This command does the following
+
+- It creates a `pipe-name.pipe.ts` file
+  - The pipe class will implement the `PipeTransform` interface, which forces the implementation of `transform(value: any, ...args: any[]): any`
+  - The class will be annotated with `@Pipe()` decorator, which takes in an object as parameter
+    - The `name` field specifies the name of the pipe when using it in the template
+- It adds the `PipeName` pipe to the `declarations` in `AppModule`
+- It creates a `pipeName.pipe.spec.ts` file for unit testing
+
+In `shorten.pipe.ts`
+
+```ts
+import { ... } from '...';
+
+@Pipe({
+  name: 'shorten',
+})
+export class ShortenPipe implements PipeTransform {
+  transform(value: string): string {
+    return value.substr(0, 10) + ' ...';
+  }
+}
+```
+
+In `app.component.html`
+
+```html
+<strong>{{ server.name | shorten }}</strong>
+```
