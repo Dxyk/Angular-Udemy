@@ -287,3 +287,15 @@ In `recipe-edit.component.html`
 Goal: Fix the bug where adding a recipe does not correctly show up in the shopping list component.
 
 The issue here is that the `RecipeService` is provided in the `RecipesComponent`, so all the components under `RecipesComponent` share the same instance of `RecipeService`. By navigating away from the `RecipesComponent`, the `RecipesService` instance is destroyed. To fix this, add `RecipeService` as one of the providers in `AppModule`.
+
+### Lesson 238 - Deleting Ingredients and Some Finishing Touches
+
+Goal: Enable the delete ingredient button
+
+In `recipe-edit.component.html`
+
+- Add a click listener that invokes `onDeleteIngredient(i)` when the delete ingredient button is clicked
+
+In `recipe-edit.component.ts`
+
+- Add `onDeleteIngredient(index)` method that deletes the `FormGroup` in the `FormArray` base on the index
