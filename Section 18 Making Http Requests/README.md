@@ -43,3 +43,39 @@ To set up
    2. Start in Test mode
    3. Enable
 4. The URL shown in the Realtime Database is the URL to send requests to for this project
+
+### Lesson 255 - Sending a POST Request
+
+To send HTTP requests through Angular, we need to import the `HttpClientModule` in `AppModule`.
+
+In Firebase, the node/endpoints are generated as folders as an abstraction.
+
+In `app.component.ts`
+
+- Use `HttpClient.post(url, body, options)` to send a POST request
+  - Angular will automatically transform the body into json.
+- The `post` method returns an `Observable`, which we need to subscribe to in order to be able to process the HTTP response.
+  - In fact, the HTTP request will not even get sent by Angular if it detects that the method is not subscribed.
+  - Since `HttpClient` is a built-in Angular module, the subscriptions are managed by Angular, so there is no need to unsubscribe.
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class AppComponent implements OnInit {
+  constructor(private http: HttpClient) {}
+
+  onCreatePost(postData: { title: string; content: string }): void {
+    // Send Http request
+    this.http
+      .post(
+        FirebaseConfigs.FIREBASE_URL + '/' + FirebaseConfigs.POSTS_ENDPOINT,
+        postData
+      )
+      .subscribe((responseData: object) => {
+        console.log(responseData);
+      });
+  }
+  ...
+}
+```

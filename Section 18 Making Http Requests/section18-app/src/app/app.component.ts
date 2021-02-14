@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { FirebaseConfigs } from './constants/firebase-configs';
 
 @Component({
   selector: 'app-root',
@@ -11,18 +12,25 @@ export class AppComponent implements OnInit {
 
   constructor(private http: HttpClient) {}
 
-  ngOnInit() {}
+  ngOnInit(): void {}
 
-  onCreatePost(postData: { title: string; content: string }) {
+  onCreatePost(postData: { title: string; content: string }): void {
     // Send Http request
-    console.log(postData);
+    this.http
+      .post(
+        FirebaseConfigs.FIREBASE_URL + '/' + FirebaseConfigs.POSTS_ENDPOINT,
+        postData
+      )
+      .subscribe((responseData: object) => {
+        console.log(responseData);
+      });
   }
 
-  onFetchPosts() {
+  onFetchPosts(): void {
     // Send Http request
   }
 
-  onClearPosts() {
+  onClearPosts(): void {
     // Send Http request
   }
 }
