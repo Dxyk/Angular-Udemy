@@ -108,3 +108,24 @@ In `shopping-edit.component.html`
 In `shopping-edit.component.ts`
 
 - In the `onClear` method, clear the form and reset the `editMode` when the button is clicked
+
+### Lesson 225 - Allowing the Deletion of Shopping List Items
+
+Goal: Delete items when the Delete button is clicked, and only make button visible if in edit mode
+
+In `shopping-list.service.ts`
+
+- Add a `deleteIngredient(index)` method that
+  - Deletes an ingredient of `index`
+  - Emits an `ingredientsChanged` event
+
+In `shopping-edit.component.html`
+
+- Add a click listener on the delete button
+- Add `*ngIf` to the delete button to only show it in `editMode`
+
+In `shopping-edit.component.ts`
+
+- In the `onDelete` method
+  - Delete the ingredient using `ShoppingListService.deleteIngredient(index)`
+  - Clear the form
