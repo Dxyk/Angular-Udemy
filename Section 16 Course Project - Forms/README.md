@@ -141,3 +141,15 @@ Goal: Add the Reactive Form in the recipe-edit component
 In `recipe-edit.component.html`
 
 - Set up the form object
+
+### Lesson 227 - Creating the Form For Editing Recipes
+
+Goal: Initialize the form using the Reactive Approach
+
+In `recipe-edit.component.ts`
+
+- Add a `FormGroup` that represents the form
+- Create a private `initForm()` method
+  - Get the current recipe if the component is in edit mode
+  - Initialize the `FormGroup` with the necessary fields with their default values
+- Call `initForm` whenever the URL changes, so in the subscription callback
