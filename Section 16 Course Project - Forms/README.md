@@ -264,3 +264,11 @@ In `recipe-edit.component.ts`
 
 - Add a `onCancel()` method that navigates to the parent level when the user clicks the Cancel button
 - Call the `onCancel()` method in `onSubmit()` after submitting the form to navigate away
+
+### Lesson 235 - Redirecting the User (after Deleting a Recipe)
+
+Goal: Navigate to the parent level after deleting a recipe
+
+In `recipe-detail.component.ts`
+
+- In the `onDelete()` method, navigate to the `/recipes` page after the recipe is deleted
