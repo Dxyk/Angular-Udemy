@@ -9,6 +9,8 @@ Goal: Use FormsModule to implement forms in
 - ShoppingList - Template Driven Approach
 - EditRecipes - Reactive Approach
 
+## Template Driven
+
 ### Lesson 218 - TD: Adding the Shopping List Form
 
 Goal: Use TD approach to update the form in the shopping list edit component
@@ -129,3 +131,13 @@ In `shopping-edit.component.ts`
 - In the `onDelete` method
   - Delete the ingredient using `ShoppingListService.deleteIngredient(index)`
   - Clear the form
+
+## Reactive Form
+
+### Lesson 226 - Creating the Template for the (Reactive) Recipe Edit Form
+
+Goal: Add the Reactive Form in the recipe-edit component
+
+In `recipe-edit.component.html`
+
+- Set up the form object
