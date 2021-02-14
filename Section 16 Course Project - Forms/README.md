@@ -197,11 +197,23 @@ In `recipe-edit.component.html`
 
 Goal: Add a button to allow adding new ingredient to the `FormArray`
 
-In `recipe-edit.component.ts`
-
-- Create `onAddIngredient()` method that creates an empty `FormGroup` and pushes it to the `FormArray`
-
 In `recipe-edit.component.html`
 
 - Add a add button at the end of the array area
   - Bind `onAddIngredient()` method to click event
+
+In `recipe-edit.component.ts`
+
+- Create `onAddIngredient()` method that creates an empty `FormGroup` and pushes it to the `FormArray`
+
+### Lesson 232 - Validating User Input
+
+Goal: Add validation to input fields
+
+In `recipe-edit.component.html`
+
+- Disable the Save button if the form is invalid
+
+In `recipe-edit.component.ts`
+
+- Add necessary validators such as `Validators.required` and `Validators.pattern()`
