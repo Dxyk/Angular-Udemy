@@ -217,3 +217,25 @@ In `recipe-edit.component.html`
 In `recipe-edit.component.ts`
 
 - Add necessary validators such as `Validators.required` and `Validators.pattern()`
+
+### Lesson 233 - Submitting the Recipe Edit Form
+
+Goal: Be able to update or save the recipe using the Save button
+
+In `recipe.service.ts`
+
+- Add a `recipesChanged` `Subject` that emits the recipes list when the list is updated
+- Add a `addRecipe(recipe)` method that adds a recipe to the recipes list
+  - Emit the `recipesChanged` event on method execution
+- Add a `updateRecipe(index, recipe)` method that updates a recipe given the index
+  - Emit the `recipesChanged` event on method execution
+
+In `recipe-list.component.ts`
+
+- Subscribe to the `recipesChanged` event in ngOnInit and update the display list when the recipes list is updated
+
+In `recipe-edit.component.ts`
+
+- Update the `OnSubmit()` method
+  - Create the `Recipe` object base on the form values
+  - Call corresponding `RecipeService` methods to update the list base on the mode
