@@ -49,3 +49,7 @@ In `app.component.html`
 ```html
 {{ server.started | date: 'fullDate' }}
 ```
+
+### Lesson 243 - Where to learn more about Pipes
+
+Use [Angular.io's docs](https://angular.io/api?query=pipe) to search for available built-in Angular pipes
