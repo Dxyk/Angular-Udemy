@@ -299,3 +299,11 @@ In `recipe-edit.component.html`
 In `recipe-edit.component.ts`
 
 - Add `onDeleteIngredient(index)` method that deletes the `FormGroup` in the `FormArray` base on the index
+
+### Lesson 239 - Deleting all Items in a FormArray
+
+To delete all items in a `FormArray`
+
+```ts
+(<FormArray>this.recipeForm.get('ingredients')).clear();
+```
