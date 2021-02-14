@@ -94,5 +94,17 @@ Goal: Reset the form when the Add/Update button is clicked
 
 In `shopping-edit.component.ts`
 
-- Switch editMode off once the Add/Update button is clicked
+- Switch `editMode` off once the Add/Update button is clicked
 - Add `NgForm.reset()`
+
+### Lesson 224 - Allowing the the User to Clear (Cancel) the Form
+
+Goal: Clear the form when the clear button is clicked
+
+In `shopping-edit.component.html`
+
+- Add a click listener on the clear button
+
+In `shopping-edit.component.ts`
+
+- In the `onClear` method, clear the form and reset the `editMode` when the button is clicked
