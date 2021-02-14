@@ -193,4 +193,54 @@ export class AppComponent {
   ...
   filteredStatus = '';
   ...
+}
+```
+
+### Lesson 248 - Pure and Impure Pipes (or: How to "fix" the Filter Pipe)
+
+In `app.component.html`
+
+```html
+<button class="btn btn-primary" (click)="onAddServer()">Add Server</button>
+```
+
+In `app.component.ts`
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class AppComponent {
+  ...
+  onAddServer(): void {
+    this.servers.push({
+      instanceType: 'small',
+      name: 'New Server',
+      status: 'stable',
+      started: new Date(2021, 2, 14),
+    });
+  }
+}
+```
+
+A undesired behavior in the current implementations:
+
+If the filter pipe's value is non-empty, adding another server does not show up in the list even if it should.
+
+This is not a bug. Angular does not rerun the pipe whenever the data list changes, so that it does not increase the performance cost. The pipe will only be triggered when the parameter is changed. Updating arrays or objects won't trigger a recalculation.
+
+There is a way to work around this, but could potentially bring performance issues. By setting `pure: false` in the `@Pipe` decorator, the pipe recalculates whenever any data is changed on the page (not only the data being transformed by the pipe).
+
+In `filter.pipe.ts`
+
+```ts
+import { ... } from '...';
+
+@Pipe({
+  name: 'filter',
+  pure: false
+})
+export class FilterPipe implements PipeTransform {
+  ...
+}
 ```
