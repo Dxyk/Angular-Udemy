@@ -239,3 +239,28 @@ In `recipe-edit.component.ts`
 - Update the `OnSubmit()` method
   - Create the `Recipe` object base on the form values
   - Call corresponding `RecipeService` methods to update the list base on the mode
+
+### Lesson 234. Adding a Delete and Clear (Cancel) Functionality
+
+Goal: Enable Delete Recipe and Cancel Recipe Edit button, and on save recipe, navigate away.
+
+In `recipe.service.ts`
+
+- Add `deleteRecipe(index)` method that deletes a recipe of index from the recipes list
+
+In `recipe-detail.component.html`
+
+- Add a click listener that calls `onDelete()` to the Delete anchor
+
+In `recipe-detail.component.ts`
+
+- Add a `onDelete()` method that calls `RecipeService.deleteRecipe()`
+
+In `recipe-edit.component.html`
+
+- Add a click listener that calls `onCancel()` to the Cancel button
+
+In `recipe-edit.component.ts`
+
+- Add a `onCancel()` method that navigates to the parent level when the user clicks the Cancel button
+- Call the `onCancel()` method in `onSubmit()` after submitting the form to navigate away
