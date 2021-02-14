@@ -244,3 +244,34 @@ export class FilterPipe implements PipeTransform {
   ...
 }
 ```
+
+### Lesson 249 - Understanding the "async" Pipe
+
+There is a special `async` pipe that can help handle async data.
+
+Given a data that is async, the `async` pipe will not render the data until the `Promise` / `Observable` resolves.
+
+In `app.component.ts`
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class AppComponent {
+  appStatus = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve('stable');
+    }, 2000);
+  });
+  ...
+}
+```
+
+In `app.component.html`
+
+- Note string-interpolating `appStatus` without the `async` pipe will only return `[Object Promise]`, and will not resolve after the Promise is resolved.
+  - This is a good thing because Angular doesn't have to constantly monitor it, so it saves performance.
+
+```html
+<h2>App Status: {{ this.appStatus | async }}</h2>
+```
