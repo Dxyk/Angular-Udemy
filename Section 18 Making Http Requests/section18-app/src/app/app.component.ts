@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FirebaseConfigs } from './constants/firebase-configs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -40,8 +41,19 @@ export class AppComponent implements OnInit {
   private getPosts(): void {
     this.http
       .get(FirebaseConfigs.FIREBASE_URL + '/' + FirebaseConfigs.POSTS_ENDPOINT)
-      .subscribe((responseData: object) => {
-        console.log(responseData);
+      .pipe(
+        map((responseData: object) => {
+          const postArray = [];
+          for (const key in responseData) {
+            if (responseData.hasOwnProperty(key)) {
+              postArray.push({ ...responseData[key], id: key });
+            }
+          }
+          return postArray;
+        })
+      )
+      .subscribe((posts: any[]) => {
+        console.log(posts);
       });
   }
 }

@@ -112,3 +112,42 @@ export class AppComponent implements OnInit {
 ```
 
 By inspecting the output, the returned object is an Object of firebase generated key as keys, and the key-value post object as value.
+
+### Lesson 257 - Using RxJS Operators to Transform Response Data
+
+To map the returned object as a list of posts, use the `pipe()` method with Observable Operators provided by RxJS. These operators happen before the `subscribe()` method, so the `subscribe()` method can contain leaner code that processes returned objects that are already transformed.
+
+In `app.component.ts`
+
+- Use `pipe()` to transform the data we get from the `HttpClient.get()` call.
+- Loop through the response data, for each key-post pair
+  - Add the post to the array
+  - Add an additional `id` field to store the key from the response
+  - Note that it is best practice to check `object.hasOwnProperty(property)` in a for-in loop, so we are not accessing properties from the prototype.
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class AppComponent implements OnInit {
+  ...
+  private getPosts(): void {
+    this.http
+      .get(FirebaseConfigs.FIREBASE_URL + '/' + FirebaseConfigs.POSTS_ENDPOINT)
+      .pipe(
+        map((responseData: object) => {
+          const postArray = [];
+          for (const key in responseData) {
+            if (responseData.hasOwnProperty(key)) {
+              postArray.push({ ...responseData[key], id: key });
+            }
+          }
+          return postArray;
+        })
+      )
+      .subscribe((posts: any[]) => {
+        console.log(posts);
+      });
+  }
+}
+```
