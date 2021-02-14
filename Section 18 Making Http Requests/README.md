@@ -26,3 +26,20 @@ HTTP requests are made out of a few components
    1. `{ "Content-Type" : "application/json" }`
 4. Body - data
    1. Mostly for POST, PUT or PATCH requests
+
+### Lesson 254 - Backend (Firebase) Setup
+
+[Firebase](https://firebase.google.com/) provides a free backend solution (server, db, etc) which we will use in this project.
+
+To set up
+
+1. Go to console
+2. Add a project
+   1. Add a Name
+   2. No need to turn on Google Analytics
+   3. Create project
+3. Go to Realtime Database
+   1. Create Database
+   2. Start in Test mode
+   3. Enable
+4. The URL shown in the Realtime Database is the URL to send requests to for this project
