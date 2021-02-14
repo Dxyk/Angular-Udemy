@@ -153,3 +153,22 @@ In `recipe-edit.component.ts`
   - Get the current recipe if the component is in edit mode
   - Initialize the `FormGroup` with the necessary fields with their default values
 - Call `initForm` whenever the URL changes, so in the subscription callback
+
+### Lesson 228 - Syncing HTML with the Form
+
+Goal: Synchronize the `FormGroup` and the HTML code
+
+In `app.module.ts`
+
+- Import `ReactiveFormsModule` in `imports`
+
+In `recipe-edit.component.html`
+
+- In the `<form>` tag
+  - Add `[formGroup]="recipeForm"` to point angular to the `FormGroup` object
+  - Add `(ngSubmit)="onSubmit()"` to invoke the `onSubmit` method when we submit the form
+- Register controls in the form using `[formControlName]="'name'"`
+
+In `recipe-edit.component.html`
+
+- Add a `onSubmit()` method that for now, just log the form object
