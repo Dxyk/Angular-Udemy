@@ -281,3 +281,9 @@ In `recipe-edit.component.html`
 
 - Add a local reference to the imagePath input
 - Use the local reference to get the `src` for the image preview section
+
+### Lesson 237. Providing the Recipe Service Correctly
+
+Goal: Fix the bug where adding a recipe does not correctly show up in the shopping list component.
+
+The issue here is that the `RecipeService` is provided in the `RecipesComponent`, so all the components under `RecipesComponent` share the same instance of `RecipeService`. By navigating away from the `RecipesComponent`, the `RecipesService` instance is destroyed. To fix this, add `RecipeService` as one of the providers in `AppModule`.
