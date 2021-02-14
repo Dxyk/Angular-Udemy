@@ -172,3 +172,23 @@ In `recipe-edit.component.html`
 In `recipe-edit.component.html`
 
 - Add a `onSubmit()` method that for now, just log the form object
+
+### Lesson 229 - Fixing a Bug
+
+### Lesson 230 - Adding Ingredient Controls to a Form Array
+
+Goal: Add the ingredient list as a `FormArray`
+
+In `recipe-edit.component.ts`
+
+- Add a `FormArray` of recipe ingredients, which will be initialized as empty
+- If the current recipe contains ingredients, loop through them and push the `FormGroup` of `name` and `amount` to the `FormArray`
+- Register the `FormArray` to the `FormGroup` object representing the form
+- Add a getter `controls` to get the controls registered in the `ingredients` `FormArray`
+
+In `recipe-edit.component.html`
+
+- Add `[formArrayName]="'ingredients'"` to the div containing the whole recipes `FormArray`
+- Add `*ngFor` to loop through the ingredient controls
+- Add `[formGroupName]="i` to assign the `FormGroup`s to the corresponding index in the `*ngFor`
+- Add `[formControlName]="'name'"` to register the controls in the `FormGroup`s
