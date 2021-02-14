@@ -272,3 +272,12 @@ Goal: Navigate to the parent level after deleting a recipe
 In `recipe-detail.component.ts`
 
 - In the `onDelete()` method, navigate to the `/recipes` page after the recipe is deleted
+
+### Lesson 236. Adding an Image Preview
+
+Goal: Add a image preview in the recipe edit component
+
+In `recipe-edit.component.html`
+
+- Add a local reference to the imagePath input
+- Use the local reference to get the `src` for the image preview section
