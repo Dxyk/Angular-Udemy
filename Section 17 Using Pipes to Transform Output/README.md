@@ -97,7 +97,10 @@ import { ... } from '...';
 })
 export class ShortenPipe implements PipeTransform {
   transform(value: string): string {
-    return value.substr(0, 10) + ' ...';
+    if (value.length > 10) {
+      return value.substr(0, 10) + ' ...';
+    }
+    return value;
   }
 }
 ```
@@ -106,4 +109,32 @@ In `app.component.html`
 
 ```html
 <strong>{{ server.name | shorten }}</strong>
+```
+
+### Lesson 246 - Parametrizing a Custom Pipe
+
+To parametrize a custom pipe, add an argument in the `transform` method. To use it in the HTML template, add a column and set the parameter.
+
+There is no limit to how many parameters / arguments there can be for a pipe.
+
+In `shorten.pipe.ts`
+
+```ts
+import { ... } from '...';
+
+@Pipe({ name: 'shorten' })
+export class ShortenPipe implements PipeTransform {
+  transform(value: string, limit: number): string {
+    if (value.length > limit) {
+      return value.substr(0, limit) + ' ...';
+    }
+    return value;
+  }
+}
+```
+
+In `app.component.html`
+
+```html
+<strong>{{ server.name | shorten: 15 }}</strong>
 ```
