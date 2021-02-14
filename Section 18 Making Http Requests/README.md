@@ -79,3 +79,36 @@ export class AppComponent implements OnInit {
   ...
 }
 ```
+
+### Lesson 256 - GETting Data
+
+Note on firebase, once a folder is stored using POST, there will be a new key present in the db. Expanding the key shows the post entry.
+
+To send a GET request, similar to POST, use `HttpClient.get(url)` and subscribe to it
+
+In `app.component.ts`
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class AppComponent implements OnInit {
+  ngOnInit(): void {
+    this.getPosts();
+  }
+
+  onFetchPosts(): void {
+    this.getPosts();
+  }
+  ...
+  private getPosts(): void {
+    this.http
+      .get(FirebaseConfigs.FIREBASE_URL + '/' + FirebaseConfigs.POSTS_ENDPOINT)
+      .subscribe((responseData: object) => {
+        console.log(responseData);
+      });
+  }
+}
+```
+
+By inspecting the output, the returned object is an Object of firebase generated key as keys, and the key-value post object as value.

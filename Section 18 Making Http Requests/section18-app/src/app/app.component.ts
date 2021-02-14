@@ -12,7 +12,9 @@ export class AppComponent implements OnInit {
 
   constructor(private http: HttpClient) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.getPosts();
+  }
 
   onCreatePost(postData: { title: string; content: string }): void {
     // Send Http request
@@ -28,9 +30,18 @@ export class AppComponent implements OnInit {
 
   onFetchPosts(): void {
     // Send Http request
+    this.getPosts();
   }
 
   onClearPosts(): void {
     // Send Http request
+  }
+
+  private getPosts(): void {
+    this.http
+      .get(FirebaseConfigs.FIREBASE_URL + '/' + FirebaseConfigs.POSTS_ENDPOINT)
+      .subscribe((responseData: object) => {
+        console.log(responseData);
+      });
   }
 }
