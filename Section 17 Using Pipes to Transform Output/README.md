@@ -53,3 +53,19 @@ In `app.component.html`
 ### Lesson 243 - Where to learn more about Pipes
 
 Use [Angular.io's docs](https://angular.io/api?query=pipe) to search for available built-in Angular pipes
+
+### Lesson 244 - Chaining Multiple Pipes
+
+It is possible to chain multiple pipes. The format is similar to applying pipes: `originalOutput | pipeMethod1 | pipeMethod2`
+
+Note the order of pipe chaining matters. Generally, the pipes are applied from left to right. I.e. In the above example, `pipeMethod1` will be applied to `originalOutput` first, and then that output is transformed by `pipeMethod2`
+
+In `app.component.html`
+
+- First format the date
+- Then transform the formatted date to uppercase
+- Note if the order is reversed, the uppercase pipe will throw an error because it will not know how to handle `Date` objects
+
+```html
+{{ server.started | date: 'fullDate' | uppercase }}
+```
