@@ -87,3 +87,12 @@ In `shopping-edit.component.ts`
 
 - Call `ShoppingListService.updateIngredient()` if the mode is in edit
 - Call `ShoppingListService.addIngredient()` if the mode is not in edit
+
+### Lesson 223 - Resetting the Form
+
+Goal: Reset the form when the Add/Update button is clicked
+
+In `shopping-edit.component.ts`
+
+- Switch editMode off once the Add/Update button is clicked
+- Add `NgForm.reset()`
