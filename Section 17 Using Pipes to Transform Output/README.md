@@ -275,3 +275,7 @@ In `app.component.html`
 ```html
 <h2>App Status: {{ this.appStatus | async }}</h2>
 ```
+
+## Assignment 8
+
+See [assignment-8](./assignment-8)
