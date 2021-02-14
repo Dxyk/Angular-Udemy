@@ -138,3 +138,59 @@ In `app.component.html`
 ```html
 <strong>{{ server.name | shorten: 15 }}</strong>
 ```
+
+### Lesson 247 - Example: Creating a Filter Pipe
+
+Goal: add a filter section so the user can filter the servers base on the input status.
+
+Create a pipe named filter using `ng g p filter`
+
+In `filter.pipe.ts`
+
+```ts
+import { ... } from '...';
+
+@Pipe({ name: 'filter' })
+export class FilterPipe implements PipeTransform {
+  transform(value: any, filterString: string, propertyName: string): any {
+    if (value.length === 0 || filterString.trim() === '') {
+      return value;
+    } else {
+      const resultArray: any[] = [];
+      for (const item of value) {
+        if (item[propertyName] === filterString) {
+          resultArray.push(item);
+        }
+      }
+      return resultArray;
+    }
+  }
+}
+```
+
+In `app.component.html`
+
+- Note the pipe was added to the `*ngFor` directive. This is ok because `*ngFor` also produces output in the template, and pipes can transform all kinds of outputs in the template
+
+```html
+<input type="text" [(ngModel)]="filteredStatus" />
+<ul class="list-group">
+  <li
+    class="list-group-item"
+    *ngFor="let server of servers | filter: filteredStatus: 'status'"
+    [ngClass]="getStatusClasses(server)"
+  ></li>
+</ul>
+```
+
+In `app.component.ts`
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class AppComponent {
+  ...
+  filteredStatus = '';
+  ...
+```
