@@ -213,3 +213,43 @@ export class AppComponent implements OnInit {
   }
 }
 ```
+
+### Lesson 259 - Outputting Posts
+
+Assign the fetched post and display them in the webpage
+
+In `app.component.ts`
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class AppComponent implements OnInit {
+  loadedPosts: Post[] = [];
+  ...
+  private getPosts(): void {
+    this.http
+      .get<{ [key: string]: Post }>( ... )
+      .pipe(...)
+      .subscribe((posts: Post[]) => {
+        this.loadedPosts = posts;
+      });
+  }
+}
+```
+
+In `app.component.html`
+
+```html
+<div class="row">
+  <div class="col-xs-12 col-md-6 col-md-offset-3">
+    <p *ngIf="loadedPosts.length < 1">No posts available!</p>
+    <ul class="list-group" *ngIf="loadedPosts.length >= 1">
+      <li class="list-group-item" *ngFor="let post of loadedPosts">
+        <h3>{{ post.title }}</h3>
+        <p>{{ post.content }}</p>
+      </li>
+    </ul>
+  </div>
+</div>
+```
