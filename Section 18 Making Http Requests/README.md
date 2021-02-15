@@ -151,3 +151,65 @@ export class AppComponent implements OnInit {
   }
 }
 ```
+
+### Lesson 258 - Using Types with the HttpClient
+
+To let TS know the type of the returned HTTP response type, one way would be to use models and type declarations.
+
+In `post.model.ts`
+
+```ts
+export class Post {
+  title: string;
+  content: string;
+  id?: string;
+}
+```
+
+In `app.component.ts`
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class AppComponent implements OnInit {
+  ...
+  private getPosts(): void {
+    this.http
+      .get(FirebaseConfigs.FIREBASE_URL + '/' + FirebaseConfigs.POSTS_ENDPOINT)
+      .pipe(
+        map((responseData: [key: string]: Post) => { ... })
+      )
+      .subscribe((posts: Post[]) => {
+        console.log(posts);
+      });
+  }
+}
+```
+
+Another more elegant way is to declare the type in the generic `HttpClient.get()` method. I.e. `HttpClient.get<Type>()`
+
+In `app.component.ts`
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class AppComponent implements OnInit {
+  ...
+  private getPosts(): void {
+    this.http
+      .get<{ [key: string]: Post }>( ... )
+      .pipe(
+        map((responseData: { [key: string]: Post }) => {
+          const postArray: Post[] = [];
+          ...
+          return postArray;
+        })
+      )
+      .subscribe((posts: Post[]) => {
+        console.log(posts);
+      });
+  }
+}
+```

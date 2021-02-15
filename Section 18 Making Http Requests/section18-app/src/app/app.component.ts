@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FirebaseConfigs } from './constants/firebase-configs';
 import { map } from 'rxjs/operators';
+import { Post } from './post.model';
 
 @Component({
   selector: 'app-root',
@@ -17,14 +18,14 @@ export class AppComponent implements OnInit {
     this.getPosts();
   }
 
-  onCreatePost(postData: { title: string; content: string }): void {
+  onCreatePost(postData: Post): void {
     // Send Http request
     this.http
-      .post(
+      .post<{ name: string }>(
         FirebaseConfigs.FIREBASE_URL + '/' + FirebaseConfigs.POSTS_ENDPOINT,
         postData
       )
-      .subscribe((responseData: object) => {
+      .subscribe((responseData: { name: string }) => {
         console.log(responseData);
       });
   }
@@ -40,10 +41,12 @@ export class AppComponent implements OnInit {
 
   private getPosts(): void {
     this.http
-      .get(FirebaseConfigs.FIREBASE_URL + '/' + FirebaseConfigs.POSTS_ENDPOINT)
+      .get<{ [key: string]: Post }>(
+        FirebaseConfigs.FIREBASE_URL + '/' + FirebaseConfigs.POSTS_ENDPOINT
+      )
       .pipe(
-        map((responseData: object) => {
-          const postArray = [];
+        map((responseData: { [key: string]: Post }) => {
+          const postArray: Post[] = [];
           for (const key in responseData) {
             if (responseData.hasOwnProperty(key)) {
               postArray.push({ ...responseData[key], id: key });
@@ -52,7 +55,7 @@ export class AppComponent implements OnInit {
           return postArray;
         })
       )
-      .subscribe((posts: any[]) => {
+      .subscribe((posts: Post[]) => {
         console.log(posts);
       });
   }
