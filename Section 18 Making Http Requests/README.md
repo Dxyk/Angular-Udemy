@@ -253,3 +253,44 @@ In `app.component.html`
   </div>
 </div>
 ```
+
+### Lesson 260 - Showing a Loading Indicator
+
+Show an indicator when a request is in flight
+
+In `app.component.ts`
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class AppComponent implements OnInit {
+  isFetching = false;
+  ...
+  private getPosts(): void {
+    this.isFetching = true;
+    this.http
+      .get<{ [key: string]: Post }>( ... )
+      .pipe(...)
+      .subscribe((posts: Post[]) => {
+        this.isFetching = false;
+        ...
+      });
+  }
+}
+```
+
+In `app.component.html`
+
+```html
+<p *ngIf="loadedPosts.length < 1 && !isFetching">No posts available!</p>
+
+<ul class="list-group" *ngIf="loadedPosts.length >= 1 && !isFetching">
+  <li class="list-group-item" *ngFor="let post of loadedPosts">
+    <h3>{{ post.title }}</h3>
+    <p>{{ post.content }}</p>
+  </li>
+</ul>
+
+<p *ngIf="isFetching">Loading ...</p>
+```

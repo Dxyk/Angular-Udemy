@@ -12,6 +12,8 @@ import { Post } from './post.model';
 export class AppComponent implements OnInit {
   loadedPosts: Post[] = [];
 
+  isFetching = false;
+
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
@@ -40,6 +42,7 @@ export class AppComponent implements OnInit {
   }
 
   private getPosts(): void {
+    this.isFetching = true;
     this.http
       .get<{ [key: string]: Post }>(
         FirebaseConfigs.FIREBASE_URL + '/' + FirebaseConfigs.POSTS_ENDPOINT
@@ -56,6 +59,7 @@ export class AppComponent implements OnInit {
         })
       )
       .subscribe((posts: Post[]) => {
+        this.isFetching = false;
         this.loadedPosts = posts;
       });
   }
