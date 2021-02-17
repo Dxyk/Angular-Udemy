@@ -40,4 +40,10 @@ export class PostsService {
         })
       );
   }
+
+  deletePosts(): Observable<object> {
+    return this.http.delete(
+      FirebaseConfigs.FIREBASE_URL + '/' + FirebaseConfigs.POSTS_ENDPOINT
+    );
+  }
 }

@@ -418,3 +418,40 @@ export class AppComponent implements OnInit {
 ```
 
 Note we don't need to apply this to the `onCreatePost()` or `PostsService.storePost()` method because the component does not care about the returned key when the `post` method returns.
+
+### Lesson 263 - Sending a DELETE Request
+
+To enable the Clear Posts button, use HTTP's DELETE verb.
+
+In `posts.service.ts`
+
+```ts
+import { ... } from '...';
+
+@Injectable({ providedIn: 'root' })
+export class PostsService {
+  ...
+  deletePosts(): Observable<object> {
+    return this.http.delete(
+      FirebaseConfigs.FIREBASE_URL + '/' + FirebaseConfigs.POSTS_ENDPOINT
+    );
+  }
+}
+```
+
+In `app.component.ts`
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class AppComponent implements OnInit {
+  ...
+  onClearPosts(): void {
+    // Send Http request
+    this.postsService.deletePosts().subscribe(() => {
+      this.loadedPosts = [];
+    });
+  }
+}
+```
