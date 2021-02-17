@@ -614,3 +614,32 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 }
 ```
+
+### Lesson 268 - Setting Headers
+
+All `HttpClient` methods have a last optional argument that is an object. To configure the Headers in an HTTP Request, use the `headers` field of this object, and construct an `HttpHeaders` object. The constructor takes in an object of key-value pairs of header entries.
+
+To verify a request with the header is sent, go to developer console -> Network -> Headers -> Request Headers
+
+In `posts.service.ts`
+
+```ts
+import { ... } from '...';
+
+@Injectable({ providedIn: 'root' })
+export class PostsService {
+  ...
+  fetchPosts(): Observable<Post[]> {
+    return this.http
+      .get<{ [key: string]: Post }>(
+        ...,
+        {
+          headers: new HttpHeaders({
+            'Custom-Header': 'Hello World',
+          }),
+        }
+      )
+      .pipe( ... );
+  }
+}
+```

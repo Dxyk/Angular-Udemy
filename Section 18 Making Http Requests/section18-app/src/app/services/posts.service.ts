@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subject, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -33,7 +33,12 @@ export class PostsService {
   fetchPosts(): Observable<Post[]> {
     return this.http
       .get<{ [key: string]: Post }>(
-        FirebaseConfigs.FIREBASE_URL + '/' + FirebaseConfigs.POSTS_ENDPOINT
+        FirebaseConfigs.FIREBASE_URL + '/' + FirebaseConfigs.POSTS_ENDPOINT,
+        {
+          headers: new HttpHeaders({
+            'Custom-Header': 'Hello World',
+          }),
+        }
       )
       .pipe(
         map((responseData: { [key: string]: Post }): Post[] => {
