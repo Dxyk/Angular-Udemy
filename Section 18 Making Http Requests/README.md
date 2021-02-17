@@ -294,3 +294,70 @@ In `app.component.html`
 
 <p *ngIf="isFetching">Loading ...</p>
 ```
+
+### Lesson 261 - Using a Service for Http Requests
+
+Components should mostly handle template / display related work. Sending HTTP requests should be outsourced to Services.
+
+In `posts.service.ts`
+
+```ts
+import { ... } from '...';
+
+@Injectable({ providedIn: 'root' })
+export class PostsService {
+  constructor(private http: HttpClient) {}
+
+  storePost(title: string, content: string): void {
+    const postData: Post = { title, content };
+    this.http
+      .post<{ name: string }>(FirebaseConfigs.FIREBASE_URL + '/' + FirebaseConfigs.POSTS_ENDPOINT, postData)
+      .subscribe((responseData: { name: string }) => {
+        console.log(responseData);
+      });
+  }
+
+  fetchPosts() {
+    this.http
+      .get<{ [key: string]: Post }>(FirebaseConfigs.FIREBASE_URL + '/' + FirebaseConfigs.POSTS_ENDPOINT)
+      .pipe(
+        map((responseData: { [key: string]: Post }) => {
+          const postArray: Post[] = [];
+          for (const key in responseData) {
+            if (responseData.hasOwnProperty(key)) {
+              postArray.push({ ...responseData[key], id: key });
+            }
+          }
+          return postArray;
+        })
+      )
+      .subscribe((posts: Post[]) => {});
+  }
+}
+```
+
+In `app.component.ts`
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class AppComponent implements OnInit {
+  ...
+
+  constructor(private postsService: PostsService) {}
+
+  ngOnInit(): void {
+    this.postsService.fetchPosts();
+  }
+
+  onCreatePost(postData: Post): void {
+    this.postsService.storePost(postData.title, postData.content);
+  }
+
+  onFetchPosts(): void {
+    this.postsService.fetchPosts();
+  }
+  ...
+}
+```
