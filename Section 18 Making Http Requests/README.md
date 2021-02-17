@@ -361,3 +361,60 @@ export class AppComponent implements OnInit {
   ...
 }
 ```
+
+### Lesson 262 - Services & Components Working Together
+
+To connect the data storage in the component and the service, there are two possible ways.
+
+The first is to use `Subject`s in the service and have the component subscribe to it. This is more suitable when there are multiple components listening to the data.
+
+The second is to simply return the `Observable` returned by `HttpClient.get()`, and subscribe it in the component. Reminder that if the Http Request is not subscribed, Angular will not send the request.
+
+In `posts.service.ts`
+
+- Return the `pipe` transformed object as an Observable
+
+```ts
+import { ... } from '...';
+
+@Injectable({ providedIn: 'root' })
+export class PostsService {
+  ...
+  fetchPosts(): Observable<Post[]> {
+    return this.http
+      .get<{ [key: string]: Post }>( ... )
+      .pipe( ... );
+  }
+}
+```
+
+In `app.component.ts`
+
+- Subscribe to the `fetchPosts()` method and update necessary flag and data to reflect in the page
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class AppComponent implements OnInit {
+  ...
+
+  ngOnInit(): void {
+    this.fetchPosts();
+  }
+
+  onFetchPosts(): void {
+    this.fetchPosts();
+  }
+
+  private fetchPosts(): void {
+    this.isFetching = true;
+    this.postsService.fetchPosts().subscribe((posts: Post[]) => {
+      this.isFetching = false;
+      this.loadedPosts = posts;
+    });
+  }
+}
+```
+
+Note we don't need to apply this to the `onCreatePost()` or `PostsService.storePost()` method because the component does not care about the returned key when the `post` method returns.

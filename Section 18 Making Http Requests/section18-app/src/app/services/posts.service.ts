@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/internal/operators/map';
 import { FirebaseConfigs } from '../constants/firebase-configs';
 import { Post } from '../post.model';
@@ -22,13 +23,13 @@ export class PostsService {
       });
   }
 
-  fetchPosts() {
-    this.http
+  fetchPosts(): Observable<Post[]> {
+    return this.http
       .get<{ [key: string]: Post }>(
         FirebaseConfigs.FIREBASE_URL + '/' + FirebaseConfigs.POSTS_ENDPOINT
       )
       .pipe(
-        map((responseData: { [key: string]: Post }) => {
+        map((responseData: { [key: string]: Post }): Post[] => {
           const postArray: Post[] = [];
           for (const key in responseData) {
             if (responseData.hasOwnProperty(key)) {
@@ -37,7 +38,6 @@ export class PostsService {
           }
           return postArray;
         })
-      )
-      .subscribe((posts: Post[]) => {});
+      );
   }
 }
