@@ -780,3 +780,54 @@ export class PostsService {
   }
 }
 ```
+
+### Lesson 272 - Introducing Interceptors
+
+An `Interceptor` intercepts all requests before they leave the application and execute some code before releasing the requests. E.g. adding a custom header for authentication, etc.
+
+To create an interceptor, In `auth-interceptor.service.ts`
+
+- Create a service that implements `HttpInterceptor`.
+- This forces the service to implement `intercept(req: HttpRequest<T>, next: HttpHandler): Observable<HttpEvent<T>>`
+  - The `req` object is the request
+  - The `next` object is a method that defines how the request should be handled
+  - After some code has been executed, the interceptor should release it by returning an `Observable` of `HttpEvent` by returning `next.handle(req)`
+
+```ts
+import { ... } from '';
+
+export class AuthInterceptorService implements HttpInterceptor {
+  constructor() {}
+
+  intercept(
+    req: HttpRequest<any>,
+    next: HttpHandler
+  ): Observable<HttpEvent<any>> {
+    console.log('Sending Request');
+    return next.handle(req);
+  }
+}
+```
+
+To provide / use the interceptor, In `app.module.ts`
+
+- Create an object in the `providers` array
+  - The `provide` attribute contains `HTTP_INTERCEPTORS`, which is a token that declares the provided class is an Http Interceptor
+  - The `useClass` attribute contains the actual `InterceptorService`
+  - The `multi` attribute is a flag that determines whether there are multiple interceptors, so the other providers with the `HTTP_INTERCEPTORS` token won't be overridden.
+
+```ts
+import { ... } from '...';
+
+@NgModule({
+  ...,
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptorService,
+      multi: true,
+    },
+  ],
+})
+export class AppModule {}
+```
