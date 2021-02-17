@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
-import { map } from 'rxjs/internal/operators/map';
+import { Observable, Subject, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { FirebaseConfigs } from '../constants/firebase-configs';
 import { Post } from '../post.model';
 
@@ -44,6 +44,10 @@ export class PostsService {
             }
           }
           return postArray;
+        }),
+        catchError((error: any) => {
+          // Non-UI related error handling. E.g. send data to analytics server
+          return throwError(error);
         })
       );
   }

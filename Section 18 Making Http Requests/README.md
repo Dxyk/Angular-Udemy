@@ -547,3 +547,32 @@ export class AppComponent implements OnInit, OnDestroy {
   ...
 }
 ```
+
+### Lesson 266 - Using the catchError Operator
+
+Another way of handling errors is through the RxJS operator `catchError`. This is more suitable for handling error in a non-UI related way. E.g. sending data to analytics server, etc.
+
+In `posts.service.ts`
+
+- `catchError` is a RxJS operator
+- `throwError` is a RxJS method that yields an Observable of error object
+
+```ts
+import { ... } from '...';
+
+@Injectable({ providedIn: 'root' })
+export class PostsService {
+  ...
+  fetchPosts(): Observable<Post[]> {
+    return this.http
+      .get<{ [key: string]: Post }>( ... )
+      .pipe(
+        ...,
+        catchError((error: any) => {
+          // Non-UI related error handling. E.g. send data to analytics server
+          return throwError(error);
+        })
+      );
+  }
+}
+```
