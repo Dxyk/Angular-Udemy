@@ -679,3 +679,61 @@ export class PostsService {
 ```
 
 Note this is also achievable by just adding the query parameters in the URL, but by setting it in the options object, we avoid concatenating a long URL string, and make the code more readable.
+
+### Lesson 270  Observing Different Types of Responses
+
+Instead of the response body, sometimes we are interested in other metadata such as the response header, status, etc.
+
+To retrieve the full response, in the configuration object, use the `observe` parameter and set a string as a value
+
+- `'body'` - the response body, set as default
+- `'response'` - the full response object
+- `'events'` - the HttpEvent containing the event type, event body, etc
+
+In `posts.service.ts`
+
+- `tap` is another RxJS operator that allows code execution without altering the response.
+
+```ts
+import { ... } from '...';
+
+@Injectable({ providedIn: 'root' })
+export class PostsService {
+  ...
+  storePost(title: string, content: string): void {
+    const postData: Post = { title, content };
+    this.http
+      .post<{ name: string }>(
+        ...,
+        { observe: 'response' }
+      )
+      .subscribe(
+        (responseData: HttpResponse<{ name: string }>) => {
+          ...
+        },
+        (error: any) => {
+          ...
+        }
+      );
+  }
+  ...
+  deletePosts(): Observable<object> {
+    return this.http
+      .delete(
+        ...,
+        { observe: 'events' }
+      )
+      .pipe(
+        tap((event: HttpEvent<object>) => {
+          console.log(event);
+          if (event.type === HttpEventType.Response) {
+            // ...
+          }
+          if (event.type === HttpEventType.Response) {
+            console.log(event.body);
+          }
+        })
+      );
+  }
+}
+```

@@ -1,7 +1,14 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpEvent,
+  HttpEventType,
+  HttpHeaders,
+  HttpParams,
+  HttpResponse,
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subject, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { FirebaseConfigs } from '../constants/firebase-configs';
 import { Post } from '../post.model';
 
@@ -18,10 +25,13 @@ export class PostsService {
     this.http
       .post<{ name: string }>(
         FirebaseConfigs.FIREBASE_URL + '/' + FirebaseConfigs.POSTS_ENDPOINT,
-        postData
+        postData,
+        {
+          observe: 'response',
+        }
       )
       .subscribe(
-        (responseData: { name: string }) => {
+        (responseData: HttpResponse<{ name: string }>) => {
           console.log(responseData);
         },
         (error: any) => {
@@ -62,8 +72,23 @@ export class PostsService {
   }
 
   deletePosts(): Observable<object> {
-    return this.http.delete(
-      FirebaseConfigs.FIREBASE_URL + '/' + FirebaseConfigs.POSTS_ENDPOINT
-    );
+    return this.http
+      .delete(
+        FirebaseConfigs.FIREBASE_URL + '/' + FirebaseConfigs.POSTS_ENDPOINT,
+        {
+          observe: 'events',
+        }
+      )
+      .pipe(
+        tap((event: HttpEvent<object>) => {
+          console.log(event);
+          if (event.type === HttpEventType.Response) {
+            // ...
+          }
+          if (event.type === HttpEventType.Response) {
+            console.log(event.body);
+          }
+        })
+      );
   }
 }
