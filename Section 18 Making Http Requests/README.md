@@ -454,3 +454,45 @@ export class AppComponent implements OnInit {
   }
 }
 ```
+
+### Lesson 264 - Handling Errors
+
+To configure Firebase to return an Error
+
+1. Go to the Rules tab
+2. Set one of the `read` or `write` values to `false`, or an expression that evaluates as `false`.
+3. This will cause the operation to throw 401 Unauthorized.
+
+One of the possible ways to handle HTTP Request Errors is to pass in a second function in the `Observable.subscribe()` method. This is the method that handles failed event.
+
+In `app.component.ts`
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class AppComponent implements OnInit {
+  ...
+  private fetchPosts(): void {
+    this.isFetching = true;
+    this.postsService.fetchPosts().subscribe(
+      (posts: Post[]) => {
+        this.isFetching = false;
+        this.loadedPosts = posts;
+      },
+      (error: any) => {
+        this.error = error.message;
+      }
+    );
+  }
+}
+```
+
+In `app.component.html`
+
+```html
+<div class="alert alert-danger" *ngIf="error">
+  <h1>An Error Occurred</h1>
+  <p>{{ error }}</p>
+</div>
+```

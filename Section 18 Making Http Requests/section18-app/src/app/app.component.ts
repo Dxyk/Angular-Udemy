@@ -12,6 +12,8 @@ export class AppComponent implements OnInit {
 
   isFetching = false;
 
+  error = null;
+
   constructor(private postsService: PostsService) {}
 
   ngOnInit(): void {
@@ -37,9 +39,14 @@ export class AppComponent implements OnInit {
 
   private fetchPosts(): void {
     this.isFetching = true;
-    this.postsService.fetchPosts().subscribe((posts: Post[]) => {
-      this.isFetching = false;
-      this.loadedPosts = posts;
-    });
+    this.postsService.fetchPosts().subscribe(
+      (posts: Post[]) => {
+        this.isFetching = false;
+        this.loadedPosts = posts;
+      },
+      (error: any) => {
+        this.error = error.message;
+      }
+    );
   }
 }
