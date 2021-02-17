@@ -52,6 +52,7 @@ export class PostsService {
             'Custom-Header': 'Hello World',
           }),
           params: queryParams,
+          responseType: 'json',
         }
       )
       .pipe(
@@ -77,10 +78,11 @@ export class PostsService {
         FirebaseConfigs.FIREBASE_URL + '/' + FirebaseConfigs.POSTS_ENDPOINT,
         {
           observe: 'events',
+          responseType: 'text',
         }
       )
       .pipe(
-        tap((event: HttpEvent<object>) => {
+        tap((event: HttpEvent<string>) => {
           console.log(event);
           if (event.type === HttpEventType.Response) {
             // ...

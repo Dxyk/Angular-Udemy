@@ -680,7 +680,7 @@ export class PostsService {
 
 Note this is also achievable by just adding the query parameters in the URL, but by setting it in the options object, we avoid concatenating a long URL string, and make the code more readable.
 
-### Lesson 270  Observing Different Types of Responses
+### Lesson 270 Observing Different Types of Responses
 
 Instead of the response body, sometimes we are interested in other metadata such as the response header, status, etc.
 
@@ -734,6 +734,49 @@ export class PostsService {
           }
         })
       );
+  }
+}
+```
+
+### Lesson 271 - Changing the Response Body Type
+
+To configure the Response Type, use the `responseType` attribute in the config object. It takes in a string of the response type, and tells Angular to automatically convert the response body to that type.
+
+- `'text'` - raw text without any transformation
+- `'json'` - convert the object to a json
+- `'blob'` - convert the object to a file
+
+In `posts.service.ts`
+
+```ts
+import { ... } from '...';
+
+@Injectable({ providedIn: 'root' })
+export class PostsService {
+  ...
+  fetchPosts(): Observable<Post[]> {
+    ...
+    return this.http
+      .get<{ [key: string]: Post }>(
+        ...,
+        {
+          ...,
+          responseType: 'json',
+        }
+      )
+      .pipe( ... );
+  }
+  ...
+  deletePosts(): Observable<object> {
+    return this.http
+      .delete(
+        ...,
+        {
+          ...,
+          responseType: 'json',
+        }
+      )
+      .pipe( ... );
   }
 }
 ```
