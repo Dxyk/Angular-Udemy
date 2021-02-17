@@ -576,3 +576,41 @@ export class PostsService {
   }
 }
 ```
+
+### Lesson 267 - Error Handling & UX
+
+It is also common practice to implement UX for user to get rid of the error message.
+
+In `app.component.html`
+
+```html
+<button class="btn btn-danger" (click)="onHandleError()">Dismiss</button>
+```
+
+In `app.component.ts`
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class AppComponent implements OnInit, OnDestroy {
+  ...
+  onHandleError(): void {
+    this.error = null;
+  }
+  ...
+  private fetchPosts(): void {
+    this.isFetching = true;
+    this.postsService.fetchPosts().subscribe(
+      (posts: Post[]) => {
+        this.isFetching = false;
+        ...
+      },
+      (error: any) => {
+        this.isFetching = false;
+        ...
+      }
+    );
+  }
+}
+```
