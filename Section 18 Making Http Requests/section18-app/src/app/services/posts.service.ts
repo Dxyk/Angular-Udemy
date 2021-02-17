@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subject, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -31,6 +31,9 @@ export class PostsService {
   }
 
   fetchPosts(): Observable<Post[]> {
+    let queryParams = new HttpParams().set('print', 'pretty');
+    queryParams = queryParams.append('queryParams', 'Hello Query');
+
     return this.http
       .get<{ [key: string]: Post }>(
         FirebaseConfigs.FIREBASE_URL + '/' + FirebaseConfigs.POSTS_ENDPOINT,
@@ -38,6 +41,7 @@ export class PostsService {
           headers: new HttpHeaders({
             'Custom-Header': 'Hello World',
           }),
+          params: queryParams,
         }
       )
       .pipe(

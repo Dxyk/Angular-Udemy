@@ -643,3 +643,39 @@ export class PostsService {
   }
 }
 ```
+
+### Lesson 269 - Adding Query Params
+
+The `HttpClient` methods' config object also allow setting query parameters using the `params` field to construct an `HttpParams` object.
+
+To set query parameters using `HttpHeaders`, there are 2 ways
+
+- `HttpParams.set(field, value)` sets (overrides) a field with value in place
+- `HttpParams.append(field, value)` appends a field with value and returns the result `HttpParams`
+  - This is used to append multiple pairs of query parameters and values
+  - Note `HttpParams` is immutable, so it needs to be assigned to the returned value
+
+In `posts.service.ts`
+
+```ts
+import { ... } from '...';
+
+@Injectable({ providedIn: 'root' })
+export class PostsService {
+  ...
+  fetchPosts(): Observable<Post[]> {
+    let queryParams = new HttpParams().set('print', 'pretty');
+    queryParams = queryParams.append('queryParams', 'Hello Query');return this.http
+      .get<{ [key: string]: Post }>(
+        ...,
+        {
+          ...,
+          params: queryParams,
+        }
+      )
+      .pipe( ... );
+  }
+}
+```
+
+Note this is also achievable by just adding the query parameters in the URL, but by setting it in the options object, we avoid concatenating a long URL string, and make the code more readable.
