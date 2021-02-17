@@ -496,3 +496,54 @@ In `app.component.html`
   <p>{{ error }}</p>
 </div>
 ```
+
+### Lesson 265 - Using Subjects for Error Handling
+
+Another way of handling error is through `Subject`s. This is more appropriate when the component is not subscribed to the service's sent request.
+
+In `posts.service.ts`
+
+```ts
+import { ... } from '...';
+
+@Injectable({ providedIn: 'root' })
+export class PostsService {
+  error = new Subject<string>();
+  ...
+  storePost(title: string, content: string): void {
+    ...
+    this.http
+      .post<{ name: string }>( ... )
+      .subscribe(
+        (responseData: { name: string }) => { ... },
+        (error: any) => {
+          this.error.next(error.error.error);
+        }
+      );
+  }
+}
+```
+
+In `app.component.ts`
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class AppComponent implements OnInit, OnDestroy {
+  private errorSubscription: Subscription;
+  ...
+  ngOnInit(): void {
+    this.errorSubscription = this.postsService.error.subscribe(
+      (errorMessage: string) => {
+        this.error = errorMessage;
+      }
+    );
+    ...
+  }
+  ngOnDestroy(): void {
+    this.errorSubscription.unsubscribe();
+  }
+  ...
+}
+```

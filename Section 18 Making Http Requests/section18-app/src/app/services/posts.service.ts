@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/internal/operators/map';
 import { FirebaseConfigs } from '../constants/firebase-configs';
 import { Post } from '../post.model';
@@ -9,6 +9,8 @@ import { Post } from '../post.model';
   providedIn: 'root',
 })
 export class PostsService {
+  error = new Subject<string>();
+
   constructor(private http: HttpClient) {}
 
   storePost(title: string, content: string): void {
@@ -18,9 +20,14 @@ export class PostsService {
         FirebaseConfigs.FIREBASE_URL + '/' + FirebaseConfigs.POSTS_ENDPOINT,
         postData
       )
-      .subscribe((responseData: { name: string }) => {
-        console.log(responseData);
-      });
+      .subscribe(
+        (responseData: { name: string }) => {
+          console.log(responseData);
+        },
+        (error: any) => {
+          this.error.next(error.error.error);
+        }
+      );
   }
 
   fetchPosts(): Observable<Post[]> {
