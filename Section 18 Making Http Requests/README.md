@@ -846,8 +846,6 @@ In `auth-interceptor.service.ts`
 import { ... } from '';
 
 export class AuthInterceptorService implements HttpInterceptor {
-  constructor() {}
-
   intercept(
     req: HttpRequest<any>,
     next: HttpHandler
@@ -857,6 +855,36 @@ export class AuthInterceptorService implements HttpInterceptor {
       headers: req.headers.append('Auth', 'authKey'),
     });
     return next.handle(modifiedReq);
+  }
+}
+```
+
+### Lesson 274 - Response Interceptors
+
+It is also possible to intercept the response in the Interceptor. This is done by using the `pipe()` method in the returned `Observable` object.
+
+In `auth-interceptor.service.ts`
+
+```ts
+import { ... } from '';
+
+export class AuthInterceptorService implements HttpInterceptor {
+  intercept(
+    req: HttpRequest<any>,
+    next: HttpHandler
+  ): Observable<HttpEvent<any>> {
+    console.log('Sending Request');
+    const modifiedReq = req.clone({
+      headers: req.headers.append('Auth', 'authKey'),
+    });
+    return next.handle(modifiedReq).pipe(
+      tap((event: HttpEvent<object>) => {
+        if (event.type === HttpEventType.Response) {
+          console.log('Response arrived. Body Data:');
+          console.log(event.body);
+        }
+      })
+    );
   }
 }
 ```
