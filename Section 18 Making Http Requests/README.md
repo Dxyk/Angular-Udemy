@@ -831,3 +831,32 @@ import { ... } from '...';
 })
 export class AppModule {}
 ```
+
+### Lesson 273 - Manipulating Request Objects
+
+The Interceptor can also be used to manipulate or modify the request object.
+
+In `auth-interceptor.service.ts`
+
+- The `HttpRequest` object is immutable, so we need to create a new request object.
+- The `HttpRequest.clone()` takes in an object of all the fields to override, and returns the clone of the request object with the overridden fields
+- The `HttpHeader.append()` method takes in the header name and header value strings and append them to the existing request headers.
+
+```ts
+import { ... } from '';
+
+export class AuthInterceptorService implements HttpInterceptor {
+  constructor() {}
+
+  intercept(
+    req: HttpRequest<any>,
+    next: HttpHandler
+  ): Observable<HttpEvent<any>> {
+    console.log('Sending Request');
+    const modifiedReq = req.clone({
+      headers: req.headers.append('Auth', 'authKey'),
+    });
+    return next.handle(modifiedReq);
+  }
+}
+```
