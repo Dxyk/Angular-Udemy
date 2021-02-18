@@ -977,3 +977,9 @@ Advanced features in `HttpClientModule`
   - Modify all requests in the app
   - Intercept the response
 - Have multiple Interceptors
+
+### Lesson 277 - Useful Resources & Links
+
+Useful Resources:
+
+- [Angular Official Http Docs](https://angular.io/guide/http)
