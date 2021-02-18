@@ -888,3 +888,76 @@ export class AuthInterceptorService implements HttpInterceptor {
   }
 }
 ```
+
+### Lesson 275 - Multiple Interceptors
+
+To add multiple Interceptors to the same Angular app, the order matters because the order of declaration will be the order of execution.
+
+In `logging-interceptor.service.ts`
+
+```ts
+import { ... } from '...';
+
+export class LoggingInterceptorService implements HttpInterceptor {
+  constructor() {}
+
+  intercept(
+    req: HttpRequest<any>,
+    next: HttpHandler
+  ): Observable<HttpEvent<any>> {
+    console.log('Outgoing Request to: ' + req.url);
+
+    return next.handle(req).pipe(
+      tap((event: HttpEvent<object>) => {
+        if (event.type === HttpEventType.Response) {
+          console.log('Incoming Response. Body:');
+          console.log(event.body);
+        }
+      })
+    );
+  }
+}
+```
+
+In `auth-interceptor.service.ts`
+
+```ts
+import { ... } from '...';
+
+export class AuthInterceptorService implements HttpInterceptor {
+  constructor() {}
+
+  intercept(
+    req: HttpRequest<any>,
+    next: HttpHandler
+  ): Observable<HttpEvent<any>> {
+    const modifiedReq = req.clone({
+      headers: req.headers.append('Auth', 'authKey'),
+    });
+    return next.handle(modifiedReq);
+  }
+}
+```
+
+In `app.module.ts`
+
+```ts
+import { ... } from '...';
+
+@NgModule({
+  ...,
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptorService,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoggingInterceptorService,
+      multi: true,
+    },
+  ],
+})
+export class AppModule {}
+```
