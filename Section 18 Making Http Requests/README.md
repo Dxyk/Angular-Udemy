@@ -961,3 +961,19 @@ import { ... } from '...';
 })
 export class AppModule {}
 ```
+
+### Lesson 276 - Wrap Up
+
+Basic features in `HttpClientModule`
+
+- Sending requests using HTTP verbs
+- Subscribing to the observables returned by the request methods
+- Adding metadata such as headers, request params, etc
+
+Advanced features in `HttpClientModule`
+
+- Setting observe response type
+- Using the `HttpInterceptor` to
+  - Modify all requests in the app
+  - Intercept the response
+- Have multiple Interceptors
