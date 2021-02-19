@@ -1,5 +1,5 @@
 # ========== Project Specific ==========
-Section\ 18\ Making\ Http\ Requests/section18-app/src/app/constants/firebase-configs.ts
+**/src/app/constants/firebase-configs.ts
 
 # ========== VSCode ==========
 .vscode/*

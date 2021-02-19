@@ -16,3 +16,16 @@ In [Firebase](https://console.firebase.google.com)
 4. Create Database
 5. Start in test mode
 6. The returned URL will be the URL to send requests to for this project
+
+### Lesson 280 - Setting Up the DataStorage Service
+
+Create a DataStorageService in the shared directory
+
+In `app.module.ts`
+
+- Import `HttpClientModule`
+
+In `data-storage.service.ts`
+
+- Make `@Injectable{}` since we will inject RecipeService into this service
+- Inject `HttpClient`
