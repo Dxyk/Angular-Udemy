@@ -49,3 +49,26 @@ In `header.component.ts`
 
 - Inject `DataStorageService`
 - Add the `onSaveData()` method that calls `DataStorageService.storeRecipes()`
+
+### Lesson 282 - Fetching Recipes
+
+In `recipe.service.ts`
+
+- Implement a `setRecipes(recipes)` method that
+  - Overrides the cached recipes list with the input recipes list
+  - Emits a `recipesChanged` so the components can be updated
+
+In `data-storage.service.ts`
+
+- Create a `fetchRecipes()` method that
+  - Fetch the list of recipes from Firebase using its `GET` endpoint
+  - Set the generic type in the `HttpClient.get<T>()` to `Recipe[]`
+  - Subscribe to the GET method and update the local cache using `RecipeService.setRecipes()` method
+
+In `header.component.html`
+
+- Add a click listener to the Fetch Data button
+
+In `header.component.ts`
+
+- Add the `onFetchData()` method that calls `DataStorageService.fetchRecipes()`

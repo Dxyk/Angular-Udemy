@@ -21,4 +21,14 @@ export class DataStorageService {
         console.log(response);
       });
   }
+
+  fetchRecipes(): void {
+    this.http
+      .get<Recipe[]>(
+        FirebaseConfigs.FIREBASE_URL + '/' + FirebaseConfigs.RECIPES_ENDPOINT
+      )
+      .subscribe((response: Recipe[]) => {
+        this.recipeService.setRecipes(response);
+      });
+  }
 }
