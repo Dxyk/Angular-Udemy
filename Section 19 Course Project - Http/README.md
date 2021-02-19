@@ -27,5 +27,25 @@ In `app.module.ts`
 
 In `data-storage.service.ts`
 
-- Make `@Injectable{}` since we will inject RecipeService into this service
+- Make `@Injectable{}` since we will inject `RecipeService` into this service
 - Inject `HttpClient`
+
+### Lesson 281 - Storing Recipes
+
+In `data-storage.service.ts`
+
+- Inject `RecipeService`
+- Create a `storeRecipes()` method that
+  - Gets the list of recipes using `RecipeService.getRecipes()`
+  - Store the list and override existing recipes in Firebase using its `PUT` endpoint
+  - Subscribe to the PUT method, and log the response
+  - No need to return the observable since the header component does not care about the object returned by the PUT request.
+
+In `header.component.html`
+
+- Add a click listener to the Save Data button
+
+In `header.component.ts`
+
+- Inject `DataStorageService`
+- Add the `onSaveData()` method that calls `DataStorageService.storeRecipes()`
