@@ -72,3 +72,41 @@ In `header.component.html`
 In `header.component.ts`
 
 - Add the `onFetchData()` method that calls `DataStorageService.fetchRecipes()`
+
+### Lesson 283 - Transforming Response Data
+
+Goal: When creating an empty recipe, the `Recipe.ingredients` `Ingredient` list is not populated, so directly accessing it might trigger NPE. It would be better if after fetching the recipes, we can add the ingredients field as an empty list if it does not exist.
+
+In `recipe.service.ts`
+
+- Remove the pre-populated data and re-initialize the `recipes` list as an empty list
+
+In `data-storage.service.ts`
+
+- Add a `pipe()` method to the `fetchRecipes()` method that
+  - Uses the RxJS `map` operator to return a new array of Recipe by
+    - Using the `Array.map()` method to map each recipe to a new recipe and make the `ingredients` attribute empty if it does not exist.
+
+```ts
+import { ... } from '...';
+
+@Injectable({ providedIn: 'root' })
+export class DataStorageService {
+  ...
+  fetchRecipes(): void {
+    this.http
+      .get<Recipe[]>( ... )
+      .pipe(
+        map((recipes: Recipe[]) => {
+          return recipes.map((recipe: Recipe) => {
+            return {
+              ...recipe,
+              ingredients: recipe.ingredients ?? [],
+            };
+          });
+        })
+      )
+      .subscribe((response: Recipe[]) => { ... });
+  }
+}
+```
