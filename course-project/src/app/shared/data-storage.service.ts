@@ -1,6 +1,7 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { FirebaseConfigs } from '../constants/firebase-configs';
 import { Recipe } from '../recipes/recipe.model';
 import { RecipeService } from '../recipes/services/recipe.service';
@@ -23,8 +24,8 @@ export class DataStorageService {
       });
   }
 
-  fetchRecipes(): void {
-    this.http
+  fetchRecipes(): Observable<Recipe[]> {
+    return this.http
       .get<Recipe[]>(
         FirebaseConfigs.FIREBASE_URL + '/' + FirebaseConfigs.RECIPES_ENDPOINT
       )
@@ -36,10 +37,10 @@ export class DataStorageService {
               ingredients: recipe.ingredients ?? [],
             };
           });
+        }),
+        tap((recipes: Recipe[]) => {
+          this.recipeService.setRecipes(recipes);
         })
-      )
-      .subscribe((response: Recipe[]) => {
-        this.recipeService.setRecipes(response);
-      });
+      );
   }
 }

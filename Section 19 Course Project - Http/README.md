@@ -110,3 +110,31 @@ export class DataStorageService {
   }
 }
 ```
+
+### Lesson 284 - Resolving Data Before Loading
+
+Goal: Use a resolver (RouteModule) to make sure the data the route points to is there.
+
+Create a `recipes-resolver.service.ts`
+
+- Inject`DataStorageService`
+- Implement the `Resolve` interface of type `Recipe[]`
+- Implement `resolve(route, state)` method that fetches the data by calling `DataStorageService.fetchRecipes()` method
+
+In `DataStorageService`
+
+- Use the `tap` RxJS operator to set the recipes in `RecipeService`
+- Remove the `subscribe` method
+- Update `fetchRecipes` to return the observable
+
+In `header.component.ts`
+
+- Subscribe to the `DataStorageService.fetchRecipes()` method
+- No need to pass in a callback since the header does not care about the data
+- The data is updated in the service method with the `RecipeService`
+
+In `app-routing.module.ts`
+
+- Add `resolve: [RecipesResolverService]` to the `:id` and `:id/edit` paths.
+  - The `resolve` property makes sure that the resolvers' `resolve()` method is called before loading the component is loaded
+  - With the resolve method loading the recipes list, we avoid the NPE
