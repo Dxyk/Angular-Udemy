@@ -138,3 +138,36 @@ In `app-routing.module.ts`
 - Add `resolve: [RecipesResolverService]` to the `:id` and `:id/edit` paths.
   - The `resolve` property makes sure that the resolvers' `resolve()` method is called before loading the component is loaded
   - With the resolve method loading the recipes list, we avoid the NPE
+
+### Lesson 285 - Fixing a Bug with the Resolver
+
+Goal: The current resolver implementation does not allow edits because every time we visit a `:id` route, the resolver fetches the recipes list form the Firebase server.
+
+The solution to this bug is to only fetch recipes from the server in the resolver when the recipes list is empty, and return the original recipes list otherwise.
+
+In `recipes-resolver.service.ts`
+
+- Inject `RecipeService`
+- Check if the existing recipes list is empty
+  - If it is, then fetch from the server
+  - If it isn't, then return the existing recipes list
+
+```ts
+import { ... } from '...';
+
+@Injectable({ providedIn: 'root' })
+export class RecipesResolverService implements Resolve<Recipe[]> {
+  ...
+  resolve(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): Recipe[] | Observable<Recipe[]> | Promise<Recipe[]> {
+    const recipes = this.recipeService.getRecipes();
+    if (recipes.length === 0) {
+      return this.dataStorageService.fetchRecipes();
+    } else {
+      return recipes;
+    }
+  }
+}
+```
