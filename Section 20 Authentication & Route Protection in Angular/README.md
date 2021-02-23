@@ -81,3 +81,42 @@ In `header.component.html`
   <a routerLink="/auth">Authenticate</a>
 </li>
 ```
+
+### Lesson 289 - Switching Between Auth Modes
+
+Track login / sign up modes and display button text correctly
+
+In `auth.component.ts`
+
+- Track the auth mode using a boolean
+- Update the mode when the switch button is clicked
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class AuthComponent implements OnInit {
+  isLoginMode = true;
+
+  onSwitchMode(): void {
+    this.isLoginMode = !this.isLoginMode;
+  }
+}
+```
+
+In `auth.component.html`
+
+- Use string interpolation to display the button text correctly
+- Assign the correct button types
+
+```html
+<div>
+  <button class="btn btn-primary" type="submit">
+    {{ this.isLoginMode ? 'Login' : 'Sign Up'}}
+  </button>
+  |
+  <button class="btn btn-primary" type="button" (click)="onSwitchMode()">
+    Switch to {{ this.isLoginMode ? 'Sign Up' : 'Login'}}
+  </button>
+</div>
+```
