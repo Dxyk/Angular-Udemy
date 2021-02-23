@@ -19,3 +19,65 @@ However, in a decoupled application, for RESTful or GraphQL server, since they a
 The client will store this JWT in the local storage (browser), and attach this token whenever it makes a request. The server will check this token for validation and fail the request if the token is invalid or if the client is not authorized.
 
 Note the client cannot attempt to generate or modify the JWT because it will not match the server's algorithm or private key, thus server can therefore determine the token is invalid and block access to the request.
+
+### Lesson 288 - Adding the Auth Page
+
+Goal:
+
+- Add a auth page where the user can log in or sign up. This page will not be mandatory since users who do not log in should also be able to access part of the page.
+- Lock the recipes page if the user is not logged in.
+
+To create the auth component
+
+```sh
+ng g c auth
+```
+
+In `auth.component.html`
+
+- Add a form that contains
+  - THe email label and input
+  - The password label and input
+  - The sign up button
+  - The switch button
+
+```html
+<form>
+  <div class="form-group">
+    <label for="email">E-Mail</label>
+    <input type="email" id="email" class="form-control" />
+  </div>
+  <div class="form-group">
+    <label for="password">Password</label>
+    <input type="password" id="password" class="form-control" />
+  </div>
+  <div>
+    <button class="btn btn-primary">Sign Up</button> |
+    <button class="btn btn-primary">Switch to Login</button>
+  </div>
+</form>
+```
+
+In `app-routing.module.ts`
+
+- Register the `AuthComponent` to the `/auth` route
+
+```ts
+const appRoutes: Routes = [
+  ...,
+  {
+    path: 'auth',
+    component: AuthComponent,
+  },
+]
+```
+
+In `header.component.html`
+
+- Provide a link in the header to navigate to the auth route
+
+```html
+<li routerLinkActive="active">
+  <a routerLink="/auth">Authenticate</a>
+</li>
+```
