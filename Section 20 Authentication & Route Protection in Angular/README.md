@@ -204,3 +204,84 @@ To set up Firebase authentication backend
 ### Lesson 292 - Make sure you got Recipes in your backend
 
 Make sure the recipes collection in the database exists
+
+### Lesson 293 - Preparing the Sign-up Request
+
+From the [Firebase Auth REST API documentation](https://firebase.google.com/docs/reference/rest/auth), we get the
+
+- Sign-up endpoint
+
+  ```text
+  https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=[API_KEY]
+  ```
+
+  - With request body
+
+    - email: string
+    - password: string
+    - returnSecureToken: boolean
+
+  - With return response
+
+    - idToken: string
+    - email: string
+    - refreshToken: string
+    - expiresIn: string
+    - localId: string
+
+- Sign-in endpoint
+
+  ```text
+  https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=[API_KEY]
+  ```
+
+  - With request body
+
+    - email: string
+    - password: string
+    - returnSecureToken: boolean
+
+  - With return response
+
+    - idToken: string
+    - email: string
+    - refreshToken: string
+    - expiresIn: string
+    - localId: string
+    - registered: boolean
+
+To obtain the API_KEY, go to Firebase console, Project Settings, Web API key
+
+Create an `AuthService` class
+
+- Define the `AuthResponseData` that will be returned by Firebase auth endpoint
+- Create a `signUp` method that
+  - Posts to the Firebase sign up url
+  - With `email`, `password` and `returnSecureToken` properties set.
+  - Return the `Observable` object of type `AuthResponseData`
+
+```ts
+import { ... } from '...';
+
+interface AuthResponseData {
+  idToken: string;
+  email: string;
+  refreshToken: string;
+  expiresIn: string;
+  localId: string;
+  registered?: boolean;
+}
+
+@Injectable({ providedIn: 'root' })
+export class AuthService {
+  constructor(private http: HttpClient) {}
+
+  signUp(email: string, password: string): Observable<AuthResponseData> {
+    return this.http.post<AuthResponseData>(FirebaseConfigs.SIGN_UP_URL, {
+      email: email,
+      password: password,
+      returnSecureToken: true,
+    });
+  }
+}
+```
