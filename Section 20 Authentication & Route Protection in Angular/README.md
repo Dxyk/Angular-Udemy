@@ -200,3 +200,7 @@ To set up Firebase authentication backend
    2. Enable Email and Password
    3. Now We are able to send a request containing the email password information to Firebase to register users and authenticate them.
    4. All users can be viewed in the Users tab
+
+### Lesson 292 - Make sure you got Recipes in your backend
+
+Make sure the recipes collection in the database exists
