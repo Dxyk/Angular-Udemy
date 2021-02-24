@@ -120,3 +120,57 @@ In `auth.component.html`
   </button>
 </div>
 ```
+
+### Lesson 290 - Handling Form Input
+
+Use the template driven approach to handle the forms.
+
+In `auth.component.ts`
+
+- Create a `onSubmit` method that logs the form and clears the form
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class AuthComponent implements OnInit {
+  ...
+  onSubmit(authForm: NgForm): void {
+    console.log(authForm.value);
+    authForm.reset();
+  }
+}
+```
+
+In `auth.component.html`
+
+- Bind the form to `onSubmit`
+- Assign the form to `ngForm` using local reference
+- Add necessary validators
+- Disable the button if the form is invalid
+
+```html
+<form #authForm="ngForm" (ngSubmit)="onSubmit(authForm)">
+  <input
+    type="email"
+    id="email"
+    class="form-control"
+    ngModel
+    name="email"
+    required
+    email
+  />
+  <input
+    type="password"
+    id="password"
+    class="form-control"
+    ngModel
+    name="password"
+    required
+    minlength="6"
+  />
+  <button class="btn btn-primary" type="submit" [disabled]="!authForm.valid">
+    {{ this.isLoginMode ? 'Login' : 'Sign Up'}}
+  </button>
+</form>
+```
