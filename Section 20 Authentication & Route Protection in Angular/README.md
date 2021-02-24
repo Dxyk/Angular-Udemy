@@ -285,3 +285,42 @@ export class AuthService {
   }
 }
 ```
+
+### Lesson 294 - Sending the Sign-up Request
+
+In `auth.component.ts`
+
+- Get the email password fields from the form
+- Make the sign-up request using the auth service
+  - Handle the response or error by logging to the console for now
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class AuthComponent implements OnInit {
+  ...
+  onSubmit(authForm: NgForm): void {
+    if (!authForm.valid) {
+      return;
+    } else {
+      const email = authForm.value.email;
+      const password = authForm.value.password;
+
+      if (this.isLoginMode) {
+      } else {
+        this.authService.signUp(email, password).subscribe(
+          (responseData: AuthResponseData) => {
+            console.log(responseData);
+          },
+          (error: any) => {
+            console.log(error);
+          }
+        );
+      }
+
+      authForm.reset();
+    }
+  }
+}
+```

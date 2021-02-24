@@ -3,7 +3,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { FirebaseConfigs } from '../constants/firebase-configs';
 
-interface AuthResponseData {
+export interface AuthResponseData {
+  kind?: string;
   idToken: string;
   email: string;
   refreshToken: string;
