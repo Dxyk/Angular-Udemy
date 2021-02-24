@@ -174,3 +174,29 @@ In `auth.component.html`
   </button>
 </form>
 ```
+
+### Lesson 291 - Preparing the Backend
+
+To set up Firebase authentication backend
+
+1. Go to the Realtime Database page
+
+   1. In the Rules tab, change the rules to the following to disallow unauthenticated users to read or write to the database.
+
+      ```json
+      {
+        "rules": {
+          ".read": "auth != null",
+          ".write": "auth != null"
+        }
+      }
+      ```
+
+   2. Now if an unauthenticated user tries to access the database, Firebase will throw a 401 Unauthorized Error
+
+2. Go to the Authentication page
+
+   1. Set up sign-in method
+   2. Enable Email and Password
+   3. Now We are able to send a request containing the email password information to Firebase to register users and authenticate them.
+   4. All users can be viewed in the Users tab
