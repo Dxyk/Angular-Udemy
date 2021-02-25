@@ -10,6 +10,10 @@ import { AuthResponseData, AuthService } from './auth.service';
 export class AuthComponent implements OnInit {
   isLoginMode = true;
 
+  isLoading = false;
+
+  error: string = null;
+
   constructor(private authService: AuthService) {}
 
   ngOnInit(): void {}
@@ -25,15 +29,21 @@ export class AuthComponent implements OnInit {
       const email = authForm.value.email;
       const password = authForm.value.password;
 
+      this.isLoading = true;
+
       if (this.isLoginMode) {
         // TODO
+        this.isLoading = false;
       } else {
         this.authService.signUp(email, password).subscribe(
           (responseData: AuthResponseData) => {
             console.log(responseData);
+            this.isLoading = false;
           },
           (error: any) => {
             console.log(error);
+            this.error = 'An error occurred';
+            this.isLoading = false;
           }
         );
       }

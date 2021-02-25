@@ -324,3 +324,77 @@ export class AuthComponent implements OnInit {
   }
 }
 ```
+
+### Lesson 295 - Adding a Loading Spinner & Error Handling Logic
+
+To add the loading spinner
+
+1. Create a loading-spinner component in the shared directory.
+   1. `ng g c shared/loading-spinner`
+2. Find a pure css script for a loading spinner template online
+   1. E.g. https://loading.io/css/
+3. Copy-paste the CSS template into the `loading-spinner.component.css` file
+4. Copy-paste the HTML template into the `loading-spinner.component.html` file
+
+In the auth component, we want to hide the entire form when the request is in flight.
+
+In `auth.component.ts`
+
+- Set `isLoading` when a request is in flight, and unset when the request is done
+- Set `error` when  the request fails
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class AuthComponent implements OnInit {
+  isLoading = false;
+  error: string = null;
+  ...
+  onSubmit(authForm: NgForm): void {
+    if (!authForm.valid) {
+      return;
+    } else {
+      ...
+      this.isLoading = true;
+      if (this.isLoginMode) {
+        this.isLoading = false;
+      } else {
+        this.authService.signUp(email, password).subscribe(
+          (responseData: AuthResponseData) => {
+            ...
+            this.isLoading = false;
+          },
+          (error: any) => {
+            ...
+            this.error = 'An error occurred';
+            this.isLoading = false;
+          }
+        );
+      }
+      ...
+    }
+  }
+}
+```
+
+In `auth.component.html`
+
+- An alert text box that only appears when the error is not null
+- A spinner div that only appears when a request is in flight
+
+```html
+<div class="alert alert-danger" *ngIf="error">
+  <p>{{ error }}</p>
+</div>
+
+<div class="spinner" *ngIf="isLoading">
+  <app-loading-spinner></app-loading-spinner>
+</div>
+
+<form
+  #authForm="ngForm"
+  (ngSubmit)="onSubmit(authForm)"
+  *ngIf="!isLoading"
+></form>
+```

@@ -14,6 +14,7 @@ import { RecipeStartComponent } from './recipes/recipe-start/recipe-start.compon
 import { RecipesComponent } from './recipes/recipes.component';
 import { RecipeService } from './recipes/services/recipe.service';
 import { DropdownDirective } from './shared/dropdown.directive';
+import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
 import { ShoppingListService } from './shopping-list/services/shopping-list.service';
 import { ShoppingEditComponent } from './shopping-list/shopping-edit/shopping-edit.component';
 import { ShoppingListComponent } from './shopping-list/shopping-list.component';
@@ -32,6 +33,7 @@ import { ShoppingListComponent } from './shopping-list/shopping-list.component';
     RecipeStartComponent,
     RecipeEditComponent,
     AuthComponent,
+    LoadingSpinnerComponent,
   ],
   imports: [
     BrowserModule,
