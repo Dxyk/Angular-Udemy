@@ -398,3 +398,71 @@ In `auth.component.html`
   *ngIf="!isLoading"
 ></form>
 ```
+
+### Lesson 296 - Improving Error Handling
+
+To make the error message more specific, we can leverage the error message returned by Firebase.
+
+In `auth.service.ts`
+
+- Handle the error and extract the error message using RxJS `catchError` operator and `throwError` method
+
+```ts
+import { ... } from '...';
+
+@Injectable({ providedIn: 'root' })
+export class AuthService {
+  constructor(private http: HttpClient) {}
+
+  signUp(email: string, password: string): Observable<AuthResponseData> {
+    return this.http
+      .post<AuthResponseData>(...)
+      .pipe(
+        catchError((error: any) => {
+          let errorMessage = 'An unknown error occurred!';
+          if (error?.error?.error) {
+            switch (error.error.error.message) {
+              case 'EMAIL_EXISTS': {
+                errorMessage = 'This email already exists!';
+              }
+            }
+          }
+          return throwError(errorMessage);
+        })
+      );
+  }
+}
+```
+
+In `app.component.ts`
+
+- Handle the extracted error message thrown by the `AuthService`
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class AuthComponent implements OnInit {
+  ...
+  onSubmit(authForm: NgForm): void {
+    if (!authForm.valid) {
+      return;
+    } else {
+      ...
+      if (this.isLoginMode) {
+        this.isLoading = false;
+      } else {
+        this.authService.signUp(email, password).subscribe(
+          (responseData: AuthResponseData) => { ... },
+          errorMessage: string) => {
+            console.log(errorMessage);
+            this.error = errorMessage;
+            this.isLoading = false;
+          }
+        );
+      }
+      ...
+    }
+  }
+}
+```
