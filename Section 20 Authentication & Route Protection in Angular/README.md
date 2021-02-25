@@ -466,3 +466,68 @@ export class AuthComponent implements OnInit {
   }
 }
 ```
+
+### Lesson 297 - Sending Login Requests
+
+In `auth.service.ts`
+
+- Create a `login` method that sends a post request to Firebase to log the user in
+
+```ts
+import { ... } from '...';
+
+@Injectable({ providedIn: 'root' })
+export class AuthService {
+  constructor(private http: HttpClient) {}
+
+  login(email: string, password: string): Observable<AuthResponseData> {
+    return this.http
+      .post<AuthResponseData>(FirebaseConfigs.SIGN_IN_URL, {
+        email: email,
+        password: password,
+        returnSecureToken: true,
+      });
+  }
+}
+```
+
+In `auth.component.ts`
+
+- Use an observable variable to avoid writing duplicated code
+- Call the `AuthService.login` method to allow the user to sign in
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class AuthComponent implements OnInit {
+  ...
+  onSubmit(authForm: NgForm): void {
+    if (!authForm.valid) {
+      return;
+    } else {
+      ...
+      let authObservable: Observable<AuthResponseData>;
+
+      if (this.isLoginMode) {
+        authObservable = this.authService.login(email, password);
+      } else {
+        authObservable = this.authService.signUp(email, password);
+      }
+
+      authObservable.subscribe(
+        (responseData: AuthResponseData) => {
+          console.log(responseData);
+          this.isLoading = false;
+        },
+        (errorMessage: string) => {
+          console.log(errorMessage);
+          this.error = errorMessage;
+          this.isLoading = false;
+        }
+      );
+
+      authForm.reset();
+    }
+}
+```

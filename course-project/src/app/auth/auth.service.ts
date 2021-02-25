@@ -41,4 +41,13 @@ export class AuthService {
         })
       );
   }
+
+  login(email: string, password: string): Observable<AuthResponseData> {
+    return this.http
+      .post<AuthResponseData>(FirebaseConfigs.SIGN_IN_URL, {
+        email: email,
+        password: password,
+        returnSecureToken: true,
+      });
+  }
 }
