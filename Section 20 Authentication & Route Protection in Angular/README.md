@@ -531,3 +531,52 @@ export class AuthComponent implements OnInit {
     }
 }
 ```
+
+### Lesson 298 - Login Error Handling
+
+In `auth.service.ts`
+
+- Refactor the logic used in the `pipe(catchError())` method operator using a private method
+
+```ts
+import { ... } from '...';
+
+@Injectable({ providedIn: 'root' })
+export class AuthService {
+  constructor(private http: HttpClient) {}
+
+  signUp(email: string, password: string): Observable<AuthResponseData> {
+    return this.http
+      .post<AuthResponseData>( ... )
+      .pipe(catchError(this.handleError));
+  }
+
+  login(email: string, password: string): Observable<AuthResponseData> {
+    return this.http
+      .post<AuthResponseData>( ... )
+      .pipe(catchError(this.handleError));
+      ;
+  }
+
+  private handleError(errorResponse: HttpErrorResponse) {
+    let errorMessage = 'An unknown error occurred!';
+    if (errorResponse?.error?.error) {
+      switch (errorResponse.error.error.message) {
+        case 'EMAIL_EXISTS': {
+          errorMessage = 'This email already exists!';
+          break;
+        }
+        case 'EMAIL_NOT_FOUND': {
+          errorMessage = 'This email does not exist!';
+          break;
+        }
+        case 'INVALID_PASSWORD': {
+          errorMessage = 'This password is incorrect!';
+          break;
+        }
+      }
+    }
+    return throwError(errorMessage);
+  }
+}
+```
