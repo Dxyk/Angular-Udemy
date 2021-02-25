@@ -341,7 +341,7 @@ In the auth component, we want to hide the entire form when the request is in fl
 In `auth.component.ts`
 
 - Set `isLoading` when a request is in flight, and unset when the request is done
-- Set `error` when  the request fails
+- Set `error` when the request fails
 
 ```ts
 import { ... } from '...';
@@ -577,6 +577,77 @@ export class AuthService {
       }
     }
     return throwError(errorMessage);
+  }
+}
+```
+
+### Lesson 299 - Creating & Storing the User Data
+
+After the sign-up or login is successful, we'd want to store the user information in our app.
+
+Create a `user.model.ts`. In it
+
+- Define the `User` type that will be used by our app
+- Use a getter for the token, and only return the token when the token is not expired
+
+```ts
+export class User {
+  constructor(
+    public email: string,
+    public id: string,
+    private _token: string,
+    private _tokenExpirationDate: Date
+  ) {}
+
+  get token() {
+    if (!this._tokenExpirationDate || new Date() > this._tokenExpirationDate) {
+      return null;
+    }
+    return this._token;
+  }
+}
+```
+
+In `auth.service.ts`
+
+- Create a `Subject` of type `User` that emits when the user we want to store in our app is updated
+- Use the `tap()` RxJS operator to tap into the `Observables` returned by the requests and
+  - Construct the new `User` object base on the return data
+  - Set the expiration date for the `User` object
+  - Emit the `Subject` containing the new `User` information
+
+```ts
+import { ... } from '...';
+
+@Injectable({ providedIn: 'root' })
+export class AuthService {
+  user = new Subject<User>();
+
+  signUp(email: string, password: string): Observable<AuthResponseData> {
+    return this.http
+      .post<AuthResponseData>( ... )
+      .pipe(
+        catchError(this.handleError),
+        tap((response: AuthResponseData) => {
+          this.handleAuthenticationResponse(
+            response.email,
+            response.localId,
+            response.idToken,
+            +response.expiresIn
+          );
+        })
+      );
+  }
+
+  private handleAuthenticationResponse(
+    email: string,
+    userId: string,
+    token: string,
+    expiresIn: number
+  ): void {
+    const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
+    const user = new User(email, userId, token, expirationDate);
+    this.user.next(user);
   }
 }
 ```
