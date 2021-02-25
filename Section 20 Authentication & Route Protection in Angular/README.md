@@ -651,3 +651,72 @@ export class AuthService {
   }
 }
 ```
+
+### Lesson 300 - Reflecting the Auth State in the UI
+
+Some UI work is required to correctly reflect the user status. E.g. if the user is signed in already, they should not see the Authenticate button in the header section.
+
+In `auth.component.ts`
+
+- Use the Angular `Router` to navigate to the recipes page when the sign-in or sign-up request was successful
+
+```ts
+import { ... } from '...';
+
+@Component({ ... })
+export class AuthComponent implements OnInit {
+
+  constructor(private authService: AuthService, private router: Router) {}
+  ...
+  onSubmit(authForm: NgForm): void {
+    if (!authForm.valid) {
+      return;
+    } else {
+      ...
+      authObservable.subscribe(
+        (responseData: AuthResponseData) => {
+          ...
+          this.router.navigate(['/recipes']);
+        },
+        (errorMessage: string) => { ...}
+      );
+
+    }
+  }
+}
+```
+
+In `header.component.ts`
+
+- Subscribe to the `Subject` in `AuthService` and store if the user is authenticated
+- The `!!user` expression is a TS trick that verifies whether the `user` object exists
+
+```ts
+import { ... } from 'rxjs';
+
+@Component({ ... })
+export class HeaderComponent implements OnInit, OnDestroy {
+  isUserAuthenticated = false;
+  userSubscription: Subscription;
+
+  constructor(
+    private dataStorageService: DataStorageService,
+    private authService: AuthService
+  ) {}
+
+  ngOnInit(): void {
+    this.userSubscription = this.authService.user.subscribe((user: User) => {
+      this.isUserAuthenticated = !!user;
+    });
+  }
+  ...
+  ngOnDestroy(): void {
+    this.userSubscription.unsubscribe();
+  }
+}
+
+```
+
+In `header.component.html`
+
+- Update the header component using the `isUserAuthenticated` flag to show or hide the header tabs

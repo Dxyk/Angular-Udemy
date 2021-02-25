@@ -1,5 +1,7 @@
 <nav class="navbar navbar-default">
   <div class="container-fluid">
+
+    <!-- Header name -->
     <div class="navbar-header">
       <a
         href="#"
@@ -9,11 +11,18 @@
 
     <div class="collapse navbar-collapse">
 
+      <!-- Top center navigation bar -->
       <ul class="nav navbar-nav">
-        <li routerLinkActive="active">
+        <li
+          routerLinkActive="active"
+          *ngIf="isUserAuthenticated"
+        >
           <a routerLink="/recipes">Recipes</a>
         </li>
-        <li routerLinkActive="active">
+        <li
+          routerLinkActive="active"
+          *ngIf="!isUserAuthenticated"
+        >
           <a routerLink="/auth">Authenticate</a>
         </li>
         <li routerLinkActive="active">
@@ -21,10 +30,18 @@
         </li>
       </ul>
 
+      <!-- Top right corner -->
       <ul class="nav navbar-nav navbar-right">
+        <!-- Logout button -->
+        <li *ngIf="isUserAuthenticated">
+          <a style="cursor: pointer;">Logout</a>
+        </li>
+
+        <!-- Manage dropdown menu -->
         <li
           class="dropdown"
           appDropdown
+          *ngIf="isUserAuthenticated"
         >
           <a
             style="cursor: pointer;"
