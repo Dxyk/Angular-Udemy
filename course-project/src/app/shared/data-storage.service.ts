@@ -1,7 +1,9 @@
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { exhaustMap, map, take, tap } from 'rxjs/operators';
+import { AuthService } from '../auth/auth.service';
+import { User } from '../auth/user.model';
 import { FirebaseConfigs } from '../constants/firebase-configs';
 import { Recipe } from '../recipes/recipe.model';
 import { RecipeService } from '../recipes/services/recipe.service';
@@ -10,13 +12,17 @@ import { RecipeService } from '../recipes/services/recipe.service';
   providedIn: 'root',
 })
 export class DataStorageService {
-  constructor(private http: HttpClient, private recipeService: RecipeService) {}
+  constructor(
+    private http: HttpClient,
+    private recipeService: RecipeService,
+    private authService: AuthService
+  ) {}
 
   storeRecipes(): void {
     const recipes: Recipe[] = this.recipeService.getRecipes();
     this.http
       .put(
-        FirebaseConfigs.FIREBASE_URL + '/' + FirebaseConfigs.RECIPES_ENDPOINT,
+        FirebaseConfigs.PROJECT_URL + '/' + FirebaseConfigs.RECIPES_ENDPOINT,
         recipes
       )
       .subscribe((response: HttpResponse<object>) => {
@@ -25,22 +31,30 @@ export class DataStorageService {
   }
 
   fetchRecipes(): Observable<Recipe[]> {
-    return this.http
-      .get<Recipe[]>(
-        FirebaseConfigs.FIREBASE_URL + '/' + FirebaseConfigs.RECIPES_ENDPOINT
-      )
-      .pipe(
-        map((recipes: Recipe[]) => {
-          return recipes.map((recipe: Recipe) => {
-            return {
-              ...recipe,
-              ingredients: recipe.ingredients ?? [],
-            };
-          });
-        }),
-        tap((recipes: Recipe[]) => {
-          this.recipeService.setRecipes(recipes);
-        })
-      );
+    return this.authService.user.pipe(
+      take(1),
+      exhaustMap((user: User) => {
+        return this.http.get<Recipe[]>(
+          FirebaseConfigs.PROJECT_URL + '/' + FirebaseConfigs.RECIPES_ENDPOINT,
+          {
+            params: new HttpParams().set(
+              FirebaseConfigs.AUTH_QUERY_PARAMETER,
+              user.token
+            ),
+          }
+        );
+      }),
+      map((recipes: Recipe[]) => {
+        return recipes.map((recipe: Recipe) => {
+          return {
+            ...recipe,
+            ingredients: recipe.ingredients ?? [],
+          };
+        });
+      }),
+      tap((recipes: Recipe[]) => {
+        this.recipeService.setRecipes(recipes);
+      })
+    );
   }
 }

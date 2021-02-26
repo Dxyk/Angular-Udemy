@@ -720,3 +720,82 @@ export class HeaderComponent implements OnInit, OnDestroy {
 In `header.component.html`
 
 - Update the header component using the `isUserAuthenticated` flag to show or hide the header tabs
+
+### Lesson 301 - Adding the Token to Outgoing Requests
+
+To fetch data with the authenticated user, the Token must be attached in the requests. In Firebase, the token is added as a query parameter in the URL.
+
+```txt
+https://project-url.firebaseio.com/dataCollection.json?auth=<token>
+```
+
+In `auth.service.ts`
+
+- Substitute the User `Subject` with `BehaviorSubject`
+- `BehaviorSubject` is a type of `Subject` provided by RxJS that
+  - Can still emit and subscribe to data using `BehaviorSubject.next()`
+  - Gives subscribers immediate access to the previously emitted value, even though the subscribers have not subscribed at the time the value was emitted
+  - Must be initialized with an initial value
+
+```ts
+import { ... } from '...';
+.,..
+@Injectable({ ... })
+export class AuthService {
+  user = new BehaviorSubject<User>(null);
+  ...
+}
+```
+
+In `data-storage.service.ts`
+
+- In the `fetchRecipes` method
+  - Subscribe to the User `BehaviorSubject`
+  - Take the data only once using `take`
+  - Use the `User.token` to send the GET request to fetch the recipes using `exhaustMap`
+  - `map` and `tap` on the resultant Observable for `Recipe[]` as before
+
+- `take(numData: number)` is another RxJS operator.
+
+  - It is used to specify the number of data to receive from the observable.
+  - After the number of data is taken from the observable, RxJS will automatically unsubscribe from it.
+  - E.g. `Observable.pipe(take(1))`
+    - Will take 1 value from the `Observable` and
+    - Immediately unsubscribe from `Observable`
+
+- `exhaustMap()` is another RxJS operator.
+
+  - It waits for the observable that the current pipe transforms to complete
+  - After that, it takes in a function that
+    - Takes in the data from the previous observable as input
+    - Return another observable that will replace the previous observable in the observable chain
+  - E.g. `Observable<T1>.pipe(exhaustMap((res: T1) => {return Observable<T2>()}))`
+    - Exhausts the returned data of type `T1` from the first observable
+    - Pass it into a function that returns an observable of type `T2`
+
+```ts
+import { ... } from '...';
+
+@Injectable({ ... })
+export class DataStorageService {
+  ...
+  fetchRecipes(): Observable<Recipe[]> {
+    return this.authService.user.pipe(
+      take(1),
+      exhaustMap((user: User) => {
+        return this.http.get<Recipe[]>(
+          FirebaseConfigs.PROJECT_URL + '/' + FirebaseConfigs.RECIPES_ENDPOINT,
+          {
+            params: new HttpParams().set(
+              FirebaseConfigs.AUTH_QUERY_PARAMETER,
+              user.token
+            ),
+          }
+        );
+      }),
+      map(...),
+      tap(...)
+    );
+  }
+}
+```
