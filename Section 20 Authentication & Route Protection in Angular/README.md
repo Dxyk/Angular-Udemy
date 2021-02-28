@@ -750,6 +750,7 @@ export class AuthService {
 In `data-storage.service.ts`
 
 - In the `fetchRecipes` method
+
   - Subscribe to the User `BehaviorSubject`
   - Take the data only once using `take`
   - Use the `User.token` to send the GET request to fetch the recipes using `exhaustMap`
@@ -796,6 +797,86 @@ export class DataStorageService {
       map(...),
       tap(...)
     );
+  }
+}
+```
+
+### Lesson 302 - Attaching the Token with an Interceptor
+
+Since all outgoing requests need to have the token attached, it makes sense to do that in an `Interceptor`.
+
+Create `auth-interceptor.service.ts`. In it
+
+- Do not inject by providing the root (`@Injectable({ provideIn: 'root' })`)
+- Subscribe to the `user` `BehaviorSubject` in `AuthService`
+- Whenever a request is sent
+  - Get the current user object from `AuthService.user`
+  - If the user object is not yet defined, forward the original request
+  - If the user object is defined, update the request to add the token
+
+```ts
+@Injectable()
+export class AuthInterceptorService implements HttpInterceptor {
+  constructor(private authService: AuthService) {}
+
+  intercept(
+    req: HttpRequest<any>,
+    next: HttpHandler
+  ): Observable<HttpEvent<any>> {
+    return this.authService.user.pipe(
+      take(1),
+      exhaustMap((user: User) => {
+        if (!user) {
+          return next.handle(req);
+        } else {
+          const modifiedReq = req.clone({
+            params: new HttpParams().set('auth', user.token),
+          });
+          return next.handle(modifiedReq);
+        }
+      })
+    );
+  }
+}
+```
+
+In `app.module.ts`
+
+- Provide the `AuthInterceptorService` and register it as an `HTTP_INTERCEPTORS` type
+
+```ts
+@NgModule({
+  declarations: [ ... ],
+  imports: [ ... ],
+  providers: [
+    ...,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptorService,
+      multi: true,
+    },
+  ],
+})
+export class AppModule {}
+```
+
+In `data-storage.service.ts`
+
+- Refactor to adapt the `AuthServiceInterceptor`
+
+```ts
+@Injectable({ providedIn: 'root' })
+export class DataStorageService {
+  ...
+  fetchRecipes(): Observable<Recipe[]> {
+    return this.http
+      .get<Recipe[]>(
+        FirebaseConfigs.PROJECT_URL + '/' + FirebaseConfigs.RECIPES_ENDPOINT
+      )
+      .pipe(
+        map(...),
+        tap(...)
+      );
   }
 }
 ```
