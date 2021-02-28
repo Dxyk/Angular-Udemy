@@ -1134,3 +1134,14 @@ const appRoutes: Routes = [
 })
 export class AppRoutingModule {}
 ```
+
+### Lesson 307 - Wrap Up
+
+Auth module
+
+- Sign-up and Sign-in
+- Storing user token in local storage
+- Use the token to fetch and store data through authenticated endpoints
+- Logouts
+- Auto-logins and auto-logouts
+- Guarding authenticated parts of the application
