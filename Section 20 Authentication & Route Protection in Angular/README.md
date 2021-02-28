@@ -1071,3 +1071,66 @@ export class AuthService {
   }
 }
 ```
+
+### Lesson 306 - Adding an Auth Guard
+
+Recap: `RouteGuard`s allow code execution before a route is loaded. This is useful for blocking unauthenticated users from accessing part of the application.
+
+Create an `auth.guard.ts` (Angular CLI: `ng generate guard` -> select `CanActivate`). In it
+
+- Return an Observable through the
+  - `user` `BehaviorSubject` from `AuthService`
+  - Use `pipe` and `map` to transform the user object to
+    - A boolean if the user exists
+    - A `URLTree` that points to `/auth` if the user does not exist
+      - The `URLTree` approach is better than calling `router.navigate` because it avoids race conditions
+
+```ts
+@Injectable({ providedIn: 'root' })
+export class AuthGuard implements CanActivate {
+  constructor(private authService: AuthService, private router: Router) {}
+
+  canActivate(
+    next: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ):
+    | boolean
+    | UrlTree
+    | Observable<boolean | UrlTree>
+    | Promise<boolean | UrlTree> {
+    return this.authService.user.pipe(
+      take(1),
+      map((user: User) => {
+        const isAuth = !!user;
+        if (isAuth) {
+          return true;
+        } else {
+          return this.router.createUrlTree(['/auth']);
+        }
+      })
+    );
+  }
+}
+```
+
+In `app-routing.module.ts`
+
+- Add `AuthGuard` to the `canActivate` property to protect the `/recipes` endpoint
+
+```ts
+const appRoutes: Routes = [
+  ...,
+  {
+    path: 'recipes',
+    component: RecipesComponent,
+    canActivate: [AuthGuard],
+    children: [ ... ],
+  },
+  ...
+];
+@NgModule({
+  imports: [RouterModule.forRoot(appRoutes)],
+  exports: [RouterModule],
+})
+export class AppRoutingModule {}
+```
