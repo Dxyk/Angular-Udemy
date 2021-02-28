@@ -34,7 +34,10 @@
       <ul class="nav navbar-nav navbar-right">
         <!-- Logout button -->
         <li *ngIf="isUserAuthenticated">
-          <a style="cursor: pointer;">Logout</a>
+          <a
+            style="cursor: pointer;"
+            (click)="onLogout()"
+          >Logout</a>
         </li>
 
         <!-- Manage dropdown menu -->

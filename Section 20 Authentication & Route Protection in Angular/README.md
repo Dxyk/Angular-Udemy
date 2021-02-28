@@ -880,3 +880,49 @@ export class DataStorageService {
   }
 }
 ```
+
+### Lesson 303 - Adding Logout
+
+To log a user out, simply reset the `user` object to null in `AuthService`, so everything listening to the `BehaviorSubject` will no longer receive a valid `user`.
+
+In `auth.service.ts`
+
+- Reset the `user` value in the `BehaviorSubject`
+- Navigate back to the authentication page when the user is logged out
+
+```ts
+@Injectable({
+  providedIn: 'root',
+})
+export class AuthService {
+  user = new BehaviorSubject<User>(null);
+  ...
+  logout() {
+    this.user.next(null);
+    this.router.navigate(['/auth']);
+  }
+}
+```
+
+In `header.component.ts`
+
+- Add a `onLogout` method that logs the user out
+
+```ts
+@Component({ ... })
+export class HeaderComponent implements OnInit, OnDestroy {
+  onLogout(): void {
+    this.authService.logout();
+  }
+}
+```
+
+In `header.component.html`
+
+- Call the `onLogout` method when the user clicks on the Logout button
+
+```html
+<li *ngIf="isUserAuthenticated">
+  <a style="cursor: pointer;" (click)="onLogout()">Logout</a>
+</li>
+```
