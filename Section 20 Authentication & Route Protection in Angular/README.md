@@ -1145,3 +1145,8 @@ Auth module
 - Logouts
 - Auto-logins and auto-logouts
 - Guarding authenticated parts of the application
+
+### Lesson 308 - Useful Resources & Links
+
+- [Firebase Auth REST API Docs](https://firebase.google.com/docs/reference/rest/auth)
+- [More on JWT](https://jwt.io)
