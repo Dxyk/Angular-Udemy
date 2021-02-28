@@ -999,3 +999,75 @@ export class AppComponent implements OnInit {
   }
 }
 ```
+
+### Lesson 305 - Adding Auto-Logout
+
+It is also useful to add a auto-logout feature since the token will eventually expire, and the user needs to acquire that information.
+
+In `auth.service.ts`
+
+- Add a `autoLogout()` method that
+  - Sets a timer and that calls `logout()`
+  - Store the timer reference
+- In the `logout()` method
+  - Clear the stored user using `localStorage.removeItem()`
+  - Clear the autoLogout timer if it exists
+    - This is needed since the user could logout manually, and the logout timer would not be affected if it is not cleared
+- When a login request succeeds, call `autoLogout` with the returned expiration date
+- When `autoLogin()` is called and the user data exists in the local storage, calculate the expiration date and call `autoLogout()`
+  - The expiration date is calculated by getting `User.tokenExpirationDate`'s timestamp (`Date.getTime()`) and subtracting it with the current date (`new Date().getTime()`)
+
+```ts
+@Injectable({
+  providedIn: 'root',
+})
+export class AuthService {
+  private tokenExpirationTimer: NodeJS.Timeout;
+
+  autoLogin(): void {
+    ...;
+    if (!userData) {
+      return;
+    } else {
+      ...
+      if (loadedUser.token) {
+        this.user.next(loadedUser);
+        const expirationDuration =
+          new Date(userData._tokenExpirationDate).getTime() -
+          new Date().getTime();
+        this.autoLogout(expirationDuration);
+      }
+    }
+  }
+
+  logout(): void {
+    this.user.next(null);
+    this.router.navigate(['/auth']);
+    localStorage.removeItem(this.localStorageUserDataKey);
+    if (this.tokenExpirationTimer) {
+      clearTimeout(this.tokenExpirationTimer);
+    }
+    this.tokenExpirationTimer = null;
+  }
+
+  autoLogout(expirationDuration: number): void {
+    console.log('The token will expire in ' + expirationDuration);
+    this.tokenExpirationTimer = setTimeout(() => {
+      this.logout();
+    }, expirationDuration);
+  }
+
+  private handleAuthenticationResponse(
+    email: string,
+    userId: string,
+    token: string,
+    expiresIn: number
+  ): void {
+    const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
+    const user = new User(email, userId, token, expirationDate);
+    this.user.next(user);
+    this.autoLogout(expiresIn * 1000);
+    localStorage.setItem(this.localStorageUserDataKey, JSON.stringify(user));
+  }
+}
+```
