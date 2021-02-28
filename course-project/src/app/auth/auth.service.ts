@@ -20,6 +20,8 @@ export interface AuthResponseData {
   providedIn: 'root',
 })
 export class AuthService {
+  private localStorageUserDataKey = 'userData';
+
   user = new BehaviorSubject<User>(null);
 
   constructor(private http: HttpClient, private router: Router) {}
@@ -64,6 +66,28 @@ export class AuthService {
       );
   }
 
+  autoLogin(): void {
+    const userData: {
+      email: string;
+      id: string;
+      _token: string;
+      _tokenExpirationDate: string;
+    } = JSON.parse(localStorage.getItem(this.localStorageUserDataKey));
+    if (!userData) {
+      return;
+    } else {
+      const loadedUser = new User(
+        userData.email,
+        userData.id,
+        userData._token,
+        new Date(userData._tokenExpirationDate)
+      );
+      if (loadedUser.token) {
+        this.user.next(loadedUser);
+      }
+    }
+  }
+
   logout() {
     this.user.next(null);
     this.router.navigate(['/auth']);
@@ -78,6 +102,7 @@ export class AuthService {
     const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
     const user = new User(email, userId, token, expirationDate);
     this.user.next(user);
+    localStorage.setItem(this.localStorageUserDataKey, JSON.stringify(user));
   }
 
   private handleError(errorResponse: HttpErrorResponse): Observable<string> {

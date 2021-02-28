@@ -926,3 +926,76 @@ In `header.component.html`
   <a style="cursor: pointer;" (click)="onLogout()">Logout</a>
 </li>
 ```
+
+### Lesson 304 - Adding Auto-Login
+
+The mechanics behind the Auto-Login feature is Token Persistence. I.e. when the user refreshes the page or close and reopen the page, we want the token to be stored in the browser (via Cookies or Local Storage) so the user doesn't have to log in every time they navigate away.
+
+In `auth.service.ts`
+
+- Store the user data when the login response is handled
+  - `localStorage` is a built-in object that represents the browser's local storage
+  - `localStorage.setItem()` takes in a key and a value, and both must be of type string
+  - `JSON.stringify()` is a TS built-in method that serializes a JS object
+- Create an `autoLogin()` method that
+  - Get and parses the stored User JS object from the local storage
+  - Construct the User object if the parsed user JS object is valid
+  - Emit the user `BehaviorSubject` after the user is constructed
+- To verify that the user object is stored to the local storage
+  - Go to Developer Console -> Application -> Local Storage and verify that the userData is there
+
+```ts
+@Injectable({ providedIn: 'root' })
+export class AuthService {
+  private localStorageUserDataKey = 'userData';
+
+  autoLogin(): void {
+    const userData: {
+      email: string;
+      id: string;
+      _token: string;
+      _tokenExpirationDate: string;
+    } = JSON.parse(localStorage.getItem(this.localStorageUserDataKey));
+    if (!userData) {
+      return;
+    } else {
+      const loadedUser = new User(
+        userData.email,
+        userData.id,
+        userData._token,
+        new Date(userData._tokenExpirationDate)
+      );
+      if (loadedUser.token) {
+        this.user.next(loadedUser);
+      }
+    }
+  }
+
+  private handleAuthenticationResponse(
+    email: string,
+    userId: string,
+    token: string,
+    expiresIn: number
+  ): void {
+    const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
+    const user = new User(email, userId, token, expirationDate);
+    this.user.next(user);
+    localStorage.setItem('userData', JSON.stringify(user));
+  }
+}
+```
+
+In `app.component.ts`
+
+- Call the `AutoLogin` method on init, so if the user is logged in already, set the application status to logged in
+
+```ts
+@Component({ ... })
+export class AppComponent implements OnInit {
+  constructor(private authService: AuthService) {}
+
+  ngOnInit(): void {
+    this.authService.autoLogin();
+  }
+}
+```
