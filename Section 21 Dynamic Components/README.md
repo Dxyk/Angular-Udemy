@@ -280,3 +280,13 @@ export class AuthComponent implements OnInit, OnDestroy {
   }
 }
 ```
+
+### Lesson 317 - Wrap Up
+
+Dynamic Component
+
+- Creating component dynamically through `*ngIf` - Recommended
+- Creating component programmatically through `ComponentFactory`
+  - Access DOM through `ViewContainerRef`
+  - Data binding and event binding
+  - `entryComponents` in `NgModule` (for Angular 8-)
