@@ -47,3 +47,27 @@ In `auth.component.html`
 ```html
 <app-alert [message]="error" *ngIf="error"></app-alert>
 ```
+
+### Lesson 311 - Understanding the Different Approaches
+
+Dynamic components are components that are loaded programmatically. There are 2 ways of doing so.
+
+1. Load the component using `*ngIf`
+
+   - This is a **Declarative Approach** since the component is added to the template using its selector
+   - The `*ngIf` controls whether the component should be loaded to the DOM
+   - Pros
+     - Easy to use
+   - Cons
+     - None
+
+2. **Dynamic Component Loader**
+
+   - This is a util feature that is deprecated, but still worth learning the concept
+   - This is a **Imperative Approach** since the component is created and added to DOM via code
+   - The component is managed and added by developer. Everything `*ngIf` does needs to be managed by code in the component loader.
+   - Pros
+     - More flexibility compared to using `*ngIf`
+     - No need to modify the template
+   - Cons
+     - Deprecated and should no longer be used
