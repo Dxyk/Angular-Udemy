@@ -207,3 +207,30 @@ export class AuthComponent implements OnInit {
   }
 }
 ```
+
+### Lesson 315 - Understanding entryComponents
+
+With Angular 9 or higher, the `ComponentFactory` logic has made the existing implementation work out of the box. However, with Angular 8 or lower, the above implementation will result in
+
+```txt
+Error: No component factory found for AlertComponent. Did you add it to @NgModule.entryComponents?
+```
+
+In `app.module.ts`
+
+- In the object passed in to the `@NgModule()` decorator,
+  - `declarations` tells Angular the components that might exist in the application, so it can create these components when it finds them in
+    - HTML templates (e.g. `<app-alert></app-alert>`)
+    - Route configs (e.g. `app-routing.module.ts`)
+  - Components declared in `declarations` does not get declared for programmatic instantiation.
+  - To tell Angular to be prepared for programmatic creation of a component, declare the component in `entryComponents`
+
+```ts
+@NgModule({
+  ...,
+  entryComponents: [AlertComponent],
+})
+export class AppModule {}
+```
+
+Note again: These steps are not necessary for Angular 9+, since it uses the Ivy rendering engine, which is different from the rendering engine used for Angular 8-.
