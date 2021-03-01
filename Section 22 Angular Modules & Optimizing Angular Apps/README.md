@@ -63,7 +63,7 @@ In `recipes.module.ts`, an initial attempt to separate `RecipesModule` from `App
     RecipeItemComponent,
     RecipeListComponent,
     RecipeStartComponent,
-  ]
+  ],
 })
 export class RecipesModule {}
 ```
@@ -85,4 +85,21 @@ In `app.module.ts`
   entryComponents: [ ... ],
 })
 export class AppModule {}
+```
+
+### Lesson 323 - Splitting Modules Correctly
+
+In `recipes.module.ts`
+
+- Import all necessary modules
+- Some modules like `BrowserModule` can only be imported once throughout the entire application, since it is also in charge of application startup logic that can only be run once
+  - To avoid this, import `BrowserModule` in `AppModule` only, and import `CommonModule` in every other modules
+
+```ts
+@NgModule({
+  declarations: [ ... ],
+  imports: [RouterModule, CommonModule, ReactiveFormsModule],
+  exports: [ ... ],
+})
+export class RecipesModule {}
 ```
