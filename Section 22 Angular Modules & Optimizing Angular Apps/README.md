@@ -26,3 +26,63 @@ In `@NgModule`, there are a few common properties
 - `entryComponents` are components created programmatically.
 - `exports` is an array of features (Modules or Components) that an external module should have access to.
   - In Angular, all Modules work independently from each other.
+
+### Lesson 322 - Getting Started with Feature Modules
+
+Instead of having one module that contains all the features, it is better to have one lean `AppModule` and have multiple **Feature Modules**.
+
+A Feature Module is a bundle of building blocks that are used in the same area of features.
+
+Having Feature Modules is a pre-requisite to optimizing Angular apps, and it also makes the app structure clearer and easier to maintain.
+
+In the course project, there are three main features: auth, recipes and shopping-list.
+
+To mark a directory (e.g. recipes) as a module, create a `recipes.module.ts` at the root of the directory.
+
+In `recipes.module.ts`, an initial attempt to separate `RecipesModule` from `AppModule`
+
+- Move all Recipes related components from `AppModule` to `RecipesModule`
+- Export these components since they are referenced elsewhere
+- Now the program doesn't compile correctly because it is missing features (e.g. `RoutingModule`).
+  - This will be corrected in the next lesson
+
+```ts
+@NgModule({
+  declarations: [
+    RecipesComponent,
+    RecipeDetailComponent,
+    RecipeEditComponent,
+    RecipeItemComponent,
+    RecipeListComponent,
+    RecipeStartComponent,
+  ],
+  exports: [
+    RecipesComponent,
+    RecipeDetailComponent,
+    RecipeEditComponent,
+    RecipeItemComponent,
+    RecipeListComponent,
+    RecipeStartComponent,
+  ]
+})
+export class RecipesModule {}
+```
+
+In `app.module.ts`
+
+- Remove recipes related components from declarations
+- Add `RecipesModule` to imports
+
+```ts
+@NgModule({
+  declarations: [ ... ],
+  imports: [
+    ...,
+    RecipesModule,
+  ],
+  providers: [ ... ],
+  bootstrap: [ ... ],
+  entryComponents: [ ... ],
+})
+export class AppModule {}
+```
