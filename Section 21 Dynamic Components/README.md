@@ -71,3 +71,56 @@ Dynamic components are components that are loaded programmatically. There are 2 
      - No need to modify the template
    - Cons
      - Deprecated and should no longer be used
+
+### Lesson 312 - Using ngIf
+
+To make the alert dialog with `*ngIf` fully functional
+
+In `alert.component.ts`
+
+```ts
+@Component({ ... })
+export class AlertComponent implements OnInit {
+  ...
+  @Output()
+  closeAlert = new EventEmitter<void>();
+
+  onClose(): void {
+    this.closeAlert.emit();
+  }
+}
+```
+
+In `alert.component.html`
+
+```html
+<div class="backdrop" (click)="onClose()"></div>
+
+<div class="alert-box">
+  <p>{{ message }}</p>
+  <div class="alert-box-actions">
+    <button class="btn btn-primary" (click)="onClose()">Close</button>
+  </div>
+</div>
+```
+
+In `auth.component.ts`
+
+```ts
+@Component({ ... })
+export class AuthComponent implements OnInit {
+  onAlertClosed(): void {
+    this.error = null;
+  }
+}
+```
+
+In `auth.component.html`
+
+```html
+<app-alert
+  [message]="error"
+  (closeAlert)="onAlertClosed()"
+  *ngIf="error"
+></app-alert>
+```

@@ -8,7 +8,11 @@
     >
       <p>{{ error }}</p>
     </div> -->
-    <app-alert [message]="error" *ngIf="error"></app-alert>
+    <app-alert
+      [message]="error"
+      (closeAlert)="onAlertClosed()"
+      *ngIf="error"
+    ></app-alert>
 
     <!-- Spinner -->
     <div

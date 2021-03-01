@@ -22,7 +22,7 @@ export interface AuthResponseData {
 export class AuthService {
   private localStorageUserDataKey = 'userData';
 
-  private tokenExpirationTimer: NodeJS.Timeout;
+  private tokenExpirationTimer: any;
 
   user = new BehaviorSubject<User>(null);
 
