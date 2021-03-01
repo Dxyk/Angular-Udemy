@@ -124,3 +124,51 @@ In `auth.component.html`
   *ngIf="error"
 ></app-alert>
 ```
+
+### Lesson 313 - Preparing Programmatic Creation
+
+Goal: Show the alert programmatically using code (not using the selector in the HTML template).
+
+In `auth.component.ts`
+
+- Create the `AlertComponent` in a `showErrorAlert()` method
+- Call the `showErrorAlert()` method when the login/sign-up requests fail
+- To create the `AlertComponent`
+  - Use the `ComponentFactoryResolver` provided by Angular to get the alert component factory
+  - To tell Angular where/how to instantiate the component in the DOM, use `ViewPointRef`
+
+```ts
+@Component({ ... })
+export class AuthComponent implements OnInit {
+  onSubmit(authForm: NgForm): void {
+    authObservable.subscribe(
+      ...,
+      (errorMessage: string) => {
+        ...;
+        this.showErrorAlert(errorMessage);
+      }
+    );
+  }
+
+  private showErrorAlert(errorMessage: string): void {
+    const alertComponentFactory = this.componentFactoryResolver.resolveComponentFactory(
+      AlertComponent
+    );
+  }
+}
+```
+
+Create a `PlaceholderDirective` using the cli `ng generate directive shared/placeholder/placeholder`
+
+In `placeholder.directive.ts`
+
+- Inject the `ViewContainerRef` class and make it public, so it can be accessed in `AuthComponent` to create the `AlertComponent`
+
+```ts
+@Directive({
+  selector: '[appPlaceholder]',
+})
+export class PlaceholderDirective {
+  constructor(public viewContainerRef: ViewContainerRef) {}
+}
+```

@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ComponentFactoryResolver, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { AlertComponent } from '../shared/alert/alert.component';
 import { AuthResponseData, AuthService } from './auth.service';
 
 @Component({
@@ -16,7 +17,11 @@ export class AuthComponent implements OnInit {
 
   error: string = null;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private componentFactoryResolver: ComponentFactoryResolver
+  ) {}
 
   ngOnInit(): void {}
 
@@ -50,6 +55,7 @@ export class AuthComponent implements OnInit {
         (errorMessage: string) => {
           console.log(errorMessage);
           this.error = errorMessage;
+          this.showErrorAlert(errorMessage);
           this.isLoading = false;
         }
       );
@@ -60,5 +66,18 @@ export class AuthComponent implements OnInit {
 
   onAlertClosed(): void {
     this.error = null;
+  }
+
+  private showErrorAlert(errorMessage: string): void {
+    // This is valid TS code, but not valid Angular code,
+    // and the AlertComponent will not be instantiated correctly
+    // const alertComponent = new AlertComponent();
+    // To create a component programmatically,
+    // Angular needs to wire it up using ComponentFactory.
+    const alertComponentFactory = this.componentFactoryResolver.resolveComponentFactory(
+      AlertComponent
+    );
+    // To tell Angular where to add the component in the DOM, use ViewPointerRef.
+    // TODO - Lesson 314
   }
 }
