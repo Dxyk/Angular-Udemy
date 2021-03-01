@@ -234,3 +234,49 @@ export class AppModule {}
 ```
 
 Note again: These steps are not necessary for Angular 9+, since it uses the Ivy rendering engine, which is different from the rendering engine used for Angular 8-.
+
+### Lesson 316 - Data Binding & Event Binding
+
+The component is now successfully created, but we need to bind data and event to it so it works properly.
+
+In `auth.component.ts`
+
+- In `showErrorAlert()`
+  - Bind the data by accessing `ComponentRef.instance.data = data`
+  - Bind the event by `ComponentRef.instance.event.subscribe()`
+    - Note from previous lessons, `EventEmitter`s should only be used with `@Output`. Otherwise when manually subscribing to an `Observer`, it is better to use `Subject`s
+    - When the event is emitted, unsubscribe and clear the component
+- Store the subscription and unsubscribe if necessary on destroy
+
+```ts
+@Component({ ... })
+export class AuthComponent implements OnInit, OnDestroy {
+  private closeAlertSubscription: Subscription;
+
+  ngOnDestroy(): void {
+    if (this.closeAlertSubscription) {
+      this.closeAlertSubscription.unsubscribe();
+    }
+  }
+
+  private showErrorAlert(errorMessage: string): void {
+    const alertComponentFactory = this.componentFactoryResolver.resolveComponentFactory(
+      AlertComponent
+    );
+    const hostViewContainerRef = this.alertHost.viewContainerRef;
+    hostViewContainerRef.clear();
+
+    const componentRef = hostViewContainerRef.createComponent(
+      alertComponentFactory
+    );
+
+    componentRef.instance.message = errorMessage;
+    this.closeAlertSubscription = componentRef.instance.closeAlert.subscribe(
+      () => {
+        this.closeAlertSubscription.unsubscribe();
+        hostViewContainerRef.clear();
+      }
+    );
+  }
+}
+```

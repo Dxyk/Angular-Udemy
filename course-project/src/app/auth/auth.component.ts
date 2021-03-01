@@ -1,12 +1,13 @@
 import {
   Component,
   ComponentFactoryResolver,
+  OnDestroy,
   OnInit,
   ViewChild,
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { AlertComponent } from '../shared/alert/alert.component';
 import { PlaceholderDirective } from '../shared/placeholder/placeholder.directive';
 import { AuthResponseData, AuthService } from './auth.service';
@@ -16,7 +17,9 @@ import { AuthResponseData, AuthService } from './auth.service';
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.css'],
 })
-export class AuthComponent implements OnInit {
+export class AuthComponent implements OnInit, OnDestroy {
+  private closeAlertSubscription: Subscription;
+
   isLoginMode = true;
 
   isLoading = false;
@@ -77,6 +80,12 @@ export class AuthComponent implements OnInit {
     this.error = null;
   }
 
+  ngOnDestroy(): void {
+    if (this.closeAlertSubscription) {
+      this.closeAlertSubscription.unsubscribe();
+    }
+  }
+
   private showErrorAlert(errorMessage: string): void {
     // This is valid TS code, but not valid Angular code,
     // and the AlertComponent will not be instantiated correctly
@@ -90,6 +99,16 @@ export class AuthComponent implements OnInit {
     const hostViewContainerRef = this.alertHost.viewContainerRef;
     hostViewContainerRef.clear();
 
-    hostViewContainerRef.createComponent(alertComponentFactory);
+    const componentRef = hostViewContainerRef.createComponent(
+      alertComponentFactory
+    );
+
+    componentRef.instance.message = errorMessage;
+    this.closeAlertSubscription = componentRef.instance.closeAlert.subscribe(
+      () => {
+        this.closeAlertSubscription.unsubscribe();
+        hostViewContainerRef.clear();
+      }
+    );
   }
 }
