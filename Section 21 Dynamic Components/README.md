@@ -290,3 +290,7 @@ Dynamic Component
   - Access DOM through `ViewContainerRef`
   - Data binding and event binding
   - `entryComponents` in `NgModule` (for Angular 8-)
+
+### Lesson 318 - Useful Resources & Links
+
+[Angular Official Docs for dynamic component loader](https://angular.io/guide/dynamic-component-loader)
