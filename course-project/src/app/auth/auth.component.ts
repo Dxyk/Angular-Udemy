@@ -1,8 +1,14 @@
-import { Component, ComponentFactoryResolver, OnInit } from '@angular/core';
+import {
+  Component,
+  ComponentFactoryResolver,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AlertComponent } from '../shared/alert/alert.component';
+import { PlaceholderDirective } from '../shared/placeholder/placeholder.directive';
 import { AuthResponseData, AuthService } from './auth.service';
 
 @Component({
@@ -16,6 +22,9 @@ export class AuthComponent implements OnInit {
   isLoading = false;
 
   error: string = null;
+
+  @ViewChild(PlaceholderDirective, { static: false })
+  alertHost: PlaceholderDirective;
 
   constructor(
     private authService: AuthService,
@@ -78,6 +87,9 @@ export class AuthComponent implements OnInit {
       AlertComponent
     );
     // To tell Angular where to add the component in the DOM, use ViewPointerRef.
-    // TODO - Lesson 314
+    const hostViewContainerRef = this.alertHost.viewContainerRef;
+    hostViewContainerRef.clear();
+
+    hostViewContainerRef.createComponent(alertComponentFactory);
   }
 }

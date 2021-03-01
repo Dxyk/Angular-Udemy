@@ -172,3 +172,38 @@ export class PlaceholderDirective {
   constructor(public viewContainerRef: ViewContainerRef) {}
 }
 ```
+
+### Lesson 314 - Creating a Component Programmatically
+
+In `auth.component.html`
+
+- Use `ng-template` to place a reference in the template
+- Add the `appPlaceholder` directive to mark the template
+
+```html
+<ng-template appPlaceholder></ng-template>
+```
+
+In `auth.component.ts`
+
+- Use `@ViewChild(PlaceholderDirective)` to get access to the first component that contains the `PlaceholderDirective`
+- Use `PlaceholderDirective.ViewContainerRef` to
+  - Clear the content that may initially be there
+  - Create the `AlertComponent` using the `alertComponentFactory`
+
+```ts
+@Component({ ... })
+export class AuthComponent implements OnInit {
+  @ViewChild(PlaceholderDirective, { static: false })
+  alertHost: PlaceholderDirective;
+
+  private showErrorAlert(errorMessage: string): void {
+    const alertComponentFactory = this.componentFactoryResolver.resolveComponentFactory(
+      AlertComponent
+    );
+    const hostViewContainerRef = this.alertHost.viewContainerRef;
+    hostViewContainerRef.clear();
+    hostViewContainerRef.createComponent(alertComponentFactory);
+  }
+}
+```
