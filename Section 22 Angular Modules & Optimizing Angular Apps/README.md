@@ -581,6 +581,11 @@ However, in production environment, we use `ng build --prod`, which uses Ahead-o
 - Lazy-loading
 - AoT Compilation
 
+### Lesson 338 - Useful Resources & Links
+
+- [Official Docs](https://angular.io/guide/ngmodules)
+- [NgModules FAQ](https://angular.io/guide/ngmodule-faq)
+
 ## Appendix
 
 ### RouterModule
