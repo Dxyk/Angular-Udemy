@@ -439,6 +439,33 @@ In `app.module.ts`
 
 - Remove both the imports for `AuthModule`, `ShoppingListModule` and the import statement for `AuthModule`, `ShoppingListModule`
 
+### Lesson 333 - Preloading Lazy-Loaded Code
+
+One downside to lazy-loading is that there might be a slight delay due to the download when loading the feature module. To overcome this, it is possible to tell Angular to preload the lazy-loaded module.
+
+This is different from eager-loading the application because the application will first load up the required module depending on the route, and after the required module is loaded up, it will download and parse the rest of the modules, so when we access those modules, it'll already be loaded.
+
+In `app-routing.module.ts`
+
+- In `RouterModule.forRoot()`, pass in a config object
+  - In the config object, set `preloadingStrategy: PreloadAllModules` to preload all modules after the required app is loaded.
+
+```ts
+...
+@NgModule({
+  imports: [
+    RouterModule.forRoot(
+      appRoutes,
+      {
+        preloadingStrategy: PreloadAllModules
+      }
+    ),
+  ],
+  exports: [RouterModule],
+})
+export class AppRoutingModule {}
+```
+
 ## Appendix
 
 ### RouterModule
