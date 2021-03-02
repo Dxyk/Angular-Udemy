@@ -245,7 +245,7 @@ export class SharedModule {}
 
 In `recipes.module.ts` and `shopping-list.module.ts`, replace `CommonsModule` with `SharedModule`
 
-In `app.component.ts`,
+In `app.module.ts`,
 
 - Remove all duplicated declarations declared in the `SharedModules`.
   - Note that Modules can be imported for multiple times, but declarations can only be declared once throughout the entire application.
@@ -282,6 +282,38 @@ In `app.module.ts`
 
 - Remove providers
 - Import `CoreModule`
+
+### Lesson 329 - Adding an Auth Feature Module
+
+In `auth.module.ts`
+
+- Declare auth Components
+- Import necessary Modules
+- Register the auth route through `RouterModule.forChild`
+
+```ts
+@NgModule({
+  declarations: [AuthComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    SharedModule,
+    RouterModule.forChild([{ path: 'auth', component: AuthComponent }]),
+  ],
+})
+export class AuthModule {}
+```
+
+In `app.module.ts`
+
+- Remove auth related declarations
+- Remove unnecessary imports
+  - Keep `BrowserModule` and `HttpClientModule` since they must be imported in `AppComponent`
+- Import `AuthModule`
+
+In `app-routing.module.ts`
+
+- Remove routes related to auth
 
 ## Appendix
 
