@@ -103,3 +103,55 @@ In `recipes.module.ts`
 })
 export class RecipesModule {}
 ```
+
+### Lesson 324 - Adding Routes to Feature Modules
+
+Except for building blocks, it is also possible to outsource routing maps from `app-routing.module.ts` to `recipes-routing.module.ts`.
+
+In `recipes-routing.module.ts`
+
+- Copy all the routes related to recipes from `app-routing.module.ts`
+- Register the routes using `RouterModule.forChild(Routes)`
+  - Note that only the top-level routing config should use `RouterModule.forRoot()`
+  - All `RouterModule.forChild()` routes will be combined with the root routes
+- Export the configured `RouterModule`
+
+```ts
+const routes: Routes = [ ... ];
+
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule],
+})
+export class RecipesRoutingModule {}
+```
+
+In `recipes.module.ts`
+
+- Import the `RecipesRoutingModule`
+
+```ts
+@NgModule({
+  declarations: [ ... ],
+  imports: [
+    ...,
+    RecipesRoutingModule,
+  ],
+  exports: [ ... ],
+})
+```
+
+In `app-routing.module.ts`
+
+- Remove recipes related routes
+- Leave the imports and exports unchanged. The `RouteModule` will be configured in both routing modules, and exported by both, so eventually it contains all the route paths.
+
+```ts
+const appRoutes: Routes = [ ... ];
+
+@NgModule({
+  imports: [RouterModule.forRoot(appRoutes)],
+  exports: [RouterModule],
+})
+export class AppRoutingModule {}
+```
