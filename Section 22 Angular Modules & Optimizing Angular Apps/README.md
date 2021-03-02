@@ -573,6 +573,14 @@ However, in production environment, we use `ng build --prod`, which uses Ahead-o
 - This builds the entire app into a few file under the `dist` folder, which is ready for deploy.
 - This is more strict on the syntax. It will fail if anything doesn't compile.
 
+### Lesson 337 - Wrap Up
+
+- Modules and types of Modules
+- Routing and Modules
+- Services and Modules
+- Lazy-loading
+- AoT Compilation
+
 ## Appendix
 
 ### RouterModule
