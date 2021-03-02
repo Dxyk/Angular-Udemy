@@ -155,3 +155,31 @@ const appRoutes: Routes = [ ... ];
 })
 export class AppRoutingModule {}
 ```
+
+### Lesson 325 - Component Declarations
+
+It is important to note that within `@NgModule()`'s `declarations`, we need to declare not only components that are used outside the module, but also components that will be used via Routing.
+
+For the `exports`, it is not necessary to export the components that are used via Routing, as long as the imports contain the outsourced routing module.
+
+In `recipes-routing.module.ts`
+
+```ts
+@NgModule({
+  declarations: [
+    RecipesComponent,
+    RecipeDetailComponent,
+    RecipeEditComponent,
+    RecipeItemComponent,
+    RecipeListComponent,
+    RecipeStartComponent,
+  ],
+  imports: [
+    RouterModule,
+    CommonModule,
+    ReactiveFormsModule,
+    RecipesRoutingModule, // outsourced routing module
+  ],
+})
+export class RecipesModule {}
+```
