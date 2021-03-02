@@ -387,6 +387,58 @@ In `app.module.ts`
 
 When done enabling lazy loading, we need to rerun `ng serve` to let it take effect.
 
+### Lesson 332 - More Lazy Loading
+
+Add lazy loading for auth and shopping list modules.
+
+In `app-routing.module.ts`
+
+```ts
+const appRoutes: Routes = [
+  ...,
+  { path: 'shopping-list', loadChildren: './shopping-list/shopping-list.module#ShoppingListModule' },
+  { path: 'auth', loadChildren: './auth/auth.module#AuthModule' }
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(appRoutes)],
+  exports: [RouterModule],
+})
+export class AppRoutingModule {}
+```
+
+In `auth.module.ts`
+
+```ts
+@NgModule({
+  declarations: [ ... ],
+  imports: [
+    ...,
+    RouterModule.forChild([{ path: '', component: AuthComponent }]),
+  ],
+})
+export class AuthModule {}
+```
+
+In `shopping-list.module.ts`
+
+```ts
+@NgModule({
+  declarations: [ ... ],
+  imports: [
+    ...,
+    RouterModule.forChild([
+      { path: '', component: ShoppingListComponent },
+    ]),
+  ],
+})
+export class ShoppingListModule {}
+```
+
+In `app.module.ts`
+
+- Remove both the imports for `AuthModule`, `ShoppingListModule` and the import statement for `AuthModule`, `ShoppingListModule`
+
 ## Appendix
 
 ### RouterModule

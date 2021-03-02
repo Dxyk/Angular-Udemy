@@ -13,6 +13,14 @@ const appRoutes: Routes = [
     //   import('./recipes/recipes.module').then((m) => m.RecipesModule),
     loadChildren: './recipes/recipes.module#RecipesModule',
   },
+  {
+    path: 'shopping-list',
+    loadChildren: './shopping-list/shopping-list.module#ShoppingListModule',
+  },
+  {
+    path: 'auth',
+    loadChildren: './auth/auth.module#AuthModule',
+  },
 ];
 
 @NgModule({
