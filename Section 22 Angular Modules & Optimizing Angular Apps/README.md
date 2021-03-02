@@ -252,6 +252,37 @@ In `app.component.ts`,
 - Import the `SharedModule` since the `AppModule` uses features inside it, e.g. `DropdownDirective`
 - Remove the `entryComponent`
 
+### Lesson 328 - Understanding the Core Module
+
+**`CoreModule`** is used to move services out of the `AppModule` to make it leaner. This can also be done by using `@Injectable({ providedIn: 'root' })` in the services. The `CoreModule` should only be used when the services are provided in `AppModule`.
+
+Create a `core.module.ts`. In it
+
+- Move all providers from `AppModule` to `CoreModule`
+- No need to export the services since
+  - Services work differently than other building blocks
+  - Services are automatically injected at the root level
+
+```ts
+@NgModule({
+  providers: [
+    ShoppingListService,
+    RecipeService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptorService,
+      multi: true,
+    },
+  ],
+})
+export class CoreModule {}
+```
+
+In `app.module.ts`
+
+- Remove providers
+- Import `CoreModule`
+
 ## Appendix
 
 ### RouterModule
