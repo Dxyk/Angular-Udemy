@@ -466,6 +466,33 @@ In `app-routing.module.ts`
 export class AppRoutingModule {}
 ```
 
+### Lesson 334 - Modules & Services
+
+Services are a special building block in Angular apps because it can be provided in different ways and they have different impacts.
+
+A service can be provided through
+
+- `AppModule` / `@Injectable({ providedIn: 'root' })`
+  - Using Root Injector
+  - The service will be available application-wide and all references will be the same instance of the service
+  - Should be used as the Default option (Using `@Injectable({ providedIn: 'root' })`)
+- `AppComponent` or other component
+  - Using Component-specific Injector
+  - The service will only be available in the component-tree.
+    - I.e. All components referenced by the component will have access to the same instance of the service
+  - If the service is provided to a sibling component, the sibling component will also have the service, but of a different instance
+  - Should be used if the service is only relevant for the component tree
+- Eager-loaded Module's `providers`
+  - Using Root Injector
+  - The service will be available application-wide nd all references will be the same instance of the service
+  - Should AVOID doing this because
+    - It may lead to undesired behaviors
+    - It makes the code hard to debug and understand
+- Lazy-loaded Module's `providers`
+  - Using Child Injector
+  - The service will only be available in the loaded module
+  - Should be used if the service should be scoped to the loaded module
+
 ## Appendix
 
 ### RouterModule
