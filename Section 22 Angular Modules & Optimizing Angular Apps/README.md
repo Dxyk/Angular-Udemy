@@ -543,6 +543,36 @@ In `app.component.ts` and `shopping-list.component.ts`, call `LoggingService.pri
     - E.g. provide `LoggingService` in `SharedModule`
     - Produces the same result because the `SharedModule` is eagerly loaded in `AppModule`, but lazily loaded in `ShoppingListModule`
 
+### Lesson 336 - Ahead-of-Time Compilation
+
+In an Angular app, there are 2 steps in the **Compilation Process**
+
+1. The TS compiler compiles Angular TS code to JS
+2. Angular template compiler compiles Template syntax to JS DOM instructions
+   - Since all HTML template and code are only recognizable by Angular. Angular needs to translate all these code to DOM instructions
+   - This compiler is shipped with in built code
+
+There are 2 approaches to the second step
+
+- **Just-in-Time (JiT) Compilation**
+  - The compile happens in the browser right before the application is rendered
+  - Though the compile time is short, it is still a performance hit
+- **Ahead-ofTime (AoT) Compilation**
+  - The compiler runs during the build process, which is before the app is deployed
+  - In the final bundle, the compiler is removed since it is not needed anymore, thus saving space and runtime
+
+By default, in development environment, we use `ng serve`, which uses Just-in-Time Compilation.
+
+- It spins up a development server
+- It is easier for debugging
+- It provides fast updating while running the application
+
+However, in production environment, we use `ng build --prod`, which uses Ahead-of-Time Compilation.
+
+- This optimizes the code as much as possible so the bundle is small and the application runs faster.
+- This builds the entire app into a few file under the `dist` folder, which is ready for deploy.
+- This is more strict on the syntax. It will fail if anything doesn't compile.
+
 ## Appendix
 
 ### RouterModule
