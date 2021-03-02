@@ -328,6 +328,65 @@ Examples
 
 Lazy Loading allow a smaller initial download size and thus improves the app load time.
 
+### Lesson 331 - Implementing Lazy Loading
+
+To enable Lazy loading, the feature modules must carry its own routes (either in `feature.module.ts` or `feature-routing.module.ts`) using `RouterModule.forChild()`.
+
+In `recipes-routing.module.ts`
+
+- Remove the top level route path and make it an empty string (`path: 'recipes'` => `path: ''`)
+
+```ts
+const routes: Routes = [
+  {
+    path: '',
+    component: ...,
+    canActivate: [ ... ],
+    children: [ ... ]
+  },
+];
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule],
+})
+export class RecipesRoutingModule {}
+```
+
+In `app-routing.module.ts`
+
+- Add the removed route path for the feature module
+- Use `loadChildren` to detach the feature module and inform Angular to only download and parse the child modules when the path is accessed
+  - For newer syntax
+    - An anonymous function that calls `import(<relative/path/to/featureModule>).then(module => module.FeatureModuleClassName)`
+  - For older syntax
+    - The value is a string of `<relative path to the feature module file without file extension>#<module class name>`
+- It is also important to make sure there are no imports to the detached feature module in the other modules for lazy loading to work.
+
+```ts
+const appRoutes: Routes = [
+  { ... },
+  {
+    path: 'recipes',
+    // loadChildren: () =>
+    //   import('./recipes/recipes.module').then((m) => m.RecipesModule),
+    loadChildren: './recipes/recipes.module#RecipesModule',
+  },
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(appRoutes)],
+  exports: [RouterModule],
+})
+export class AppRoutingModule {}
+```
+
+In `app.module.ts`
+
+- Remove both the imports for `RecipesModule` and the import statement for `RecipesModule`
+  - Not removing them will cause the app to throw an error since it is trying to load the module both eagerly and lazily.
+
+When done enabling lazy loading, we need to rerun `ng serve` to let it take effect.
+
 ## Appendix
 
 ### RouterModule
