@@ -209,6 +209,49 @@ To create the ShoppingListModule, create `shopping-list.module.ts`. In it
 export class ShoppingListModule {}
 ```
 
+### Lesson 327 - Understanding Shared Modules
+
+**Shared Modules** contain features that are shared between feature modules. These shared modules are used to avoid code duplication and maintain leaner feature modules.
+
+In the [course project](../course-project), the shared feature is mostly defined in the shared folder, and on top of that, the `CommonModule` is imported for both `ShoppingListModule` and `RecipesModule`.
+
+Create a `shared/shared.module.ts`. In it
+
+- Declare all the building blocks used in the shared module
+- Import the `CommonModule`
+- Export building blocks that might be used by the feature modules, and also export the `CommonModule` so feature modules importing `SharedModule` won't need to import it again.
+- Add the `AlertComponent` as `entryComponents` since it is referenced in the `SharedModule`
+
+```ts
+@NgModule({
+  declarations: [
+    AlertComponent,
+    LoadingSpinnerComponent,
+    PlaceholderDirective,
+    DropdownDirective,
+  ],
+  imports: [CommonModule],
+  exports: [
+    AlertComponent,
+    LoadingSpinnerComponent,
+    PlaceholderDirective,
+    DropdownDirective,
+    CommonModule,
+  ],
+  entryComponents: [AlertComponent],
+})
+export class SharedModule {}
+```
+
+In `recipes.module.ts` and `shopping-list.module.ts`, replace `CommonsModule` with `SharedModule`
+
+In `app.component.ts`,
+
+- Remove all duplicated declarations declared in the `SharedModules`.
+  - Note that Modules can be imported for multiple times, but declarations can only be declared once throughout the entire application.
+- Import the `SharedModule` since the `AppModule` uses features inside it, e.g. `DropdownDirective`
+- Remove the `entryComponent`
+
 ## Appendix
 
 ### RouterModule
