@@ -315,6 +315,19 @@ In `app-routing.module.ts`
 
 - Remove routes related to auth
 
+### Lesson 330 - Understanding Lazy Loading
+
+Separating the application into different modules does not have only cosmetic effects. It is also a pre-requisite to **Lazy Loading**.
+
+Lazy Loading allows the app to only load specific modules when the user access the corresponding route, instead of loading everything all at once.
+
+Examples
+
+- When the user accesses `/`, we load only the `AppModule` and/or `CoreModule`
+- When the user accesses `/recipes`, we load the `RecipesModule` along with `AppModule` and `CoreModule`
+
+Lazy Loading allow a smaller initial download size and thus improves the app load time.
+
 ## Appendix
 
 ### RouterModule
