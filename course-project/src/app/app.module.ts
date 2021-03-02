@@ -17,5 +17,6 @@ import { SharedModule } from './shared/shared.module';
     SharedModule,
   ],
   bootstrap: [AppComponent],
+  // providers: [LoggingService]
 })
 export class AppModule {}

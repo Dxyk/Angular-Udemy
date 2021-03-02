@@ -493,6 +493,56 @@ A service can be provided through
   - The service will only be available in the loaded module
   - Should be used if the service should be scoped to the loaded module
 
+### Lesson 335 - Loading Services Differently
+
+An example that would explain the above 4 scenarios further
+
+Create `logging.service.ts`
+
+```ts
+export class LoggingService {
+  lastLog: string;
+
+  printLog(message: string) {
+    console.log(message);
+    console.log(this.lastLog);
+    this.lastLog = message;
+  }
+}
+```
+
+In `app.component.ts` and `shopping-list.component.ts`, call `LoggingService.printLog()` with different values
+
+- `AppModule` / `@Injectable({ providedIn: 'root' })`
+- Eager-loaded Module's `providers` (provided in `CoreComponent`)
+
+  ```txt
+  // app loaded
+  AppComponent
+  undefined
+  // shopping-list component loaded
+  ShoppingListComponent
+  AppComponent
+  ```
+
+  - This is because both components are using the same instance of the service
+
+- Lazy-loaded Module's `providers` (Provide in both `AppModule` and `ShoppingListModule`)
+
+  ```txt
+  // app loaded
+  AppComponent
+  undefined
+  // shopping-list component loaded
+  ShoppingListComponent
+  undefined
+  ```
+
+  - This is because the `ShoppingListComponent` is using a different instance of `LoggingService` than `AppComponent`
+  - Note the same behavior applies to imported modules as well.
+    - E.g. provide `LoggingService` in `SharedModule`
+    - Produces the same result because the `SharedModule` is eagerly loaded in `AppModule`, but lazily loaded in `ShoppingListModule`
+
 ## Appendix
 
 ### RouterModule
