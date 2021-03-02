@@ -43,7 +43,7 @@ In `recipes.module.ts`, an initial attempt to separate `RecipesModule` from `App
 
 - Move all Recipes related components from `AppModule` to `RecipesModule`
 - Export these components since they are referenced elsewhere
-- Now the program doesn't compile correctly because it is missing features (e.g. `RoutingModule`).
+- Now the program doesn't compile correctly because it is missing features (e.g. `RouterModule`).
   - This will be corrected in the next lesson
 
 ```ts
@@ -183,3 +183,60 @@ In `recipes-routing.module.ts`
 })
 export class RecipesModule {}
 ```
+
+### Lesson 326 - The ShoppingList Feature Module
+
+To create the ShoppingListModule, create `shopping-list.module.ts`. In it
+
+- Declare all the shopping list components
+- Import the necessary modules
+- Import `RouterModule` and register the routes using `forChild`
+  - Since the route for shopping-list is lightweight, it is not necessary to create a separate `ShoppingListRoutingModule`
+- No need to export the `RouterModule`
+  - See [Appendix](#appendix) for explanation
+
+```ts
+@NgModule({
+  declarations: [ShoppingListComponent, ShoppingEditComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterModule.forChild([
+      { path: 'shopping-list', component: ShoppingListComponent },
+    ]),
+  ],
+})
+export class ShoppingListModule {}
+```
+
+## Appendix
+
+### RouterModule
+
+The usage of `RouterModule` is rather complex, since this module has several tasks.
+
+In `RouterModule` several directives are declared, which are needed in multiple components in connection with routing (like `RouterOutlet`, `RouterLink`, `RouterLinkActive` etc.).
+
+Additionally `RouterModule` should provide the services which manage the different routes arrays of the feature modules. And last but not least: `RouterModule` should provide an instance of the `Router` service itself.
+
+#### The problem
+
+This dual role, declaring directives and providing services, - actually nothing special for a module - causes a problem in the case of `RouterModule`:
+
+1. We know that a directive (like a component) can be declared only once in an app, in the declarations array of one particular module, not more often. That means we have to import `RouterModule` in multiple modules of our app, in order to make the routing directives mentioned above available in all places where they are needed.
+
+2. But this could involve the risk of getting multiple instances of the services, if those would be provided in the usual manner in a providers array directly in the `@NgModule` annotation of `RouterModule`.
+
+And this should not happen: It’s clear that the services which are responsible for the routes arrays of the different feature modules, as well as the `Router` instance itself, have to be singletons.
+
+#### The solution
+
+The basic version of the `RouterModule` contains only the directives mentioned above which are needed for routing in the components. Nothing more. This simple version of `RouterModule` can be imported in as many modules as required without any risk.
+
+If you call `RouterModule.forChild(myChildRoutes)` in a feature module, this method returns an enhanced `RouterModule`, which contains not only these directives, but additionally the services which are required for handling `myChildRoutes`.
+
+You will import this modified version only once in the routing module of that feature module. And important: **The original `RouterModule` will not be modified; you will export the unmodified `RouterModule` version from the routing module**, which then can be used in the related feature module for accessing the directives in multiple places.
+
+And `RouterModule.forRoot(myRootRoutes)` acts similarly. This method returns an enhanced version of `RouterModule` as well (again without modifying the original `RouterModule`), containing the directives, the providers for `myRootRoutes`, and in this case also the provider for the `Router` instance itself.
+
+This version of the `RouterModule` should only be imported once in your app (in `app-routing.module.ts`), and you will get an error if you try to use it in a lazy loaded module (since then you would get a new instance of the `Router`, and that has to be avoided under any circumstances). And of course you will export the unmodified `RouterModule` version from `app-routing.module.ts` for the import and further usage in `app.module.ts`.
