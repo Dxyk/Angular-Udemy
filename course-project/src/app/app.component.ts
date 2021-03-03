@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { environment } from 'src/environments/environment';
 import { AuthService } from './auth/auth.service';
 import { LoggingService } from './logging.service';
 
@@ -16,5 +17,6 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.authService.autoLogin();
     this.loggingService.printLog('Hello from AppComponent NgOnInit');
+    console.log(environment.production);
   }
 }
