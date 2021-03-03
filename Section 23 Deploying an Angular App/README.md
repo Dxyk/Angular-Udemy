@@ -36,3 +36,20 @@ export class AppComponent implements OnInit {
   }
 }
 ```
+
+### Lesson 342 - Deployment Example: Firebase Hosting
+
+After building the prod distribution bundle using `ng build --prod`, the project is ready for deployment.
+
+There are multiple web services that can host static web servers. Some examples are AWS S3 and Firebase. For this course, we use Firebase.
+
+1. `npm install -g firebase-tools` - Install Firebase CLI
+2. `firebase login` - Log into Firebase
+3. `firebase init` - Connect the local project with a Firebase project
+   1. Select Hosting to host the static website
+   2. Select the Firebase project to connect to
+   3. Set the public directory as the generated bundle folder under `dist`. I.e. `dist/course-project`
+   4. Choose Yes to configure the project as a single page app
+   5. Do not override the existing HTML file
+4. `firebase deploy` - Deploy the firebase project
+   1. This will return a URL that is hosting the application
