@@ -53,3 +53,7 @@ There are multiple web services that can host static web servers. Some examples 
    5. Do not override the existing HTML file
 4. `firebase deploy` - Deploy the firebase project
    1. This will return a URL that is hosting the application
+
+### Lesson 343 - Server Routing vs Browser Routing
+
+When deploying an Angular app, it's important to make sure the hosting server (like S3) is configured to always serve the index.html file. This is so that the server can redirect the route to Angular so it doesn't throw 404s because the server cannot find the route.
