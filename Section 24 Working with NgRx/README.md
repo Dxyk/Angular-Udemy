@@ -46,10 +46,6 @@ Downsides of using `RxJS` only is that there isn't a specific pattern enforced. 
     - Return the new State
 - The returned State gets forwarded to the `Store` and the `Store` saves the reduced State
 
-Redux Workflow:
-
-<img src="./images/Redux.png" alt="Redux Workflow">
-
 The Redux Pattern provides a cleaner way of storing the application state because
 
 - It provides a centralized place for storing app data
@@ -62,3 +58,7 @@ The Redux Pattern provides a cleaner way of storing the application state becaus
 - It uses RxJS
 - It uses TS instead of JS
 - It allows side effect handling by listening to the `Action`s
+
+NgRx Workflow:
+
+<img src="./images/NgRx.png" alt="Redux Workflow">
