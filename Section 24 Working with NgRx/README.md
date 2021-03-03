@@ -62,3 +62,27 @@ The Redux Pattern provides a cleaner way of storing the application state becaus
 NgRx Workflow:
 
 <img src="./images/NgRx.png" alt="Redux Workflow">
+
+### Lesson 347 - Getting Started with Reducers
+
+Install NgRx using `npm install --save @ngrx/store`
+
+Create a `shopping-list.reducer.ts` file. In it
+
+- Declare an initial state
+  - Copy the `ingredients` list from `ShoppingListService`
+- Define and export a function `shoppingListReducer`
+  - This function will be used by NgRx when we introduce it
+  - The function takes in
+    - A `state`
+      - Set the initial state as default argument
+      - If the state is not set or null, then the `initialState` is used
+    - An `action`
+
+```ts
+const initialState = {
+  ingredients: [new Ingredient('Apples', 5), new Ingredient('Tomatoes', 10)],
+};
+
+export function shoppingListReducer(state = initialState, action) {}
+```
