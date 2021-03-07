@@ -2,6 +2,17 @@
 
 ## NgRx
 
+### Note
+
+As of now (2021-03-07), to make everything compile, there are a few project setup items needed
+
+- In `tsconfig`
+  - The TS target version should be `"target": "es2015"`
+    - Note this will be incompatible with IE 11
+  - All `'strict'` settings should be false
+- In `package.json`
+  - The version for ngrx should be `"@ngrx/store": "^10.1.2"`
+
 ### Lesson 344 - Module Introduction
 
 **NgRx** is a state management package maintained and developed by parts of the Angular team.
@@ -191,4 +202,74 @@ In `app.module.ts`
   bootstrap: [ ... ],
 })
 export class AppModule {}
+```
+
+### Lesson 351 - Selecting State
+
+To use the state to get the shopping list ingredients
+
+In `shopping-list.component.ts`
+
+- Inject the store in the constructor
+  - The `Store` object takes in type parameter as an JS object
+    - The key is the identifier used in `AppModule`
+    - The value is the return type (state type) of the reducer
+- Modify `ingredients` to an `Observable`
+- In `ngOnInit`, use `Store.select()` to select the slice of the state
+  - The slice is identified as a string, which is the identifier mentioned above
+  - The method returns an `Observable` of the type of the state type
+
+```ts
+@Component({
+  selector: 'app-shopping-list',
+  templateUrl: './shopping-list.component.html',
+  styleUrls: ['./shopping-list.component.css'],
+})
+export class ShoppingListComponent implements OnInit, OnDestroy {
+  ingredients: Observable<{ ingredients: Ingredient[] }>;
+
+  constructor(
+    ...,
+    private store: Store<{ shoppingList: { ingredients: Ingredient[] } }>
+  ) {}
+
+  ngOnInit() {
+    this.ingredients = this.store.select('shoppingList');
+  }
+
+  ngOnDestroy() {}
+}
+```
+
+In `shopping-list.component.html`
+
+- Modify the `*mgFor` to use a `async` pipe to resolve the `Observable`, and get the `ingredients` list after the observable is resolved
+
+```html
+<a
+  class="list-group-item"
+  style="cursor: pointer"
+  *ngFor="let ingredient of (ingredients | async).ingredients; let i = index"
+  (click)="onEditItem(i)"
+>
+  {{ ingredient.name }} ({{ ingredient.amount }})
+</a>
+```
+
+In `shopping-list.reducer.ts`
+
+- Add a `default` statement that returns the state when the action is unknown to avoid errors
+
+```ts
+export function shoppingListReducer(
+  state = initialState,
+  action: ShoppingListActions.AddIngredient
+) {
+  switch (action.type) {
+    case ShoppingListActions.ADD_INGREDIENT:
+      ...;
+    default:
+      return state;
+  }
+}
 ```
