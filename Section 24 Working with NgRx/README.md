@@ -534,3 +534,127 @@ export class RecipeService {
   constructor(private store: Store<fromShoppingList.AppState>) {}
 }
 ```
+
+### Lesson 357 - Managing More State via NgRx
+
+The bug mentioned at the end of [Lesson 355](#lesson-355---updating--deleting-ingredients) is caused by `shopping-edit.component.ts` fetching target ingredient from `ShoppingListService` instead of the Store.
+
+In `shopping-list.actions.ts`
+
+- Create a `StartEdit` Action
+  - Use the constructor to set the payload as the index of the `Ingredient` to edit
+- Create a `StopEdit` Action
+  - No need to add a payload because the Reducer does not need any information to reset the state
+- Add the two actions to the `ShoppingListActions` type definition
+
+```ts
+export const START_EDIT = 'START_EDIT';
+export const STOP_EDIT = 'STOP_EDIT';
+
+export class StartEdit implements Action {
+  readonly type = START_EDIT;
+
+  constructor(public payload: number) {}
+}
+
+export class StopEdit implements Action {
+  readonly type = STOP_EDIT;
+}
+
+export type ShoppingListActions =
+  | AddIngredient
+  | AddIngredients
+  | UpdateIngredients
+  | DeleteIngredients
+  | StartEdit
+  | StopEdit;
+```
+
+In `shopping-list.reducer.ts`
+
+- Add logic to process Action type of `START_EDIT`
+  - Copy the state
+  - Set the `editedIngredientIndex` using the payload
+  - Set the `editedIngredient` using the index and the state's ingredients list
+    - Note that the ingredient needs to be copied to avoid mutable edits
+- Add logic to process Action type of `STOP_EDIT`
+  - Copy the state
+  - Reset `editedIngredientIndex` and `editedIngredient`
+
+```ts
+export function shoppingListReducer(
+  state: State = initialState,
+  action: ShoppingListActions.ShoppingListActions
+): State {
+  switch (action.type) {
+    ...;
+    case ShoppingListActions.START_EDIT:
+      return {
+        ...state,
+        editedIngredientIndex: action.payload,
+        editedIngredient: { ...state.ingredients[action.payload] },
+      };
+    case ShoppingListActions.STOP_EDIT:
+      return {
+        ...state,
+        editedIngredient: null,
+        editedIngredientIndex: -1,
+      };
+  }
+```
+
+In `shopping-list.component.ts`
+
+- Dispatch `StartEdit` Action when the item is edited
+
+```ts
+@Component({ ... })
+export class ShoppingListComponent implements OnInit, OnDestroy {
+  onEditItem(index: number) {
+    this.store.dispatch(new ShoppingListActions.StartEdit(index));
+  }
+}
+```
+
+In `shopping-edit.component.ts`
+
+- In `ngOnInit`
+  - Fetch the `State` data from the store
+  - Base on the store, set the edit mode
+  - If the store contains valid edit data, then set the editedItem and the form values
+- In `onClear` and `ngOnDestroy`
+  - Dispatch `StopEdit` Action to clear the `State`'s edit data
+
+```ts
+@Component({ ... })
+export class ShoppingEditComponent implements OnInit, OnDestroy {
+  ngOnInit() {
+    this.startedEditingSubscription = this.store
+      .select('shoppingList')
+      .subscribe((stateData: fromShoppingList.State) => {
+        if (stateData.editedIngredientIndex > -1) {
+          this.editMode = true;
+          this.editedItem = stateData.editedIngredient;
+          this.shoppingListForm.setValue({
+            name: this.editedItem.name,
+            amount: this.editedItem.amount,
+          });
+        } else {
+          this.editMode = false;
+        }
+      });
+  }
+
+  onClear() {
+    ...;
+    this.store.dispatch(new ShoppingListActions.StopEdit());
+  }
+
+  ngOnDestroy(): void {
+    ...;
+    this.store.dispatch(new ShoppingListActions.StopEdit());
+  }
+}
+```
+
+This introduces another bug - the edit and delete actions are dispatched and processed by the Reducer, but the changes to the state are no longer reflected on the page. This will be addressed in a later lesson
