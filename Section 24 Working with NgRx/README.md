@@ -385,3 +385,34 @@ export class RecipeService {
   }
 }
 ```
+
+### Lesson 354 - Preparing Update & Delete Actions
+
+In `shopping-list.actions.ts`
+
+- Add `UpdateIngredients` Action, which takes in an object of index and ingredient as payload
+- Add `DeleteIngredients` Action, which takes only the index as payload
+- Add both Actions to the `ShoppingListActions` type
+
+```ts
+export const UPDATE_INGREDIENTS = 'UPDATE_INGREDIENTS';
+export const DELETE_INGREDIENTS = 'DELETE_INGREDIENTS';
+
+export class UpdateIngredients implements Action {
+  readonly type = UPDATE_INGREDIENTS;
+
+  constructor(public payload: { index: number; ingredient: Ingredient }) {}
+}
+
+export class DeleteIngredients implements Action {
+  readonly type = DELETE_INGREDIENTS;
+
+  constructor(public payload: number) {}
+}
+
+export type ShoppingListActions =
+  | AddIngredient
+  | AddIngredients
+  | UpdateIngredients
+  | DeleteIngredients;
+```
