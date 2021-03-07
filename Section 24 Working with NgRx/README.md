@@ -321,3 +321,67 @@ The workflow of dispatching an action
 2. The Action reaches all the registered Reducers (Registered using `StoreModule.forRoot({identifier: reducer})`)
    1. The action is passed in as the second argument in the Reducer function
    2. The Reducer checks the type of action and react correspondingly
+
+### Lesson 353 - Multiple Actions
+
+To add another action, e.g. Add multiple recipes
+
+In `shopping-list.actions.ts`
+
+- Add a new constant `ADD_INGREDIENTS` indicating the type of the new actions
+- Add a new Action `AddIngredients`
+  - Use the above type
+  - Include `payload` of array of `Ingredient`s in the constructor
+- Export a `type` of `ShoppingListActions`, which is a union of all possible Action types
+
+```ts
+export const ADD_INGREDIENTS = 'ADD_INGREDIENTS';
+
+export class AddIngredients implements Action {
+  readonly type = ADD_INGREDIENTS;
+
+  constructor(public payload: Ingredient[]) {}
+}
+
+export type ShoppingListActions = AddIngredient | AddIngredients;
+```
+
+In `shopping-list.reducer.ts`
+
+- React to the new action type
+  - Use `...list` to unpack the list object to add all list item to the list
+
+```ts
+export function shoppingListReducer(
+  state = initialState,
+  action: ShoppingListActions.ShoppingListActions
+) {
+  switch (action.type) {
+    case ShoppingListActions.ADD_INGREDIENTS:
+      return {
+        ...state,
+        ingredients: [...state.ingredients, ...action.payload],
+      };
+    ...
+  }
+}
+```
+
+In `recipe.service.ts`
+
+- Inject the store
+- Use `Store.dispatch()` to dispatch the `AddIngredients` event
+
+```ts
+@Injectable({ ... })
+export class RecipeService {
+  constructor(
+    ...,
+    private store: Store<{ shoppingList: { ingredients: Ingredient[] } }>
+  ) {}
+
+  addIngredientToShoppingList(ingredients: Ingredient[]): void {
+    this.store.dispatch(new ShoppingListActions.AddIngredients(ingredients));
+  }
+}
+```
