@@ -273,3 +273,51 @@ export function shoppingListReducer(
   }
 }
 ```
+
+### Lesson 352 - Dispatching Actions
+
+Another place to dispatch Actions in the app is in the shopping-edit component.
+
+In `shopping-list.actions.ts`
+
+- Use the constructor to include the `payload` property so all `AddIngredient` actions require it during construction
+
+```ts
+export class AddIngredient implements Action {
+  readonly type = ADD_INGREDIENT;
+
+  constructor(public payload: Ingredient) {}
+}
+```
+
+In `shopping-edit.component.ts`
+
+- Instead of using the service to add an ingredient, dispatch an `AddIngredient` action using `Store.dispatch`
+  - `Store.dispatch()` takes in an action, and does not return anything
+
+```ts
+@Component({ ... })
+export class ShoppingEditComponent implements OnInit, OnDestroy {
+  constructor(
+    ...,
+    private store: Store<{ shoppingList: { ingredients: Ingredient[] } }>
+  ) {}
+
+  onSubmit(formElement: NgForm) {
+    ...;
+    if (this.editMode) {
+      ...;
+    } else {
+      this.store.dispatch(new ShoppingListActions.AddIngredient(newIngredient));
+    }
+    ...;
+  }
+}
+```
+
+The workflow of dispatching an action
+
+1. An `Action` is dispatched using `Store.dispatch()`
+2. The Action reaches all the registered Reducers (Registered using `StoreModule.forRoot({identifier: reducer})`)
+   1. The action is passed in as the second argument in the Reducer function
+   2. The Reducer checks the type of action and react correspondingly
