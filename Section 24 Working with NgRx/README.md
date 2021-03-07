@@ -494,4 +494,43 @@ export class ShoppingEditComponent implements OnInit, OnDestroy {
 }
 ```
 
-Note there is a bug where the page is displaying outdated states when editing an ingredient. This will be addressed in the next lesson.
+Note there is a bug where the page is displaying outdated states when editing an ingredient. This will be addressed in later lessons.
+
+### Lesson 356 - Expanding the State
+
+In `shopping-list.reducer.ts`
+
+- Define an interface that describes the `State`
+- Define an interface that describes the `AppState`
+  - This is used when the `Store` is injected into other components
+
+```ts
+export interface State {
+  ingredients: Ingredient[];
+  editedIngredient: Ingredient;
+  editedIngredientIndex: number;
+}
+
+export interface AppState {
+  shoppingList: State;
+}
+
+const initialState: State = {
+  ingredients: [new Ingredient('Apples', 5), new Ingredient('Tomatoes', 10)],
+  editedIngredient: null,
+  editedIngredientIndex: -1,
+};
+```
+
+In `recipe.service.ts`, `shopping-edit.component.ts` and `shopping-list.component.ts`
+
+- Use the `AppState` to replace the hard-coded type parameter when injecting the `Store`
+
+```ts
+import * as fromShoppingList from '.../shopping-list.reducer';
+
+@Injectable({ ... })
+export class RecipeService {
+  constructor(private store: Store<fromShoppingList.AppState>) {}
+}
+```
