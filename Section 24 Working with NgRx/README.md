@@ -658,3 +658,92 @@ export class ShoppingEditComponent implements OnInit, OnDestroy {
 ```
 
 This introduces another bug - the edit and delete actions are dispatched and processed by the Reducer, but the changes to the state are no longer reflected on the page. This will be addressed in a later lesson
+
+### Lesson 358 - Removing Redundant Component State Management
+
+The bug mentioned at the end of [lesson 357](#lesson-357---managing-more-state-via-ngrx) is caused by `shopping-edit.component.ts`'s editedItemIndex not being updated / set during `ngOnInit`.
+
+One fix is to set it by `this.editedItemIndex = stateData.editedIngredientIndex;`, but this is redundant because this is extracting data from the `Store`, and later in the application, the `Store` also relies on this data to set the new `State`. Thus it is appropriate to remove it all at once.
+
+In `shopping-list.actions.ts`
+
+- Remove the need for index in `UpdateIngredient` and `DeleteIngredient` Actions
+
+```ts
+export class UpdateIngredients implements Action {
+  readonly type = UPDATE_INGREDIENTS;
+
+  constructor(public payload: Ingredient) {}
+}
+
+export class DeleteIngredients implements Action {
+  readonly type = DELETE_INGREDIENTS;
+}
+```
+
+In `shopping-list.reducer.ts`
+
+- Update logic to respond to `UpdateIngredient` and `DeleteIngredient` Actions
+  - Use the index in the `Store` instead of in the payload
+
+```ts
+export function shoppingListReducer(
+  state: State = initialState,
+  action: ShoppingListActions.ShoppingListActions
+): State {
+  switch (action.type) {
+    ...;
+    case ShoppingListActions.UPDATE_INGREDIENTS:
+      const ingredient = state.ingredients[state.editedIngredientIndex];
+      const updatedIngredient = {
+        ...ingredient, // copy old data
+        ...action.payload, // overwrite with new data
+      };
+      const updatedIngredients = [...state.ingredients];
+      updatedIngredients[state.editedIngredientIndex] = updatedIngredient;
+      return {
+        ...state,
+        ingredients: updatedIngredients,
+        editedIngredientIndex: -1,
+        editedIngredient: null,
+      };
+    case ShoppingListActions.DELETE_INGREDIENTS:
+      return {
+        ...state,
+        ingredients: state.ingredients.filter(
+          (_ingredient: Ingredient, index: number) => {
+            return index !== state.editedIngredientIndex;
+          }
+        ),
+        editedIngredientIndex: -1,
+        editedIngredient: null,
+      };
+    ...;
+  }
+```
+
+In `shopping-edit.component.ts`
+
+- Dispatch the `UpdateIngredients` and `DeleteIngredients` Actions properly
+
+```ts
+@Component({ ... })
+export class ShoppingEditComponent implements OnInit, OnDestroy {
+  onSubmit(formElement: NgForm) {
+    ...;
+    if (this.editMode) {
+      this.store.dispatch(
+        new ShoppingListActions.UpdateIngredients(newIngredient)
+      );
+    } else {
+      ...;
+    }
+    ...;
+  }
+
+  onDelete() {
+    this.store.dispatch(new ShoppingListActions.DeleteIngredients());
+    ...;
+  }
+}
+```
