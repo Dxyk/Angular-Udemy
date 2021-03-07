@@ -86,3 +86,29 @@ const initialState = {
 
 export function shoppingListReducer(state = initialState, action) {}
 ```
+
+### Lesson 348 - Adding Logic to the Reducer
+
+In `shopping-list.reducer.ts`
+
+- The reducer updates the state base on the type of action (`Action.type`).
+  - The type is an action identifier defined by the developer and the convention is to use `UPPERCASE_NAMES`.
+- The returned updated `State` must be an immutable update.
+  - I.e. the state must be copied and updated instead of updating and returning the original state.
+  - Use the `...object` syntax to copy the value from the object. This object can be a JS object or array.
+- The data change will be encapsulated in the `Action`, which will be added in the next lecture
+
+```ts
+export function shoppingListReducer(state = initialState, action: Action) {
+  switch (action.type) {
+    case 'ADD_INGREDIENT':
+      return {
+        ...state,
+        ingredients: [
+          ...state.ingredients,
+          action, // this is not yet correct
+        ],
+      };
+  }
+}
+```
