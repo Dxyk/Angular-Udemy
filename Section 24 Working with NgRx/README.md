@@ -747,3 +747,29 @@ export class ShoppingEditComponent implements OnInit, OnDestroy {
   }
 }
 ```
+
+### Lesson 359 - First Summary & Clean Up
+
+Thus far, what we did are
+
+- Import `StoreModule` in `AppModule`
+  - Register the Reducer using `StoreModule.forRoot({ identifier: reducer })`
+- Add a Reducer `shopping-list.reducer.ts`
+  - Reducer is just a function that takes in a State and an Action and returns a new State (immutable)
+  - Use a switch-case statement to check the Action's type and generate the new state accordingly
+  - No asynchronous code in the Reducer
+- Add an Actions file `shopping-list.actions.ts`
+  - Define Action type identifiers
+  - Define Actions implementing `Action`
+  - Optionally accept payload data
+
+Cons of using NgRx Store (compared to using services)
+
+- More overhead setting up Reducer and Actions
+
+Pros of using NgRx Store (compared to using services)
+
+- Easy to grow the Reducer and Actions once they are set up
+- Easier to manage the state as the state gets larger
+
+Now all the states related to `shopping-list.service.ts` are managed by NgRx, all references to the ShoppingListService can be safely removed / commented out.
