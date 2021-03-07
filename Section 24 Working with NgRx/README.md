@@ -416,3 +416,82 @@ export type ShoppingListActions =
   | UpdateIngredients
   | DeleteIngredients;
 ```
+
+### Lesson 355 - Updating & Deleting Ingredients
+
+In `shopping-list.reducer.ts`
+
+- Add logic to handle Action of type `UPDATE_INGREDIENTS`
+  - Copy all objects and lists that will be modified
+  - Note that NgRx forbids mutable modifications to the state, and this applies to objects stored in the state as well
+  - I.e. the objects in the state must be copied and then modified
+- Add logic to handle Action of type `DELETE_INGREDIENTS`
+  - Use the `filter()` method, which returns a copy of the list, and only retain elements that evaluates to true in the passed in method
+
+```ts
+export function shoppingListReducer(
+  state = initialState,
+  action: ShoppingListActions.ShoppingListActions
+) {
+  switch (action.type) {
+    case ShoppingListActions.UPDATE_INGREDIENTS:
+      const ingredient = state.ingredients[action.payload.index];
+      const updatedIngredient = {
+        ...ingredient, // copy old data
+        ...action.payload.ingredient, // overwrite with new data
+      };
+      const updatedIngredients = [...state.ingredients];
+      updatedIngredients[action.payload.index] = updatedIngredient;
+      return {
+        ...state,
+        ingredients: updatedIngredients,
+      };
+    case ShoppingListActions.DELETE_INGREDIENTS:
+      return {
+        ...state,
+        ingredients: state.ingredients.filter(
+          (_ingredient: Ingredient, index: number) => {
+            return index !== action.payload;
+          }
+        ),
+      };
+    ...;
+  }
+}
+```
+
+In `shopping-edit.component.ts`
+
+- Modify methods to dispatch Actions correctly
+
+```ts
+@Component({
+  selector: 'app-shopping-edit',
+  templateUrl: './shopping-edit.component.html',
+  styleUrls: ['./shopping-edit.component.css'],
+})
+export class ShoppingEditComponent implements OnInit, OnDestroy {
+  onSubmit(formElement: NgForm) {
+    ...;
+    if (this.editMode) {
+      this.store.dispatch(
+        new ShoppingListActions.UpdateIngredients({
+          index: this.editedItemIndex,
+          ingredient: newIngredient,
+        })
+      );
+    } else {
+      ...;
+    }
+    ...;
+  }
+  onDelete() {
+    this.store.dispatch(
+      new ShoppingListActions.DeleteIngredients(this.editedItemIndex)
+    );
+    ...;
+  }
+}
+```
+
+Note there is a bug where the page is displaying outdated states when editing an ingredient. This will be addressed in the next lesson.
