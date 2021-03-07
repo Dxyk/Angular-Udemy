@@ -146,3 +146,49 @@ export function shoppingListReducer(state = initialState, action: Action) {
   }
 }
 ```
+
+### Lesson 350 - Setting Up the NgRx Store
+
+In `shopping-list.reducer.ts`
+
+- Import everything from `shopping-list.actions.ts` by using `import * as ShoppingListActions from 'shopping-list.actions'`
+- Properly use the payload in the AddIngredient action
+
+```ts
+import * as ShoppingListActions from './shopping-list.actions';
+...
+export function shoppingListReducer(
+  state = initialState,
+  action: ShoppingListActions.AddIngredient
+) {
+  switch (action.type) {
+    case ShoppingListActions.ADD_INGREDIENT:
+      return {
+        ...state,
+        ingredients: [...state.ingredients, action.payload],
+      };
+  }
+}
+```
+
+To set up the store
+
+In `app.module.ts`
+
+- Import `StoreModule` from NgRx
+- Use the `StoreModule.forRoot()` method to register the reducers
+  - It takes in `ActionReducerMap` as input, which is just a JS object
+    - The key is an arbitrary identifier that represents the feature the reducer will cover
+    - The value is the actual reducer object
+
+```ts
+@NgModule({
+  declarations: [ ... ],
+  imports: [
+    ...,
+    StoreModule.forRoot({ shoppingList: shoppingListReducer }),
+  ],
+  bootstrap: [ ... ],
+})
+export class AppModule {}
+```
