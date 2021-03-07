@@ -112,3 +112,37 @@ export function shoppingListReducer(state = initialState, action: Action) {
   }
 }
 ```
+
+### Lesson 349 - Understanding & Adding Actions
+
+With the `Reducer` set up, now we should set up `Action`s. In NgRx, `Action` is an interface that forces only a `type` identifier.
+
+Create a `store` directory, create a `shopping-list.actions.ts`. In it
+
+- Export a constant that represents the `ADD_INGREDIENT` action type identifier
+- Export a `AddIngredient` class that implements NgRx `Action`
+  - Implement the `type` parameter and define it as `ADD_INGREDIENT`
+    - Make the `type` parameter `readonly`. This is similar to `final` in Java, which forbids any further modification to this property.
+  - Include a `payload` property that carries the data, which will be the type of `Ingredient` in this case.
+
+```ts
+export const ADD_INGREDIENT = 'ADD_INGREDIENT';
+
+export class AddIngredient implements Action {
+  readonly type = ADD_INGREDIENT;
+  payload: Ingredient;
+}
+```
+
+Move `shopping-list.reducer.ts` to the `store` directory. In it
+
+- Substitute the string action type with the constant defined in `shopping-list.actions.ts`
+
+```ts
+export function shoppingListReducer(state = initialState, action: Action) {
+  switch (action.type) {
+    case ADD_INGREDIENT:
+      return {...};
+  }
+}
+```
