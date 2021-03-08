@@ -837,3 +837,73 @@ export class AppModule {}
 Remove `AppState` defined in `shopping-list.reducer.ts` since it is no longer required.
 
 Update `AppState` type parameter in `shopping-edit.component.ts`, `shopping-list.component.ts` and `recipe.service.ts`.
+
+### Lesson 361 - Setting Up Auth Reducer & Actions
+
+Create `auth.actions.ts`. In it
+
+- Declare and export `Login` Action
+  - Declare the type
+  - Set the payload as an object containing all necessary fields to create a user
+- Declare and export `Logout` Action
+  - Declare the type
+  - No payload necessary
+
+```ts
+export const LOGIN = 'LOGIN';
+export const LOGOUT = 'LOGOUT';
+
+export class Login implements Action {
+  readonly type = LOGIN;
+
+  constructor(
+    public payload: {
+      email: string;
+      userId: string;
+      token: string;
+      expirationDate: Date;
+    }
+  ) {}
+}
+
+export class Logout implements Action {
+  readonly type = LOGOUT;
+}
+
+export type AuthActions = Login | Logout;
+```
+
+In `auth.reducer.ts`
+
+- Implement logic to respond to `Login` Action
+  - Create a user and set it as the user in the new state
+- Implement logic to respond to `Login` Action
+  - Set the state user to null
+
+```ts
+export function authReducer(
+  state: State = initialState,
+  action: AuthActions.AuthActions
+): State {
+  switch (action.type) {
+    case AuthActions.LOGIN:
+      const user = new User(
+        action.payload.email,
+        action.payload.userId,
+        action.payload.token,
+        action.payload.expirationDate
+      );
+      return {
+        ...state,
+        user: user,
+      };
+    case AuthActions.LOGOUT:
+      return {
+        ...state,
+        user: null,
+      };
+    default:
+      return state;
+  }
+}
+```
