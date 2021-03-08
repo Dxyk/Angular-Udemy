@@ -773,3 +773,67 @@ Pros of using NgRx Store (compared to using services)
 - Easier to manage the state as the state gets larger
 
 Now all the states related to `shopping-list.service.ts` are managed by NgRx, all references to the ShoppingListService can be safely removed / commented out.
+
+### Lesson 360 - One Root State
+
+Create a `auth/store` directory, and create `auth.reducer.ts`. In it
+
+- Define and export `State` interface
+- Set up `initialState`
+- Set up simple `authReducer`
+
+```ts
+export interface State {
+  user: User;
+}
+
+const initialState: State = {
+  user: null,
+};
+
+export function authReducer(state: State = initialState, action) {
+  return state;
+}
+```
+
+Create `store` directory at root level, and create `app.reducer.ts`. In it
+
+- Define and export interface `AppState`
+  - The key is the Reducer identifier
+  - The value is the `State` interface defined in each Reducer
+- Define and export the `ActionReducerMap`
+  - The type parameter is the `AppState`
+  - The key is the Reducer identifier
+  - The value is the Reducer function
+
+```ts
+export interface AppState {
+  shoppingList: fromShoppingList.State;
+  auth: fromAuth.State;
+}
+
+export const appReducer: ActionReducerMap<AppState> = {
+  shoppingList: fromShoppingList.shoppingListReducer,
+  auth: fromAuth.authReducer,
+};
+```
+
+In `app.module.ts`
+
+- Declare the Reducers using the `ActionReducerMap` defined in `app.reducer.ts`
+
+```ts
+@NgModule({
+  declarations: [ ... ],
+  imports: [
+    ...,
+    StoreModule.forRoot(fromApp.appReducer),
+  ],
+  bootstrap: [ ... ],
+})
+export class AppModule {}
+```
+
+Remove `AppState` defined in `shopping-list.reducer.ts` since it is no longer required.
+
+Update `AppState` type parameter in `shopping-edit.component.ts`, `shopping-list.component.ts` and `recipe.service.ts`.
