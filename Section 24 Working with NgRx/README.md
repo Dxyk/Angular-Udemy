@@ -1109,3 +1109,91 @@ export class AuthEffects {
   constructor(private actions$: Actions, private http: HttpClient) {}
 }
 ```
+
+### Lesson 368 - Login via NgRx Effects
+
+In `app.module.ts`
+
+- Import `EffectsModule`
+  - Use `EffectsModule.forRoot([])` to register a list of Effects
+
+```ts
+@NgModule({
+  declarations: [ ... ],
+  imports: [
+    ...,
+    EffectsModule.forRoot([AuthEffects]),
+  ],
+  bootstrap: [ ... ],
+})
+export class AppModule {}
+```
+
+In `auth.effects.ts`
+
+- Use `@Injectable()` to allow injections into `AuthEffects`
+- Use `map()` to populate an `AuthActions.Login` action after the side-effect (login request) completes successfully
+
+```ts
+@Injectable()
+export class AuthEffects {
+  @Effect()
+  authLogin = this.actions$.pipe(
+    ofType(AuthActions.LOGIN_START),
+    switchMap((authData: AuthActions.LoginStart) => {
+      return this.http
+        .post<AuthResponseData>(FirebaseConfigs.SIGN_IN_URL, {
+          email: authData.payload.email,
+          password: authData.payload.password,
+          returnSecureToken: true,
+        })
+        .pipe(
+          map((responseData: AuthResponseData) => {
+            const expirationDate = new Date(
+              new Date().getTime() + +responseData.expiresIn * 1000
+            );
+            return of(
+              new AuthActions.Login({
+                email: responseData.email,
+                userId: responseData.localId,
+                token: responseData.idToken,
+                expirationDate: expirationDate,
+              })
+            );
+          }),
+          catchError((error) => {
+            // ...
+            // returns an empty observable for now
+            return of();
+          })
+        );
+    })
+  );
+}
+```
+
+In `auth.component.ts`
+
+- Use the Store to dispatch a `LoginStart` Action
+  - The `LoginStart` Action will not be processed by the reducer (it will be processed using the default case), it will be captured by the Effects defined above because of the `ofType` filter
+
+```ts
+@Component({ ... })
+export class AuthComponent implements OnInit, OnDestroy {
+  onSubmit(authForm: NgForm): void {
+    if (!authForm.valid) {
+      ...;
+    } else {
+      ...;
+      if (this.isLoginMode) {
+        this.store.dispatch(
+          new AuthActions.LoginStart({ email: email, password: password })
+        );
+      } else {
+        ...;
+      }
+      ...;
+    }
+  }
+}
+```

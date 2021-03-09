@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { FirebaseConfigs } from 'src/app/constants/firebase-configs';
 import * as AuthActions from './auth.actions';
 
@@ -15,6 +16,7 @@ export interface AuthResponseData {
   registered?: boolean;
 }
 
+@Injectable()
 export class AuthEffects {
   @Effect()
   authLogin = this.actions$.pipe(
@@ -27,13 +29,23 @@ export class AuthEffects {
           returnSecureToken: true,
         })
         .pipe(
+          map((responseData: AuthResponseData) => {
+            const expirationDate = new Date(
+              new Date().getTime() + +responseData.expiresIn * 1000
+            );
+            return of(
+              new AuthActions.Login({
+                email: responseData.email,
+                userId: responseData.localId,
+                token: responseData.idToken,
+                expirationDate: expirationDate,
+              })
+            );
+          }),
           catchError((error) => {
             // ...
-            // returns a non-error observable to keep the observable alive
-            of();
-          }),
-          map((responseData) => {
-            of();
+            // returns an empty observable for now
+            return of();
           })
         );
     })
