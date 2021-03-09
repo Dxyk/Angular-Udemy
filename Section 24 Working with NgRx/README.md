@@ -1008,3 +1008,9 @@ In `auth.actions.ts`
 export const LOGIN = '[Auth] Login';
 export const LOGOUT = '[Auth] Logout';
 ```
+
+### Lesson 365 - Exploring NgRx Effects
+
+Side effects in NgRx applications are code or logic that are irrelevant to the immediate update of the state. For example, during the auth sign-up logic, the code for posting the Http Request are side effects, where as the code for processing the request response and storing the signed-up user in the state is not. NgRx does not care about the side effects, so the Actions and Reducers should not include side effect code.
+
+To deal with these side effects, NgRx provides the `@ngrx/effects`. This needs to be installed through `npm install --save @ngrx/effects`. It provides a solution to elegantly work with side effects while keeping Actions and Reducers clean.
