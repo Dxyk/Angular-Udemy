@@ -1014,3 +1014,31 @@ export const LOGOUT = '[Auth] Logout';
 Side effects in NgRx applications are code or logic that are irrelevant to the immediate update of the state. For example, during the auth sign-up logic, the code for posting the Http Request are side effects, where as the code for processing the request response and storing the signed-up user in the state is not. NgRx does not care about the side effects, so the Actions and Reducers should not include side effect code.
 
 To deal with these side effects, NgRx provides the `@ngrx/effects`. This needs to be installed through `npm install --save @ngrx/effects`. It provides a solution to elegantly work with side effects while keeping Actions and Reducers clean.
+
+### Lesson 366 - Defining the First Effect
+
+In `auth.actions.ts`
+
+- Create an Action type of `LOGIN_START`
+
+```ts
+export const LOGIN_START = '[Auth] Login Start';
+```
+
+In `auth/store`, create an `auth.effects.ts`. In it
+
+- Create and export an `AuthEffects` class
+- Define a property of `actions$: Actions` in the constructor
+  - `Actions` is an Observable provided by `@ngrx/effects` that gives access to all the dispatched actions
+  - The `$` sign is a naming convention for variables of type `Observable`
+- An Effect is a property of the class of type Observable
+  - It is obtained by filtering on the Action type in the `actions$` property
+  - `ofType()` is an operator provided by `@ngrx/effects`. It defines a filter for the kinds of effects the effect is targeting.
+
+```ts
+export class AuthEffects {
+  authLogin = this.actions$.pipe(ofType(AuthActions.LOGIN_START));
+
+  constructor(private actions$: Actions) {}
+}
+```
