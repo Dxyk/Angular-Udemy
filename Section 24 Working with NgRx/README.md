@@ -1042,3 +1042,70 @@ export class AuthEffects {
   constructor(private actions$: Actions) {}
 }
 ```
+
+### Lesson 367 - Effects & Error Handling
+
+In `auth.actions.ts`
+
+- Create a `LoginStart` Action
+  - The constructor takes in a payload with email and password
+
+```ts
+export class LoginStart implements Action {
+  readonly type = LOGIN_START;
+
+  constructor(public payload: { email: string; password: string }) {}
+}
+```
+
+In `auth.effects.ts`
+
+- To make `authLogin` a proper Effect, use the `@Effect()` decorator
+- Use `switchMap` to emit the Http Post request
+  - Recall that the `switchMap` operator maps the current Observable to an inner Observable and eventually emits the data in the inner Observable
+- Note that in the effect, we cannot catch the error thrown by the Http request using `catchError` (as in `AuthService`) because
+  - `catchError` terminates the Observable stream, which terminates the Observable
+  - In the service, the Observable is created whenever the method is called, so terminating it is ok
+  - In the effect, the Observable is created only once, and should live until we explicitly terminate it or until the application ends, so that it can react to other actions of the same type.
+- To handle the error, use `pipe()` in the inner Observable, and use `catchError` and `map` in the inner pipe
+  - Note that the `catchError` operator must not return an error, so the effect stays alive
+  - Use `of()` to return a new observable
+    - `of` is an RxJS operator that returns an observable
+    - The content of `of` and the return statement will be covered in the next lesson
+
+```ts
+export interface AuthResponseData {
+  kind?: string;
+  idToken: string;
+  email: string;
+  refreshToken: string;
+  expiresIn: string;
+  localId: string;
+  registered?: boolean;
+}
+
+export class AuthEffects {
+  @Effect()
+  authLogin = this.actions$.pipe(
+    ofType(AuthActions.LOGIN_START),
+    switchMap((authData: AuthActions.LoginStart) => {
+      return this.http
+        .post<AuthResponseData>(FirebaseConfigs.SIGN_IN_URL, {
+          email: authData.payload.email,
+          password: authData.payload.password,
+          returnSecureToken: true,
+        })
+        .pipe(
+          catchError((error) => {
+            of();
+          }),
+          map((responseData) => {
+            of();
+          })
+        );
+    })
+  );
+
+  constructor(private actions$: Actions, private http: HttpClient) {}
+}
+```
