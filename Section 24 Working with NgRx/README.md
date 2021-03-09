@@ -907,3 +907,66 @@ export function authReducer(
   }
 }
 ```
+
+### Lesson 362 - Dispatching Auth Actions
+
+In `auth.service.ts`
+
+- Inject Store
+- Replace all `user.next()` with `Store.dispatch()`
+
+```ts
+@Injectable({ ... })
+export class AuthService {
+  constructor(
+    ...,
+    private store: Store<fromApp.AppState>
+  ) {}
+
+  autoLogin(): void {
+    ...;
+    if (!userData) {
+      return;
+    } else {
+      ...;
+      if (loadedUser.token) {
+        // this.user.next(loadedUser);
+        this.store.dispatch(
+          new AuthActions.Login({
+            email: loadedUser.email,
+            userId: loadedUser.id,
+            token: loadedUser.token,
+            expirationDate: new Date(userData._tokenExpirationDate),
+          })
+        );
+        ...;
+      }
+    }
+  }
+
+  logout(): void {
+    // this.user.next(null);
+    this.store.dispatch(new AuthActions.Logout());
+    ...;
+  }
+
+  private handleAuthenticationResponse(
+    email: string,
+    userId: string,
+    token: string,
+    expiresIn: number
+  ): void {
+    ...;
+    // this.user.next(user);
+    this.store.dispatch(
+      new AuthActions.Login({
+        email: email,
+        userId: userId,
+        token: token,
+        expirationDate: expirationDate,
+      })
+    );
+    ...;
+  }
+}
+```
