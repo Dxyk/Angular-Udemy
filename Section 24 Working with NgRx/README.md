@@ -993,3 +993,18 @@ return this.store.select('auth').pipe(
   ...
 )
 ```
+
+### Lesson 364 - An Important Note on Actions
+
+When the app starts up NgRx will dispatch an action with a special type. This type is not handled by our Reducers at the moment, and thus the `default` case is required to return the original state.
+
+It is also important to add the `default` case because dispatched actions will reach _All_ reducers. If the `default` case is not specified, the reducer may not recognize the action and not return anything, and the state will be broken.
+
+Another thing to remember is that the Action identifiers' values should be unique across all Actions in the application. To avoid this, NgRx has a common pattern - **prefixing**. By prefixing the identifier with `[Feature Name]`, it ensures that no two features will have the same identifier name by accident. The common pattern also uses plain English text (with spaces) in the identifier.
+
+In `auth.actions.ts`
+
+```ts
+export const LOGIN = '[Auth] Login';
+export const LOGOUT = '[Auth] Logout';
+```
