@@ -970,3 +970,26 @@ export class AuthService {
   }
 }
 ```
+
+### Lesson 363 - Auth Finished (For Now...)
+
+In `auth.service.ts`
+
+- Comment out the `user` `BehaviorSubject` since all states should be managed by NgRx
+
+In `auth-interceptor.service.ts`, `auth.guard.ts`, `header.component.ts`
+
+- Inject the Store
+- Instead of using `AuthService.user`, use the store to select the slice of the state
+- Use `pipe` and `map` to map them to the correct data type so it can be processed as before
+
+```ts
+// return this.authService.user.pipe(
+return this.store.select('auth').pipe(
+  take(1),
+  map((authState: fromAuth.State) => {
+    return authState.user;
+  }),
+  ...
+)
+```
