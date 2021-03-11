@@ -1584,7 +1584,7 @@ In `auth.effects.ts`
   - Copy the logic from `AuthService.autoLogin()`
   - Return dummy Action if the data is invalid
   - Comment out logic to auto logout for now
-- Create an `autoLogout` Effect to listen to `AUTO_LOGOUT` Actions
+- Create an `authLogout` Effect to listen to `LOGOUT_SUCCESS` Actions
   - Reset local storage
   - No need to dispatch another action
 
@@ -1642,6 +1642,83 @@ export class AuthEffects {
     ofType(AuthActions.LOGOUT_SUCCESS),
     tap(() => {
       localStorage.removeItem(userDataKey);
+    })
+  );
+}
+```
+
+### Lesson 375 - Adding Auto-Logout
+
+Since all auth-related logic has been replaced with NgRx management, the `AuthService` should only handle the logout timer.
+
+In `auth.service.ts`
+
+- Rename `autoLogout` to `setLogoutTimer` that dispatches the `Logout` Action
+- Create a `clearLogoutTimer` method that clears the timer
+
+```ts
+@Injectable({ ... })
+export class AuthService {
+  private tokenExpirationTimer: any;
+
+  constructor(private store: Store<fromApp.AppState>) {}
+
+  setLogoutTimer(expirationDuration: number): void {
+    this.tokenExpirationTimer = setTimeout(() => {
+      this.store.dispatch(new AuthActions.Logout());
+    }, expirationDuration);
+  }
+
+  clearLogoutTimer() {
+    if (this.tokenExpirationTimer) {
+      clearTimeout(this.tokenExpirationTimer);
+      this.tokenExpirationTimer = null;
+    }
+  }
+}
+```
+
+In `auth.effects.ts`
+
+- Use `tap()` to set the timer when the user is authenticated or auto-logged in
+- Stop listening to `LOGOUT` Actions in the `authRedirect` Effect
+- In the `authLogout` Effect
+  - Clear the logout timer
+  - Navigate to the auth page `/auth`
+
+```ts
+@Injectable()
+export class AuthEffects {
+  @Effect()
+  authSignUp = this.actions$.pipe(
+    ofType(AuthActions.SIGN_UP_START),
+    switchMap((signUpAction: AuthActions.SignUpStart) => {
+      return this.http
+        .post<AuthResponseData>(...)
+        .pipe(
+          tap((responseData: AuthResponseData) => {
+            this.authService.setLogoutTimer(+responseData.expiresIn * 1000);
+          }),
+          ...;
+        );
+    })
+  );
+
+  @Effect({ dispatch: false })
+  authRedirect = this.actions$.pipe(
+    ofType(AuthActions.AUTHENTICATE_SUCCESS),
+    tap(() => {
+      this.router.navigate(['/']);
+    })
+  );
+
+  @Effect({ dispatch: false })
+  authLogout = this.actions$.pipe(
+    ofType(AuthActions.LOGOUT_SUCCESS),
+    tap(() => {
+      this.authService.clearLogoutTimer();
+      localStorage.removeItem(userDataKey);
+      this.router.navigate(['/auth']);
     })
   );
 }
