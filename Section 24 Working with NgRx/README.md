@@ -1723,3 +1723,7 @@ export class AuthEffects {
   );
 }
 ```
+
+### Lesson 376 - Finishing the Auth Effects
+
+Cleanup all component and services since all auth logic is managed by NgRx
