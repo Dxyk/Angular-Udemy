@@ -1326,3 +1326,33 @@ export class AuthEffects {
   );
 }
 ```
+
+### Lesson 371 - Preparing Other Auth Actions
+
+In `auth.actions`
+
+- Add `SignUpSignUpStart` Action
+- Rename `LoginSuccess` and `LoginFail` to `AuthenticateSuccess` and `AuthenticateFail`, since the logic is shared between `Login` and `SignUp`
+
+```ts
+export const SIGN_UP_START = '[Auth] Sign Up Start';
+export class SignUpStart implements Action {
+  readonly type = SIGN_UP_START;
+
+  constructor(public payload: { email: string; password: string }) {}
+}
+```
+
+Update references across the application.
+
+In `auth.effects.ts`
+
+- Add a skeleton effect to listen to `SignUpStart` events
+
+```ts
+@Injectable()
+export class AuthEffects {
+  @Effect()
+  authSignUp = this.actions$.pipe(ofType(AuthActions.SIGN_UP_START));
+}
+```

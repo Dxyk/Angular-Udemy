@@ -20,6 +20,11 @@ export interface AuthResponseData {
 @Injectable()
 export class AuthEffects {
   @Effect()
+  authSignUp = this.actions$.pipe(
+    ofType(AuthActions.SIGN_UP_START)
+  );
+
+  @Effect()
   authLogin = this.actions$.pipe(
     ofType(AuthActions.LOGIN_START),
     switchMap((authData: AuthActions.LoginStart) => {
@@ -34,7 +39,7 @@ export class AuthEffects {
             const expirationDate = new Date(
               new Date().getTime() + +responseData.expiresIn * 1000
             );
-            return new AuthActions.LoginSuccess({
+            return new AuthActions.AuthenticateSuccess({
               email: responseData.email,
               userId: responseData.localId,
               token: responseData.idToken,
@@ -59,7 +64,7 @@ export class AuthEffects {
                 }
               }
             }
-            return of(new AuthActions.LoginFail(errorMessage));
+            return of(new AuthActions.AuthenticateFail(errorMessage));
           })
         );
     })
@@ -67,7 +72,7 @@ export class AuthEffects {
 
   @Effect({ dispatch: false })
   authSuccess = this.actions$.pipe(
-    ofType(AuthActions.LOGIN_SUCCESS),
+    ofType(AuthActions.AUTHENTICATE_SUCCESS),
     tap(() => {
       this.router.navigate(['/']);
     })
