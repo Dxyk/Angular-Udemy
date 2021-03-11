@@ -1539,7 +1539,7 @@ export class AuthEffects {
     tap((authAction: AuthActions.AuthActions) => {
       if (authAction.type === AuthActions.AUTHENTICATE_SUCCESS) {
         this.router.navigate(['/']);
-      } else if (authAction.type === AuthActions.LOGOUT_SUCCESS){
+      } else if (authAction.type === AuthActions.LOGOUT_SUCCESS) {
         this.router.navigate(['/auth']);
       }
     })
@@ -1563,3 +1563,86 @@ export class HeaderComponent implements OnInit, OnDestroy {
 In `auth.service.ts`
 
 - Remove the `login` and `signUp` methods since they are no longer needed
+
+### Lesson 374 - Adding Auto-Login with NgRx
+
+In `auth.actions.ts`
+
+- Create an `AutoLogin` Action
+
+```ts
+export const AUTO_LOGIN = '[Auth] Auto Login';
+export class AutoLogin implements Action {
+  readonly type = AUTO_LOGIN;
+}
+```
+
+In `auth.effects.ts`
+
+- Store the current user in localStorage when the authentication request returns successful
+- Create an `autoLogin` Effect to listen to `AUTO_LOGIN` Actions
+  - Copy the logic from `AuthService.autoLogin()`
+  - Return dummy Action if the data is invalid
+  - Comment out logic to auto logout for now
+- Create an `autoLogout` Effect to listen to `AUTO_LOGOUT` Actions
+  - Reset local storage
+  - No need to dispatch another action
+
+```ts
+const handleAuthentication = (email, userId, token, expiresIn) => {
+  ...;
+  const user = new User(email, userId, token, expirationDate);
+  localStorage.setItem(userDataKey, JSON.stringify(user));
+  return new AuthActions.AuthenticateSuccess({ ... });
+};
+
+@Injectable()
+export class AuthEffects {
+  @Effect()
+  autoLogin = this.actions$.pipe(
+    ofType(AuthActions.AUTO_LOGIN),
+    map(() => {
+      const userData: {
+        email: string;
+        id: string;
+        _token: string;
+        _tokenExpirationDate: string;
+      } = JSON.parse(localStorage.getItem(userDataKey));
+      if (!userData) {
+        return { type: 'NOOP' };
+      } else {
+        const loadedUser = new User(
+          userData.email,
+          userData.id,
+          userData._token,
+          new Date(userData._tokenExpirationDate)
+        );
+
+        if (loadedUser.token) {
+          // this.user.next(loadedUser);
+          return new AuthActions.AuthenticateSuccess({
+            email: loadedUser.email,
+            userId: loadedUser.id,
+            token: loadedUser.token,
+            expirationDate: new Date(userData._tokenExpirationDate),
+          });
+          // const expirationDuration =
+          //   new Date(userData._tokenExpirationDate).getTime() -
+          //   new Date().getTime();
+          // this.autoLogout(expirationDuration);
+        } else {
+          return { type: 'NOOP' };
+        }
+      }
+    })
+  );
+
+  @Effect({ dispatch: false })
+  authLogout = this.actions$.pipe(
+    ofType(AuthActions.LOGOUT_SUCCESS),
+    tap(() => {
+      localStorage.removeItem(userDataKey);
+    })
+  );
+}
+```
