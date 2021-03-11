@@ -17,11 +17,68 @@ export interface AuthResponseData {
   registered?: boolean;
 }
 
+const handleAuthentication = (
+  email: string,
+  userId: string,
+  token: string,
+  expiresIn: number
+) => {
+  const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
+  return new AuthActions.AuthenticateSuccess({
+    email: email,
+    userId: userId,
+    token: token,
+    expirationDate: expirationDate,
+  });
+};
+
+const handleError = (errorResponse: HttpErrorResponse) => {
+  let errorMessage = 'An unknown error occurred!';
+  if (errorResponse?.error?.error) {
+    switch (errorResponse.error.error.message) {
+      case 'EMAIL_EXISTS': {
+        errorMessage = 'This email already exists!';
+        break;
+      }
+      case 'EMAIL_NOT_FOUND': {
+        errorMessage = 'This email does not exist!';
+        break;
+      }
+      case 'INVALID_PASSWORD': {
+        errorMessage = 'This password is incorrect!';
+        break;
+      }
+    }
+  }
+  return of(new AuthActions.AuthenticateFail(errorMessage));
+};
+
 @Injectable()
 export class AuthEffects {
   @Effect()
   authSignUp = this.actions$.pipe(
-    ofType(AuthActions.SIGN_UP_START)
+    ofType(AuthActions.SIGN_UP_START),
+    switchMap((signUpAction: AuthActions.SignUpStart) => {
+      return this.http
+        .post<AuthResponseData>(FirebaseConfigs.SIGN_UP_URL, {
+          email: signUpAction.payload.email,
+          password: signUpAction.payload.password,
+          returnSecureToken: true,
+        })
+        .pipe(
+          map((responseData: AuthResponseData) => {
+            return handleAuthentication(
+              responseData.email,
+              responseData.localId,
+              responseData.idToken,
+              +responseData.expiresIn
+            );
+          }),
+          catchError((errorResponse: HttpErrorResponse) => {
+            return handleError(errorResponse);
+          })
+        );
+    })
   );
 
   @Effect()
@@ -36,35 +93,15 @@ export class AuthEffects {
         })
         .pipe(
           map((responseData: AuthResponseData) => {
-            const expirationDate = new Date(
-              new Date().getTime() + +responseData.expiresIn * 1000
+            return handleAuthentication(
+              responseData.email,
+              responseData.localId,
+              responseData.idToken,
+              +responseData.expiresIn
             );
-            return new AuthActions.AuthenticateSuccess({
-              email: responseData.email,
-              userId: responseData.localId,
-              token: responseData.idToken,
-              expirationDate: expirationDate,
-            });
           }),
           catchError((errorResponse: HttpErrorResponse) => {
-            let errorMessage = 'An unknown error occurred!';
-            if (errorResponse?.error?.error) {
-              switch (errorResponse.error.error.message) {
-                case 'EMAIL_EXISTS': {
-                  errorMessage = 'This email already exists!';
-                  break;
-                }
-                case 'EMAIL_NOT_FOUND': {
-                  errorMessage = 'This email does not exist!';
-                  break;
-                }
-                case 'INVALID_PASSWORD': {
-                  errorMessage = 'This password is incorrect!';
-                  break;
-                }
-              }
-            }
-            return of(new AuthActions.AuthenticateFail(errorMessage));
+            return handleError(errorResponse);
           })
         );
     })

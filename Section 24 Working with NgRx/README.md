@@ -1356,3 +1356,95 @@ export class AuthEffects {
   authSignUp = this.actions$.pipe(ofType(AuthActions.SIGN_UP_START));
 }
 ```
+
+### Lesson 372 - Adding Sign-up
+
+In `auth.effects.ts`
+
+- Fill in logic for `authSignUp` Effect
+- Extract common logic to refactor the code
+
+```ts
+const handleAuthentication = (email, userId, token, expiresIn) => {
+  ...;
+  return new AuthActions.AuthenticateSuccess({ ... });
+};
+
+const handleError = (errorResponse: HttpErrorResponse) => {
+  ...;
+  return of(new AuthActions.AuthenticateFail(errorMessage));
+};
+
+@Injectable()
+export class AuthEffects {
+  @Effect()
+  authSignUp = this.actions$.pipe(
+    ofType(AuthActions.SIGN_UP_START),
+    switchMap((signUpAction: AuthActions.SignUpStart) => {
+      return this.http
+        .post<AuthResponseData>(...)
+        .pipe(
+          map((responseData: AuthResponseData) => {
+            return handleAuthentication(
+              responseData.email,
+              responseData.localId,
+              responseData.idToken,
+              +responseData.expiresIn
+            );
+          }),
+          catchError((errorResponse: HttpErrorResponse) => {
+            return handleError(errorResponse);
+          })
+        );
+    })
+  );
+
+  @Effect()
+  authLogin = this.actions$.pipe(
+    ofType(AuthActions.LOGIN_START),
+    switchMap((authData: AuthActions.LoginStart) => {
+      return this.http
+        .post<AuthResponseData>(...)
+        .pipe(
+          map((responseData: AuthResponseData) => {
+            return handleAuthentication(
+              responseData.email,
+              responseData.localId,
+              responseData.idToken,
+              +responseData.expiresIn
+            );
+          }),
+          catchError((errorResponse: HttpErrorResponse) => {
+            return handleError(errorResponse);
+          })
+        );
+    })
+  );
+  ...
+}
+```
+
+In `auth.component.ts`
+
+- Use NgRx to replace existing logic to dispatch SignUp requests
+
+```ts
+@Component({ ... })
+export class AuthComponent implements OnInit, OnDestroy {
+  onSubmit(authForm: NgForm): void {
+    if (!authForm.valid) {
+      return;
+    } else {
+      ...;
+      if (this.isLoginMode) {
+        ...;
+      } else {
+        this.store.dispatch(
+          new AuthActions.SignUpStart({ email: email, password: password })
+        );
+      }
+      authForm.reset();
+    }
+  }
+}
+```
