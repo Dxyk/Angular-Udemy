@@ -1,8 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { FirebaseConfigs } from 'src/app/constants/firebase-configs';
 import * as AuthActions from './auth.actions';
 
@@ -33,23 +34,48 @@ export class AuthEffects {
             const expirationDate = new Date(
               new Date().getTime() + +responseData.expiresIn * 1000
             );
-            return of(
-              new AuthActions.LoginSuccess({
-                email: responseData.email,
-                userId: responseData.localId,
-                token: responseData.idToken,
-                expirationDate: expirationDate,
-              })
-            );
+            return new AuthActions.LoginSuccess({
+              email: responseData.email,
+              userId: responseData.localId,
+              token: responseData.idToken,
+              expirationDate: expirationDate,
+            });
           }),
-          catchError((error) => {
-            // ...
-            // returns an empty observable for now
-            return of();
+          catchError((errorResponse: HttpErrorResponse) => {
+            let errorMessage = 'An unknown error occurred!';
+            if (errorResponse?.error?.error) {
+              switch (errorResponse.error.error.message) {
+                case 'EMAIL_EXISTS': {
+                  errorMessage = 'This email already exists!';
+                  break;
+                }
+                case 'EMAIL_NOT_FOUND': {
+                  errorMessage = 'This email does not exist!';
+                  break;
+                }
+                case 'INVALID_PASSWORD': {
+                  errorMessage = 'This password is incorrect!';
+                  break;
+                }
+              }
+            }
+            return of(new AuthActions.LoginFail(errorMessage));
           })
         );
     })
   );
 
-  constructor(private actions$: Actions, private http: HttpClient) {}
+  @Effect({ dispatch: false })
+  authSuccess = this.actions$.pipe(
+    ofType(AuthActions.LOGIN_SUCCESS),
+    tap(() => {
+      this.router.navigate(['/']);
+    })
+  );
+
+  constructor(
+    private actions$: Actions,
+    private http: HttpClient,
+    private router: Router
+  ) {}
 }

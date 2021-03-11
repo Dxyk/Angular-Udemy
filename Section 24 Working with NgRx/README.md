@@ -1264,3 +1264,65 @@ export class AuthComponent implements OnInit, OnDestroy {
   }
 }
 ```
+
+### Lesson 370 - Finishing the Login Effect
+
+In `auth.effects.ts`
+
+- Update the `authLogin` Effect to
+  - Return the `LoginSuccess` Action in the `map` method without using `of` to make it an Observable, since `map` already returns an Observable
+  - In `catchError`, copy the error handling logic from `AuthService.handleError()`
+    - Instead of returning `throwError()`, return a `LoginFail` Action wrapped in `of()` to make it an observable
+- Add `authSuccess` Effect to
+  - Listen to `LOGIN_SUCCESS` Actions using `ofType()`
+  - Navigate to the root path
+- Note the `authSuccess` Effect does not dispatch another Action because it is not necessary.
+  - To let NgRx know that the Effect does not need to dispatch any Action, use `@Effect({ dispatch: false })`
+
+```ts
+@Injectable()
+export class AuthEffects {
+  @Effect()
+  authLogin = this.actions$.pipe(
+    ofType(AuthActions.LOGIN_START),
+    switchMap((authData: AuthActions.LoginStart) => {
+      return this.http
+        .post<AuthResponseData>(...)
+        .pipe(
+          map((responseData: AuthResponseData) => {
+            ...;
+            return new AuthActions.LoginSuccess({ ... });
+          }),
+          catchError((errorResponse: HttpErrorResponse) => {
+            let errorMessage = 'An unknown error occurred!';
+            if (errorResponse?.error?.error) {
+              switch (errorResponse.error.error.message) {
+                case 'EMAIL_EXISTS': {
+                  errorMessage = 'This email already exists!';
+                  break;
+                }
+                case 'EMAIL_NOT_FOUND': {
+                  errorMessage = 'This email does not exist!';
+                  break;
+                }
+                case 'INVALID_PASSWORD': {
+                  errorMessage = 'This password is incorrect!';
+                  break;
+                }
+              }
+            }
+            return of(new AuthActions.LoginFail(errorMessage));
+          })
+        );
+    })
+  );
+
+  @Effect({ dispatch: false })
+  authSuccess = this.actions$.pipe(
+    ofType(AuthActions.LOGIN_SUCCESS),
+    tap(() => {
+      this.router.navigate(['/']);
+    })
+  );
+}
+```
