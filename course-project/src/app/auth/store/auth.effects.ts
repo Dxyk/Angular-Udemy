@@ -34,7 +34,7 @@ export class AuthEffects {
               new Date().getTime() + +responseData.expiresIn * 1000
             );
             return of(
-              new AuthActions.Login({
+              new AuthActions.LoginSuccess({
                 email: responseData.email,
                 userId: responseData.localId,
                 token: responseData.idToken,

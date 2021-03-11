@@ -3,7 +3,7 @@ import {
   ComponentFactoryResolver,
   OnDestroy,
   OnInit,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -13,6 +13,7 @@ import { PlaceholderDirective } from '../shared/placeholder/placeholder.directiv
 import * as fromApp from '../store/app.reducer';
 import { AuthResponseData, AuthService } from './auth.service';
 import * as AuthActions from './store/auth.actions';
+import * as fromAuth from './store/auth.reducer';
 
 @Component({
   selector: 'app-auth',
@@ -38,7 +39,12 @@ export class AuthComponent implements OnInit, OnDestroy {
     private store: Store<fromApp.AppState>
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.store.select('auth').subscribe((authState: fromAuth.State) => {
+      this.isLoading = authState.loading;
+      this.error = authState.authError;
+    });
+  }
 
   onSwitchMode(): void {
     this.isLoginMode = !this.isLoginMode;
@@ -64,19 +70,19 @@ export class AuthComponent implements OnInit, OnDestroy {
         authObservable = this.authService.signUp(email, password);
       }
 
-      authObservable.subscribe(
-        (responseData: AuthResponseData) => {
-          console.log(responseData);
-          this.isLoading = false;
-          this.router.navigate(['/recipes']);
-        },
-        (errorMessage: string) => {
-          console.log(errorMessage);
-          this.error = errorMessage;
-          // this.showErrorAlert(errorMessage);
-          this.isLoading = false;
-        }
-      );
+      // authObservable.subscribe(
+      //   (responseData: AuthResponseData) => {
+      //     console.log(responseData);
+      //     this.isLoading = false;
+      //     this.router.navigate(['/recipes']);
+      //   },
+      //   (errorMessage: string) => {
+      //     console.log(errorMessage);
+      //     this.error = errorMessage;
+      //     // this.showErrorAlert(errorMessage);
+      //     this.isLoading = false;
+      //   }
+      // );
 
       authForm.reset();
     }

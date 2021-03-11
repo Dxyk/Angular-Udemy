@@ -1197,3 +1197,70 @@ export class AuthComponent implements OnInit, OnDestroy {
   }
 }
 ```
+
+### Lesson 369 - Managing UI State in NgRx
+
+In `auth.actions.ts`
+
+- Add a `LoginFail` Action and export it as one of the `AuthActions` types
+
+```ts
+export const LOGIN_FAIL = '[Auth] Login Fail';
+export class LoginFail implements Action {
+  readonly type = LOGIN_FAIL;
+
+  constructor(public payload: string) {}
+}
+export type AuthActions = LoginSuccess | Logout | LoginStart | LoginFail;
+```
+
+In `auth.reducer.ts`
+
+- Expand the state to include `authError` and `loading`
+- Update existing cases to reset `authError` and `loading` to `null`
+- Add cases to handle `LoginFail` Action
+
+```ts
+export interface State {
+  user: User;
+  authError: string;
+  loading: boolean;
+}
+
+const initialState: State = {
+  user: null,
+  authError: null,
+  loading: false,
+};
+
+export function authReducer(
+  state: State = initialState,
+  action: AuthActions.AuthActions
+): State {
+  switch (action.type) {
+    case AuthActions.LOGIN_FAIL:
+      return {
+        ...state,
+        user: null,
+        authError: action.payload,
+        loading: false,
+      };
+    ...;
+  }
+```
+
+In `auth.component.ts`
+
+- In stead of subscribing to the Http requests from the service in `onSubmit`, subscribe to the store's auth State in `ngOnInit` and update the attributes accordingly
+
+```ts
+@Component({ ... })
+export class AuthComponent implements OnInit, OnDestroy {
+  ngOnInit(): void {
+    this.store.select('auth').subscribe((authState: fromAuth.State) => {
+      this.isLoading = authState.loading;
+      this.error = authState.authError;
+    });
+  }
+}
+```
