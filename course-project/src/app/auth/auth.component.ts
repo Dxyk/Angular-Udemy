@@ -8,10 +8,10 @@ import {
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { PlaceholderDirective } from '../shared/placeholder/placeholder.directive';
 import * as fromApp from '../store/app.reducer';
-import { AuthResponseData, AuthService } from './auth.service';
+import { AuthService } from './auth.service';
 import * as AuthActions from './store/auth.actions';
 import * as fromAuth from './store/auth.reducer';
 
@@ -22,6 +22,8 @@ import * as fromAuth from './store/auth.reducer';
 })
 export class AuthComponent implements OnInit, OnDestroy {
   private closeAlertSubscription: Subscription;
+
+  private storeSubscription: Subscription;
 
   isLoginMode = true;
 
@@ -40,10 +42,12 @@ export class AuthComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.store.select('auth').subscribe((authState: fromAuth.State) => {
-      this.isLoading = authState.loading;
-      this.error = authState.authError;
-    });
+    this.storeSubscription = this.store
+      .select('auth')
+      .subscribe((authState: fromAuth.State) => {
+        this.isLoading = authState.loading;
+        this.error = authState.authError;
+      });
   }
 
   onSwitchMode(): void {
@@ -92,12 +96,16 @@ export class AuthComponent implements OnInit, OnDestroy {
   }
 
   onAlertClosed(): void {
-    this.error = null;
+    // this.error = null;
+    this.store.dispatch(new AuthActions.ClearError());
   }
 
   ngOnDestroy(): void {
     if (this.closeAlertSubscription) {
       this.closeAlertSubscription.unsubscribe();
+    }
+    if (this.storeSubscription) {
+      this.storeSubscription.unsubscribe();
     }
   }
 

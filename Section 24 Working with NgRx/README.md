@@ -1448,3 +1448,118 @@ export class AuthComponent implements OnInit, OnDestroy {
   }
 }
 ```
+
+### Lesson 373 - Further Auth Effects
+
+In `auth.actions.ts`
+
+- Create a `ClearError` Action
+
+```ts
+export const CLEAR_ERROR = '[Auth] Clear Error';
+export class ClearError implements Action {
+  readonly type = CLEAR_ERROR;
+}
+export type AuthActions =
+  | SignUpStart
+  | LoginStart
+  | AuthenticateSuccess
+  | AuthenticateFail
+  | Logout
+  | ClearError;
+```
+
+In `auth.reducer.ts`
+
+- Process the `SIGN_UP_START` case by extending the `LOGIN_START` case
+- Process the `CLEAR_ERROR` case by setting the `authError` to `null`
+
+```ts
+export function authReducer(
+  state: State = initialState,
+  action: AuthActions.AuthActions
+): State {
+  switch (action.type) {
+    case AuthActions.SIGN_UP_START:
+    case AuthActions.LOGIN_START:
+      return {
+        ...state,
+        authError: null,
+        loading: true,
+      };
+    case AuthActions.CLEAR_ERROR:
+      return {
+        ...state,
+        authError: null,
+      };
+    ...;
+  }
+```
+
+In `auth.component.ts`
+
+- Subscribe and unsubscribe to store subscriptions
+- Handle the error close method using the store
+
+```ts
+@Component({ ... })
+export class AuthComponent implements OnInit, OnDestroy {
+  private storeSubscription: Subscription;
+
+  ngOnInit(): void {
+    this.storeSubscription = this.store
+      .select('auth')
+      .subscribe(...);
+  }
+
+  onAlertClosed(): void {
+    this.store.dispatch(new AuthActions.ClearError());
+  }
+
+  ngOnDestroy(): void {
+    if (this.storeSubscription) {
+      this.storeSubscription.unsubscribe();
+    }
+  }
+}
+```
+
+In `auth.effects.ts`
+
+- Rename `authSuccess` to `authRedirect`
+  - Listen to both `AUTHENTICATE_SUCCESS` and `LOGOUT_SUCCESS` Actions
+  - Redirect accordingly
+
+```ts
+@Injectable()
+export class AuthEffects {
+  @Effect({ dispatch: false })
+  authRedirect = this.actions$.pipe(
+    ofType(AuthActions.AUTHENTICATE_SUCCESS, AuthActions.LOGOUT_SUCCESS),
+    tap((authAction: AuthActions.AuthActions) => {
+      if (authAction.type === AuthActions.AUTHENTICATE_SUCCESS) {
+        this.router.navigate(['/']);
+      } else if (authAction.type === AuthActions.LOGOUT_SUCCESS){
+        this.router.navigate(['/auth']);
+      }
+    })
+  );
+}
+```
+
+In `header.component.ts`
+
+- Use the store to dispatch the `Logout` Action instead of using `AuthService`
+
+```ts
+@Component({ ... })
+export class HeaderComponent implements OnInit, OnDestroy {
+  onLogout(): void {
+    this.store.dispatch(new AuthActions.Logout())
+  }
+}
+```
+
+In `auth.service.ts`
+
+- Remove the `login` and `signUp` methods since they are no longer needed

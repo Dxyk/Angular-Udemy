@@ -18,10 +18,12 @@ export function authReducer(
   action: AuthActions.AuthActions
 ): State {
   switch (action.type) {
+    case AuthActions.SIGN_UP_START:
     case AuthActions.LOGIN_START:
       return {
         ...state,
         authError: null,
+        loading: true,
       };
     case AuthActions.AUTHENTICATE_SUCCESS:
       const user = new User(
@@ -47,6 +49,11 @@ export function authReducer(
       return {
         ...state,
         user: null,
+        authError: null,
+      };
+    case AuthActions.CLEAR_ERROR:
+      return {
+        ...state,
         authError: null,
       };
     default:

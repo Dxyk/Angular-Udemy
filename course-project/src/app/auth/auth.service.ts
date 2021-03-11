@@ -35,45 +35,45 @@ export class AuthService {
     private store: Store<fromApp.AppState>
   ) {}
 
-  signUp(email: string, password: string): Observable<AuthResponseData> {
-    return this.http
-      .post<AuthResponseData>(FirebaseConfigs.SIGN_UP_URL, {
-        email: email,
-        password: password,
-        returnSecureToken: true,
-      })
-      .pipe(
-        catchError(this.handleError),
-        tap((response: AuthResponseData) => {
-          this.handleAuthenticationResponse(
-            response.email,
-            response.localId,
-            response.idToken,
-            +response.expiresIn
-          );
-        })
-      );
-  }
+  // signUp(email: string, password: string): Observable<AuthResponseData> {
+  //   return this.http
+  //     .post<AuthResponseData>(FirebaseConfigs.SIGN_UP_URL, {
+  //       email: email,
+  //       password: password,
+  //       returnSecureToken: true,
+  //     })
+  //     .pipe(
+  //       catchError(this.handleError),
+  //       tap((response: AuthResponseData) => {
+  //         this.handleAuthenticationResponse(
+  //           response.email,
+  //           response.localId,
+  //           response.idToken,
+  //           +response.expiresIn
+  //         );
+  //       })
+  //     );
+  // }
 
-  login(email: string, password: string): Observable<AuthResponseData> {
-    return this.http
-      .post<AuthResponseData>(FirebaseConfigs.SIGN_IN_URL, {
-        email: email,
-        password: password,
-        returnSecureToken: true,
-      })
-      .pipe(
-        catchError(this.handleError),
-        tap((response: AuthResponseData) => {
-          this.handleAuthenticationResponse(
-            response.email,
-            response.localId,
-            response.idToken,
-            +response.expiresIn
-          );
-        })
-      );
-  }
+  // login(email: string, password: string): Observable<AuthResponseData> {
+  //   return this.http
+  //     .post<AuthResponseData>(FirebaseConfigs.SIGN_IN_URL, {
+  //       email: email,
+  //       password: password,
+  //       returnSecureToken: true,
+  //     })
+  //     .pipe(
+  //       catchError(this.handleError),
+  //       tap((response: AuthResponseData) => {
+  //         this.handleAuthenticationResponse(
+  //           response.email,
+  //           response.localId,
+  //           response.idToken,
+  //           +response.expiresIn
+  //         );
+  //       })
+  //     );
+  // }
 
   autoLogin(): void {
     const userData: {
@@ -113,7 +113,7 @@ export class AuthService {
   logout(): void {
     // this.user.next(null);
     this.store.dispatch(new AuthActions.Logout());
-    this.router.navigate(['/auth']);
+    // this.router.navigate(['/auth']);
     localStorage.removeItem(this.localStorageUserDataKey);
     if (this.tokenExpirationTimer) {
       clearTimeout(this.tokenExpirationTimer);
