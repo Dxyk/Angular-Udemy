@@ -1777,3 +1777,114 @@ export class AppModule {}
 ```
 
 In the Redux tab in the dev tool, there are more actions (e.g. `@ngrx/router-store/navigation`, `@ngrx/router-store/request`, etc) being dispatched when the program loads or navigates to a different path.
+
+### Lesson 379 - Getting Started with NgRx for Recipes
+
+Create a `recipes/store` folder. In it, create `recipe.actions.ts`, `recipe.effects.ts` and `recipe.reducer.ts`.
+
+In `recipe.actions.ts`
+
+- Create `SetRecipes` that takes in a list of `Recipe`s as payload
+
+```ts
+export const SET_RECIPES = '[Recipes] Set Recipes';
+
+export class SetRecipes implements Action {
+  readonly type = SET_RECIPES;
+
+  constructor(public payload: Recipe[]) {}
+}
+
+export type RecipeActions = SetRecipes;
+```
+
+In `recipe.reducer.ts`
+
+- Export a `State` interface that contains
+  - `recipes` list of Recipes
+- Create an initial state of empty recipes
+- Create the `recipeReducer` function
+  - Handle `SET_RECIPES`
+    - Set the recipes list using the payload
+
+```ts
+export interface State {
+  recipes: Recipe[];
+}
+
+const initialState: State = {
+  recipes: [],
+};
+
+export function recipeReducer(
+  state: State = initialState,
+  action: RecipeActions.RecipeActions
+): State {
+  switch (action.type) {
+    case RecipeActions.SET_RECIPES:
+      return {
+        ...state,
+        recipes: [...action.payload],
+      };
+    default:
+      return state;
+  }
+}
+```
+
+In `app.reducer.ts`
+
+- Add recipes State to the `AppState` interface
+- Add the `recipeReducer` to the `appReducer` map
+
+```ts
+export interface AppState {
+  recipes: fromRecipe.State;
+}
+
+export const appReducer: ActionReducerMap<AppState> = {
+  recipes: fromRecipe.recipeReducer,
+};
+```
+
+In `data-storage.service.ts`
+
+- Use the Store to dispatch the `SetRecipes` Action when the Get request returns
+
+```ts
+@Injectable({ ... })
+export class DataStorageService {
+  fetchRecipes(): Observable<Recipe[]> {
+    return this.http
+      .get<Recipe[]>( ... )
+      .pipe(
+        map( ... ),
+        tap((recipes: Recipe[]) => {
+          this.store.dispatch(new RecipesActions.SetRecipes(recipes));
+        })
+      );
+  }
+```
+
+In `recipe-list.component.ts`
+
+- Subscribe to the `recipes` slice of the State instead of the `recipesChanged` Observer form the `RecipesService`
+  - Use `pipe` and `map` to extract the `recipes` list from the State
+  - Inherit the existing logic to process the `recipes` list
+
+```ts
+@Component({ ... })
+export class RecipeListComponent implements OnInit, OnDestroy {
+  ngOnInit() {
+    this.recipesChangeSubscription = this.store
+      .select('recipes')
+      .pipe(
+        map((recipeState: fromRecipe.State) => {
+          return recipeState.recipes;
+        })
+      )
+      .subscribe(...);
+    ...;
+  }
+}
+```
