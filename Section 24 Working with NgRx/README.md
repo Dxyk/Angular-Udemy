@@ -1727,3 +1727,30 @@ export class AuthEffects {
 ### Lesson 376 - Finishing the Auth Effects
 
 Cleanup all component and services since all auth logic is managed by NgRx
+
+### Lesson 377 - Using the Store Devtools
+
+[Redux Devtools](https://github.com/zalmoxisus/redux-devtools-extension) is an open source dev tool that keeps track of the dispatched Actions, their data and the Store data during development.
+
+With the Redux devtools installed, install `@ngrx/store-devtools` as a development dependency to the project by `npm install --save-dev @ngrx/store-devtools`.
+
+In `app.module.ts`
+
+- Import `StoreDevtoolsModule`
+  - Use `StoreDevtoolsModule.instrument()` for configuration
+  - Use `environment.production` to determine the `logOnly` property
+    - Angular will swap the environment accordingly
+
+```ts
+@NgModule({
+  declarations: [ ... ],
+  imports: [
+    ...,
+    StoreDevtoolsModule.instrument({ logOnly: environment.production }),
+  ],
+  bootstrap: [ ... ],
+})
+export class AppModule {}
+```
+
+In the browser's devtool, go to the `Redux` tab. The tab contains the detailed log of the store in the application. By clicking into the log items, the devtool also shows the Action being dispatched, the state after the action was processed and the difference between the current state and the previous state.
