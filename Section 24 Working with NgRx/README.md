@@ -1754,3 +1754,26 @@ export class AppModule {}
 ```
 
 In the browser's devtool, go to the `Redux` tab. The tab contains the detailed log of the store in the application. By clicking into the log items, the devtool also shows the Action being dispatched, the state after the action was processed and the difference between the current state and the previous state.
+
+### Lesson 378 - The Router Store
+
+NgRx also provides a `@ngrx/router-store`. Install by `npm install --save @ngrx/router-store`. This package allows NgRx to dispatch Actions when the Router navigates to a different route, and developers can react to these Actions in the Reducer.
+
+In `app.module.ts`
+
+- Import `StoreRouterConnectingModule`
+  - Use `StoreRouterConnectingModule.forRoot()` to register the `RouteStateSnapshot`. Nothing is needed to be provided in this case
+
+```ts
+@NgModule({
+  declarations: [ ... ],
+  imports: [
+    ...,
+    StoreRouterConnectingModule.forRoot(),
+  ],
+  bootstrap: [ ... ],
+})
+export class AppModule {}
+```
+
+In the Redux tab in the dev tool, there are more actions (e.g. `@ngrx/router-store/navigation`, `@ngrx/router-store/request`, etc) being dispatched when the program loads or navigates to a different path.

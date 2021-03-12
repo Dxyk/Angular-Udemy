@@ -12,6 +12,7 @@ import { SharedModule } from './shared/shared.module';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import * as fromApp from './store/app.reducer';
 import { environment } from 'src/environments/environment';
+import { StoreRouterConnectingModule } from '@ngrx/router-store';
 
 @NgModule({
   declarations: [AppComponent, HeaderComponent],
@@ -22,6 +23,7 @@ import { environment } from 'src/environments/environment';
     StoreModule.forRoot(fromApp.appReducer),
     EffectsModule.forRoot([AuthEffects]),
     StoreDevtoolsModule.instrument({ logOnly: environment.production }),
+    StoreRouterConnectingModule.forRoot(),
     CoreModule,
     SharedModule,
   ],
