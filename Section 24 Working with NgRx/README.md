@@ -1968,3 +1968,110 @@ export class RecipeEditComponent implements OnInit {
     }
 }
 ```
+
+### Lesson 381 - Fetching Recipes & Using the Resolver
+
+In `recipe.actions.ts`
+
+- Create a `FetchRecipes` Action
+
+```ts
+export const FETCH_RECIPES = '[Recipes] Fetch Recipes';
+export class FetchRecipes implements Action {
+  readonly type = FETCH_RECIPES;
+
+  constructor() {}
+}
+```
+
+In `recipe.effects.ts`
+
+- Create and export the `RecipeEffects` class
+- Create a `fetchRecipes` Effect that listens to the `FETCH_RECIPES` Action
+  - Use `switchMap` to switch the Observable to the one obtained by posting the GET request to the backend
+  - Use `map` to deep copy the recipes
+  - Use `map` to return the `SetRecipes` Action
+    - NgRx will dispatch the Action automatically
+
+```ts
+@Injectable()
+export class RecipeEffects {
+  @Effect()
+  fetchRecipes = this.actions$.pipe(
+    ofType(RecipesActions.FETCH_RECIPES),
+    switchMap(() => {
+      return this.http.get<Recipe[]>(
+        FirebaseConfigs.PROJECT_URL + '/' + FirebaseConfigs.RECIPES_ENDPOINT
+      );
+    }),
+    map((recipes: Recipe[]) => {
+      return recipes.map((recipe: Recipe) => {
+        return {
+          ...recipe,
+          ingredients: recipe.ingredients ?? [],
+        };
+      });
+    }),
+    map((recipes: Recipe[]) => {
+      return new RecipesActions.SetRecipes(recipes);
+    })
+  );
+
+  constructor(private actions$: Actions, private http: HttpClient) {}
+}
+```
+
+In `app.module.ts`
+
+- Register the `RecipeEffects`
+
+```ts
+@NgModule({
+  ...,
+  imports: [
+    ...,
+    EffectsModule.forRoot([AuthEffects, RecipeEffects]),
+  ],
+})
+export class AppModule {}
+```
+
+In `header.component.ts`
+
+- Dispatch `FetchRecipes` to get the list of recipes instead of using `RecipeService`
+
+```ts
+@Component({ ... })
+export class HeaderComponent implements OnInit, OnDestroy {
+  onFetchData(): void {
+    this.store.dispatch(new RecipeActions.FetchRecipes());
+  }
+}
+```
+
+In `recipes-resolver.service.ts`
+
+- When resolving paths related to recipes, dispatch a `FetchRecipes` Action
+- Use `Actions` to listen to the `SET_RECIPES` Action, which is dispatched when the `FetchRecipes` Action is processed
+  - Use `take` to only listen to the Observable once
+  - Return the Observable in the `resolve` method
+
+```ts
+@Injectable({ providedIn: 'root' })
+export class RecipesResolverService implements Resolve<Recipe[]> {
+  constructor(
+    private dataStorageService: DataStorageService,
+    private recipeService: RecipeService,
+    private store: Store<fromApp.AppState>,
+    private actions$: Actions
+  ) {}
+
+  resolve(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): Recipe[] | Observable<Recipe[]> | Promise<Recipe[]> {
+    this.store.dispatch(new RecipeActions.FetchRecipes());
+    return this.actions$.pipe(ofType(RecipeActions.SET_RECIPES), take(1));
+  }
+}
+```
