@@ -2398,3 +2398,7 @@ export class RecipeDetailComponent implements OnInit {
   }
 }
 ```
+
+### Lesson 386 - Wrap Up
+
+NgRx is more complex to set up, but it provides a streamlined, centralized state management system, which is beneficial to large Angular projects.
