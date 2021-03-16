@@ -2379,3 +2379,22 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 }
 ```
+
+### Lesson 385 - Cleanup Work
+
+With the app using the NgRx framework, the `RecipeService` can be retired. To fully retire it, there are a few more places to modify.
+
+In `recipe-detail.component.ts`
+
+- Instead of using RecipeService to add ingredients, dispatch the `AddIngredients` Action
+
+```ts
+@Component({ ... })
+export class RecipeDetailComponent implements OnInit {
+  onAddToShoppingList() {
+    this.store.dispatch(
+      new ShoppingListActions.AddIngredients(this.recipe.ingredients)
+    );
+  }
+}
+```
