@@ -2323,3 +2323,59 @@ export class RecipesResolverService implements Resolve<Recipe[]> {
   }
 }
 ```
+
+### Lesson 384 - Storing Recipes via Effects
+
+In `recipe.actions.ts`
+
+- Create `StoreRecipes` Action
+
+```ts
+export const STORE_RECIPES = '[Recipes] Store Recipes';
+export class StoreRecipes implements Action {
+  readonly type = STORE_RECIPES;
+
+  constructor() {}
+}
+```
+
+In `recipe.effects.ts`
+
+- Create a `storeRecipes` Effect that listens to `STORE_RECIPES` Actions
+  - Use `withLatestFrom(Observable)` to merge another observable data into the current pipe
+    - In this case, merge the recipes Store into the Action data
+    - This returns a list of `[originalData, newData]`
+  - Use List decomposition to decompose the returned list from `withLatestFrom`
+    - `([val1, val2])`
+  - Use `switchMap()` to switch to the Http Request Observable
+  - No need to dispatch another action
+
+```ts
+@Injectable()
+export class RecipeEffects {
+  @Effect({ dispatch: false })
+  storeRecipes = this.actions$.pipe(
+    ofType(RecipesActions.STORE_RECIPES),
+    withLatestFrom(this.store.select('recipes')),
+    switchMap(([actionData, recipesState]) => {
+      return this.http.put(
+        FirebaseConfigs.PROJECT_URL + '/' + FirebaseConfigs.RECIPES_ENDPOINT,
+        recipesState.recipes
+      );
+    })
+  );
+}
+```
+
+In `header.component.ts`
+
+- Dispatch the `StoreRecipes` Action instead of using the `DataStorageService`
+
+```ts
+@Component({ ... })
+export class HeaderComponent implements OnInit, OnDestroy {
+  onSaveData(): void {
+    this.store.dispatch(new RecipeActions.StoreRecipes());
+  }
+}
+```
