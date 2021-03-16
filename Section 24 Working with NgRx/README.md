@@ -1888,3 +1888,83 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   }
 }
 ```
+
+### Lesson 380 - Fetching Recipe Detail Data
+
+In `recipe-detail.component.ts`
+
+- In `ngOnInit`, instead of using the service to set the recipe
+  - Use `pipe` and `map` to transform the `Params` and extract the `id`
+  - Use `switchMap` to convert the existing observable to the selected recipes State
+  - Use `map` to extract the `Recipe` corresponding to the `id` from the State
+  - Subscribe to the piped Observable and set the recipe
+
+```ts
+@Component({ ... })
+export class RecipeDetailComponent implements OnInit {
+  ngOnInit() {
+    this.route.params
+      .pipe(
+        map((params: Params) => {
+          return +params.id;
+        }),
+        switchMap((id: number) => {
+          this.id = id;
+          return this.store.select('recipes');
+        }),
+        map((recipeState: fromRecipe.State) => {
+          return recipeState.recipes.find((_recipe: Recipe, index: number) => {
+            return index === this.id;
+          });
+        })
+      )
+      .subscribe((recipe: Recipe) => {
+        this.recipe = recipe;
+      });
+  }
+}
+```
+
+In `recipe-edit.component.ts`
+
+- Use the similar logic to select the recipe from the store
+- Instead of executing code synchronously, move the logic to the subscribe method and execute them asynchronously
+
+```ts
+@Component({ ... })
+export class RecipeEditComponent implements OnInit {
+  private initForm(): void {
+    ...;
+    if (this.editMode) {
+      this.store
+        .select('recipes')
+        .pipe(
+          map((recipeState: fromRecipe.State) => {
+            return recipeState.recipes.find(
+              (_recipe: Recipe, index: number) => {
+                return index === this.id;
+              }
+            );
+          })
+        )
+        .subscribe((recipe: Recipe) => {
+          recipeName = recipe.name;
+          recipeImagePath = recipe.imagePath;
+          recipeDescription = recipe.description;
+          if (recipe.ingredients) {
+            for (const ingredient of recipe.ingredients) {
+              recipeIngredients.push(
+                new FormGroup({
+                  name: new FormControl(ingredient.name, Validators.required),
+                  amount: new FormControl(ingredient.amount, [
+                    Validators.required,
+                    Validators.pattern(/^[1-9]+[0-9]*$/),
+                  ]),
+                })
+              );
+            }
+          }
+        });
+    }
+}
+```
