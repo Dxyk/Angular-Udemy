@@ -2406,3 +2406,7 @@ NgRx is more complex to set up, but it provides a streamlined, centralized state
 ### Lesson 387 - Alternative NgRx Syntax
 
 The NgRx team also released an alternative syntax for creating actions, reducers, effects etc.
+
+### Lesson 388 - Useful Resources & Links
+
+- [NgRx Official Docs](https://ngrx.io)
