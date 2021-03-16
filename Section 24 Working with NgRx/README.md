@@ -2075,3 +2075,75 @@ export class RecipesResolverService implements Resolve<Recipe[]> {
   }
 }
 ```
+
+### Lesson 382 - Fixing the Auth Redirect
+
+Currently every time the page is loaded, the page will be redirected to the `/recipes`. This is because in the page always auto-login after reload, and `AuthEffects` redirects the application to `/recipes` after every reload. To fix this, do the following
+
+In `auth.actions.ts`
+
+- Add a boolean in the constructor for `AuthenticateSuccess` that indicates whether the app should redirect the user after authentication
+
+```ts
+export class AuthenticateSuccess implements Action {
+  readonly type = AUTHENTICATE_SUCCESS;
+
+  constructor(
+    public payload: {
+      ...: ...;
+      redirect: boolean;
+    }
+  ) {}
+}
+```
+
+In `auth.effects.ts`
+
+- Set `redirect` to `true` when the `AuthenticateSuccess` Action is dispatched from non-auto login
+- Set `redirect` to `false` when the `AuthenticateSuccess` Action is dispatched form auto login
+- In `authRedirect` Effect, redirect depend on the value of `redirect`
+
+```ts
+const handleAuthentication = ( ... ) => {
+  ...;
+  return new AuthActions.AuthenticateSuccess({
+    ...,
+    redirect: true,
+  });
+};
+
+@Injectable()
+export class AuthEffects {
+  @Effect({ dispatch: false })
+  authRedirect = this.actions$.pipe(
+    ofType(AuthActions.AUTHENTICATE_SUCCESS),
+    tap((authSuccessAction: AuthActions.AuthenticateSuccess) => {
+      if (authSuccessAction.payload.redirect) {
+        this.router.navigate(['/']);
+      }
+    })
+  );
+
+  @Effect()
+  autoLogin = this.actions$.pipe(
+    ofType(AuthActions.AUTO_LOGIN),
+    map(() => {
+      ...;
+      if (!userData) {
+        ...;
+      } else {
+        ...;
+        if (loadedUser.token) {
+          ...;
+          return new AuthActions.AuthenticateSuccess({
+            ...,
+            redirect: false,
+          });
+        } else {
+          ...;
+        }
+      }
+    })
+  );
+}
+```
