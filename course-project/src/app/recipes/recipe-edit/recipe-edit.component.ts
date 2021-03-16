@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormArray,
@@ -8,10 +8,12 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import * as fromApp from 'src/app/store/app.reducer';
 import { Recipe } from '../recipe.model';
 import { RecipeService } from '../services/recipe.service';
+import * as RecipesActions from '../store/recipe.actions';
 import * as fromRecipe from '../store/recipe.reducer';
 
 @Component({
@@ -19,8 +21,11 @@ import * as fromRecipe from '../store/recipe.reducer';
   templateUrl: './recipe-edit.component.html',
   styleUrls: ['./recipe-edit.component.css'],
 })
-export class RecipeEditComponent implements OnInit {
+export class RecipeEditComponent implements OnInit, OnDestroy {
+  private storeSubscription: Subscription;
+
   id: number;
+
   editMode = false;
 
   recipeForm: FormGroup;
@@ -48,9 +53,16 @@ export class RecipeEditComponent implements OnInit {
       this.recipeForm.value.ingredients
     );
     if (this.editMode) {
-      this.recipeService.updateRecipe(this.id, recipe);
+      // this.recipeService.updateRecipe(this.id, recipe);
+       this.store.dispatch(
+        new RecipesActions.UpdateRecipe({
+          index: this.id,
+          newRecipe: recipe,
+        })
+      );
     } else {
-      this.recipeService.addRecipe(recipe);
+      // this.recipeService.addRecipe(recipe);
+      this.store.dispatch(new RecipesActions.AddRecipe(recipe));
     }
     this.onCancel();
   }
@@ -79,6 +91,12 @@ export class RecipeEditComponent implements OnInit {
     this.router.navigate(['../'], { relativeTo: this.route });
   }
 
+  ngOnDestroy(): void {
+    if (this.storeSubscription) {
+      this.storeSubscription.unsubscribe();
+    }
+  }
+
   private initForm(): void {
     let recipeName = '';
     let recipeImagePath = '';
@@ -87,7 +105,7 @@ export class RecipeEditComponent implements OnInit {
 
     if (this.editMode) {
       // const recipe = this.recipeService.getRecipe(this.id);
-      this.store
+      this.storeSubscription = this.store
         .select('recipes')
         .pipe(
           map((recipeState: fromRecipe.State) => {

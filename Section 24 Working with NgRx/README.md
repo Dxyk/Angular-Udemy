@@ -2147,3 +2147,179 @@ export class AuthEffects {
   );
 }
 ```
+
+### Lesson 383 - Update, Delete and Add Recipes
+
+In `recipe.action.ts`
+
+- Create `AddRecipe` that takes in the new `Recipe` as payload
+- Create `UpdateRecipe` that takes in the `index` and the new `Recipe` as payload
+- Create `DeleteRecipe` that takes in the `index` as payload
+- Export all added Action types
+
+```ts
+export const ADD_RECIPE = '[Recipes] Add Recipes';
+export const UPDATE_RECIPE = '[Recipes] Update Recipe';
+export const DELETE_RECIPE = '[Recipes] Delete Recipe';
+
+export class AddRecipes implements Action {
+  readonly type = ADD_RECIPE;
+
+  constructor(public payload: Recipe) {}
+}
+
+export class UpdateRecipe implements Action {
+  readonly type = UPDATE_RECIPE;
+
+  constructor(public payload: { index: number; newRecipe: Recipe }) {}
+}
+
+export class DeleteRecipes implements Action {
+  readonly type = DELETE_RECIPE;
+
+  constructor(public payload: number) {}
+}
+
+export type RecipeActions =
+  | SetRecipes
+  | FetchRecipes
+  | AddRecipes
+  | UpdateRecipe
+  | DeleteRecipes;
+```
+
+In `recipe.reducer.ts`
+
+- Add case to handle `ADD_RECIPE` by adding the new `recipe` to the `recipes` list
+- Add case to handle `UPDATE_RECIPE` by copying the `recipes` list and overwriting the recipe defined at the index
+- Add case to handle `DELETE_Recipe` by filtering the original `recipes` and retaining recipes that are not at the target index
+
+```ts
+export function recipeReducer(
+  state: State = initialState,
+  action: RecipeActions.RecipeActions
+): State {
+  switch (action.type) {
+    ...;
+    case RecipeActions.ADD_RECIPE:
+      return {
+        ...state,
+        recipes: [...state.recipes, action.payload],
+      };
+    case RecipeActions.UPDATE_RECIPE:
+      const updatedRecipe = {
+        ...state.recipes[action.payload.index],
+        ...action.payload.newRecipe,
+      };
+
+      const updatedRecipes = [...state.recipes];
+      updatedRecipes[action.payload.index] = updatedRecipe;
+
+      return {
+        ...state,
+        recipes: updatedRecipes,
+      };
+    case RecipeActions.DELETE_RECIPE:
+      return {
+        ...state,
+        recipes: state.recipes.filter((_recipe, index) => {
+          return index !== action.payload;
+        }),
+      };
+    default:
+      return state;
+  }
+}
+```
+
+In `recipe-edit.component.ts`
+
+- Manage subscription related to the Store
+- Dispatch `UpdateRecipe` and `AddRecipe` Actions instead of using `RecipeService`
+
+```ts
+@Component({ ... })
+export class RecipeEditComponent implements OnInit, OnDestroy {
+  private storeSubscription: Subscription;
+
+  onSubmit(): void {
+    ...;
+    if (this.editMode) {
+       this.store.dispatch(
+        new RecipesActions.UpdateRecipe({
+          index: this.id,
+          newRecipe: recipe,
+        })
+      );
+    } else {
+      this.store.dispatch(new RecipesActions.AddRecipe(recipe));
+    }
+    ...;
+  }
+
+  ngOnDestroy(): void {
+    if (this.storeSubscription) {
+      this.storeSubscription.unsubscribe();
+    }
+  }
+
+  private initForm(): void {
+    ...;
+    if (this.editMode) {
+      this.storeSubscription = this.store
+        .select('recipes')
+        .pipe(
+          map(...)
+        )
+        .subscribe(...);
+    }
+    ...;
+  }
+}
+```
+
+In `recipe-detail.component.ts`
+
+- Use the Store to dispatch `DeleteRecipe` Action instead of using the `RecipeService`
+
+```ts
+@Component({ ... })
+export class RecipeDetailComponent implements OnInit {
+  onDeleteRecipe() {
+    this.store.dispatch(new RecipesActions.DeleteRecipes(this.id));
+    ...;
+  }
+}
+```
+
+In `recipes-resolver.service.ts`
+
+- Instead of directly fetching the recipes using the `FetchRecipes` Action
+  - First check if the store contains any recipes
+    - If so, return the recipes in the store
+    - If not, dispatch the `FetchRecipes` Action and obtain the recipes from the backend
+
+```ts
+@Injectable({ ... })
+export class RecipesResolverService implements Resolve<Recipe[]> {
+  resolve(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): Recipe[] | Observable<Recipe[]> | Promise<Recipe[]> {
+    return this.store.select('recipes').pipe(
+      take(1),
+      map((recipeState: fromRecipe.State) => {
+        return recipeState.recipes;
+      }),
+      switchMap((recipes) => {
+        if (recipes.length === 0) {
+          this.store.dispatch(new RecipeActions.FetchRecipes());
+          return this.actions$.pipe(ofType(RecipeActions.SET_RECIPES), take(1));
+        } else {
+          return of(recipes);
+        }
+      })
+    );
+  }
+}
+```
