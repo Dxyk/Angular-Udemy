@@ -128,6 +128,24 @@ Deprecated
 
 See [Angular official documentation for Angular Universal](https://angular.io/guide/universal)
 
+### Lesson 397 - Working on the App Module - DEPRECATED
+
+### Lesson 398 - Adding a Server-Side Build Workflow - DEPRECATED
+
+### Lesson 399 - Adding a NodeJS Server - DEPRECATED
+
+### Lesson 400 - Pre-Rendering the App on the Server - DEPRECATED
+
+### Lesson 401 - Next Steps - DEPRECATED
+
+### Lesson 402 - Angular Universal Gotchas
+
+The main reason to make the application Universal is for search engine crawlers to be able to access the content of the page.
+
+It is important to remember that in Universal Applications, the application must not use any browser-only APIs such as `document.querySelector()`.
+
+It is recommended to use only Angular features.
+
 ## Appendix
 
 ### Update to Angular 11
