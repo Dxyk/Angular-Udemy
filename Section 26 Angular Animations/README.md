@@ -16,3 +16,5 @@ Some changes that need to be made in the following lessons
 ### Lesson 404 - Introduction
 
 Angular provides Animations features to make rendering more smoothly and customized.
+
+### Lesson 405 - Setting up the Starting Project
