@@ -89,6 +89,21 @@ Note
 
 - The previous version of the application no longer works because of a dependency mismatch. To resolve this, upgrade the application to Angular 11 by following the steps specified in [Appendix - Update to Angular 11](#update-to-angular-11)
 
+### Lesson 392 - Adding Angular Universal with NestJS
+
+[NestJS](https://nestjs.com/) is a server-side framework for NodeJs.
+
+To add NestJS Universal to the project, use `ng add @nestjs/ng-universal`.
+
+The difference between NestJS Universal and Angular Universal is that the NestJS version not only supports pre-rendering, but also comes with a NestJS server application. This makes the application full-stack.
+
+To build and serve the Universal application, use the same commands (NestJS generates them in the `package.json` file).
+
+```sh
+npm run build:ssr
+npm run serve:ssr
+```
+
 ## Appendix
 
 ### Update to Angular 11
