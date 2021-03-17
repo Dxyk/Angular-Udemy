@@ -112,6 +112,12 @@ Some available servers that can host Universal Apps are Heroku or AWS ElasticBea
 
 To these hosts, upload the `dist/` folder along with the `package.json` file. On the web server, ensure that `npm install` is executed, followed by `npm serve:ssr`.
 
+### Lesson 394 - Important: Remaining Lectures
+
+The remaining lectures are manual steps of making the application Universal. It has the same effect as [Lesson 391](#lesson-391---adding-angular-universal).
+
+Since we already used `@universal/express-engine` to make the application universal, the code changes will not be included in this project.
+
 ## Appendix
 
 ### Update to Angular 11
