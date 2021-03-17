@@ -107,3 +107,30 @@ In `app.component.html`
 ```html
 <button class="btn btn-primary" (click)="onAnimate()">Animate!</button>
 ```
+
+### Lesson 408 - Transitions
+
+In `app.component.ts`
+
+- Use the `transition()` function to define the transition between states
+  - The first argument is the state transition as string
+    - The format is `state1 => state2`
+  - The second argument is the steps of the transition
+    - For now it will be `animate()` method, which transitions the styles using a even gradient
+      - It takes in a number as the amount of time (ms) the transition should take place for
+
+```ts
+@Component({
+  animations: [
+    trigger('divState', [
+      state(...),
+      state(...),
+      transition('normal => highlighted', animate(300)),
+      transition('highlighted => normal', animate(300)),
+    ]),
+  ],
+})
+export class AppComponent {
+  ...
+}
+```
