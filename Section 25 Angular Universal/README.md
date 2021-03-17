@@ -122,6 +122,12 @@ Since we already used `@universal/express-engine` to make the application univer
 
 Same as [Lesson 389](#lesson-389---module-introduction)
 
+### Lesson 396 - Getting Started with Angular Universal - DEPRECATED
+
+Deprecated
+
+See [Angular official documentation for Angular Universal](https://angular.io/guide/universal)
+
 ## Appendix
 
 ### Update to Angular 11
