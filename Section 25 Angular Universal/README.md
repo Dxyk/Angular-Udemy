@@ -104,6 +104,14 @@ npm run build:ssr
 npm run serve:ssr
 ```
 
+### Lesson 393 - Deploying Universal Apps
+
+The reason why Universal Apps cannot be deployed to a static host (Firebase Hosting, AWS S3, etc) is that the Universal Apps need to use NodeJS to pre-render on the server.
+
+Some available servers that can host Universal Apps are Heroku or AWS ElasticBeanstalk.
+
+To these hosts, upload the `dist/` folder along with the `package.json` file. On the web server, ensure that `npm install` is executed, followed by `npm serve:ssr`.
+
 ## Appendix
 
 ### Update to Angular 11
