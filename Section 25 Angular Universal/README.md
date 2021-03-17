@@ -14,3 +14,7 @@ This could be disadvantageous because
 - Search Engines use Crawlers to search for website contents. It usually only search for the initially downloaded webpage instead of waiting for all the scripts to load.
 
 Angular Universal pre-loads the page, and thus returns a proper HTML page back from the server, which helps solve/mitigate the above issues. After the page is loaded, Angular takes over again and handles the subsequent actions.
+
+### Lesson 390 - Angular Universal & ModuleMapLoader
+
+In the next lecture, it is no longer required to add  `ModuleMapLoader` to the `app.server.ts` file with Angular 9+.
