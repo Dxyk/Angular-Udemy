@@ -79,3 +79,31 @@ In `app.component.html`
 ```
 
 In the application page, there will be a red square that contains both the div styles and the state that is declared in the TS file.
+
+### Lesson 407 - Switching between States
+
+To switch the state, simply change the state bound to the animation trigger name, and property binding will pick up the change and invoke the correct trigger.
+
+In `app.component.ts`
+
+- Create the `onAnimate()` method that toggles the state between `'normal'` and `highlighted`
+
+```ts
+@Component({ ... })
+export class AppComponent {
+  onAnimate() {
+    this.state === 'normal'
+      ? (this.state = 'highlighted')
+      : (this.state = 'normal');
+  }
+  ...
+}
+```
+
+In `app.component.html`
+
+- Event bind the `onAnimate()` method to the click event to the Animate button
+
+```html
+<button class="btn btn-primary" (click)="onAnimate()">Animate!</button>
+```
