@@ -134,3 +134,83 @@ export class AppComponent {
   ...
 }
 ```
+
+### Lesson 409 - Advanced Transitions
+
+The `transition()` method's first argument takes in a string expression of the state change. One example would be `'normal <=> highlighted'`. This means the transition between the two states have the same animation.
+
+Transition also allow control of the styling during the transition.
+
+In `app.component.ts`
+
+- Use `'state1 <=> state2'` in the `transition()` state expression to indicate the transitions between the two state have the same effect
+- Add another Trigger for `wildState`
+  - Define the previous two states and add `transform: scale(1)` to them
+  - Define a new state that shrinks the element
+  - Define the previous two transitions
+  - Use `'shrunken <=> *'` to define a new transition from `shrunken` state to any state (`*` wildcard) and vice versa
+- Add logic to `onAnimate` to toggle the `wildState` between `normal` and `highlighted` (same as before)
+- Add `onShrink()` method to set the `wildState` to `'shrunken'`
+
+```ts
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  animations: [
+    trigger('divState', [
+      state(...),
+      state(...),
+      transition('normal <=> highlighted', animate(300)),
+    ]),
+    trigger('wildState', [
+      state(
+        'normal',
+        style({
+          backgroundColor: 'red',
+          transform: 'translateX(0) scale(1)',
+        })
+      ),
+      state(
+        'highlighted',
+        style({
+          backgroundColor: 'blue',
+          transform: 'translateX(100px) scale(1)',
+        })
+      ),
+      state(
+        'shrunken',
+        style({
+          backgroundColor: 'green',
+          transform: 'translateX(0) scale(0.5)',
+        })
+      ),
+      transition('normal => highlighted', animate(300)),
+      transition('highlighted => normal', animate(800)),
+      transition('shrunken <=> *', animate(500)),
+    ]),
+  ],
+})
+export class AppComponent {
+  wildState = 'normal';
+  onAnimate() {
+    ...;
+    this.wildState === 'normal'
+      ? (this.wildState = 'highlighted')
+      : (this.wildState = 'normal');
+  }
+  onShrink() {
+    this.wildState = 'shrunken';
+  }
+  ...
+}
+```
+
+In `app.component.html`
+
+- Use event binding to bind the `onShrink()` method to the Shrink button
+- Add a new div and use property binding to bind the `wildState` trigger to the `wildState` property
+
+```html
+<button class="btn btn-primary" (click)="onShrink()">Shrink!</button>
+<div style="width: 100px; height: 100px;" [@wildState]="wildState"></div>
+```
