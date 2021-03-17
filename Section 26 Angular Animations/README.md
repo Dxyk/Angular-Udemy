@@ -12,3 +12,7 @@ Some changes that need to be made in the following lessons
 - This Module needs to be imported from `@angular/platform-browser/animations`
   - `import { BrowserAnimationsModule } from '@angular/platform-browser/animations`
 - Import `trigger`, `state`, `style`, etc from `@angular/animations` instead of `@angular/core`
+
+### Lesson 404 - Introduction
+
+Angular provides Animations features to make rendering more smoothly and customized.
