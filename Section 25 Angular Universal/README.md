@@ -118,6 +118,10 @@ The remaining lectures are manual steps of making the application Universal. It 
 
 Since we already used `@universal/express-engine` to make the application universal, the code changes will not be included in this project.
 
+### Lesson 395 - Module Introduction - DEPRECATED
+
+Same as [Lesson 389](#lesson-389---module-introduction)
+
 ## Appendix
 
 ### Update to Angular 11
