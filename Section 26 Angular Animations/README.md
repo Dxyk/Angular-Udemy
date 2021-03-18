@@ -222,11 +222,11 @@ In `app.component.ts`
 - Pass in a list of `style()` and `animate()` methods as the second argument for the `trigger()` method
   - If the method is `style()`, the style is set instantly
   - If the method is `animate()`, the second optional argument can be a `style()` method that defines the style the transformation animation should be like
+  - It is important to have `animate()` at the end to transform smoothly to the end state
 
 ```ts
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
+  ...,
   animations: [
     trigger('divState', [...]),
     trigger('wildState', [
@@ -243,6 +243,56 @@ In `app.component.ts`
           })
         ),
         animate(500),
+      ]),
+    ]),
+  ],
+})
+export class AppComponent { ... }
+```
+
+### Lesson 411 - The "void" State
+
+In `app.component.ts`
+
+- Add a new trigger for `list1`
+  - Define an initial state of name `in`, and opacity of 1 and steady position
+  - Add a transition of `void => *` for adding an item to the list
+    - `void` is a reserved state from Angular that indicates the element does not exist in the DOM
+    - This transition starts from the left and opacity of 0 (transparent)
+    - Use `animate()` to define the duration of this transition
+  - Add a transition of `* => void` for removing an item from the list
+    - This transition does not have a start state
+    - Use `animation()` to define the duration and the style for the animation to move to the right and make the element transparent
+
+```ts
+@Component({
+  ...,
+  animations: [
+    trigger('divState', [...]),
+    trigger('wildState', [...]),
+    trigger('list1', [
+      state(
+        'in',
+        style({
+          opacity: 1,
+          transform: 'translateX(0)',
+        })
+      ),
+      transition('void => *', [
+        style({
+          opacity: 0,
+          transform: 'translateX(-100px)',
+        }),
+        animate(300),
+      ]),
+      transition('* => void', [
+        animate(
+          300,
+          style({
+            transform: 'translateX(100px)',
+            opacity: 0,
+          })
+        ),
       ]),
     ]),
   ],
