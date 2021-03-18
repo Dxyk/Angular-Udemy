@@ -299,3 +299,18 @@ In `app.component.ts`
 })
 export class AppComponent { ... }
 ```
+
+In `app.component.html`
+
+- Add the `[@list1]` trigger, but do not bind it to any other property because it does not need to have an initial state. The initial state is defined in the trigger
+
+```html
+<li
+  class="list-group-item"
+  (click)="onDelete(item)"
+  [@list1]
+  *ngFor="let item of list"
+>
+  {{ item }}
+</li>
+```
