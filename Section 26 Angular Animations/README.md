@@ -71,6 +71,7 @@ In `app.component.html`
 
 - Define a div of a square using CSS styling
 - Use `[@triggerName]="stateName"` to
+  - The `@` sign informs Angular that the variable is animation related
   - Define the Trigger name (`[@divState]`)
   - Property bind the trigger name to the State or state variable name (`state`)
 
