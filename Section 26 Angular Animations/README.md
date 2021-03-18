@@ -436,3 +436,37 @@ In `app.component.ts`
 })
 export class AppComponent { ... }
 ```
+
+### Lesson 414 - Using Animation Callbacks
+
+It is possible to execute code after the animation started or finished
+
+In `app.component.ts`
+
+- Create `animationStarted()` and `animationEnded()` to log the events
+
+```ts
+@Component({ ... })
+export class AppComponent {
+  ...
+  animationStarted(event) {
+    console.log(event);
+  }
+  animationEnded(event) {
+    console.log(event);
+  }
+}
+```
+
+In `app.component.html`
+
+- Use event binding to listen to `@triggerName.start` and `@triggerName.done` to fire events and execute code
+
+```html
+<div
+  style="width: 100px; height: 100px;"
+  [@divState]="state"
+  (@divState.start)="animationStarted($event)"
+  (@divState.done)="animationEnded($event)"
+></div>
+```
