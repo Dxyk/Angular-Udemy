@@ -314,3 +314,85 @@ In `app.component.html`
   {{ item }}
 </li>
 ```
+
+### Lesson 412 - Using Keyframes for Animations
+
+In `app.component.ts`
+
+- Add another trigger for `list2`
+  - Keep initial state the same as in `list1`
+  - When adding an item, pass in a `keyframes()` method that segments the duration into either equal parts or base on offsets defined in the `style()` methods in the second argument
+    - The `style()` methods in `keyframes()` defines the goal style for the transition
+      - The object can contain an `offset` parameter that determines the % of the keyframe for the style
+
+```ts
+@Component({
+  ...,
+  animations: [
+    trigger('divState', [...]),
+    trigger('wildState', [...]),
+    trigger('list1', [...]),
+    trigger('list2', [
+      state(
+        'in',
+        style({
+          opacity: 1,
+          transform: 'translateX(0)',
+        })
+      ),
+      transition('void => *', [
+        animate(
+          1000,
+          keyframes([
+            style({
+              transform: 'translateX(-100px)',
+              opacity: 0,
+              offset: 0,
+            }),
+            style({
+              transform: 'translateX(-50px)',
+              opacity: 0.5,
+              offset: 0.3,
+            }),
+            style({
+              transform: 'translateX(-20px)',
+              opacity: 1,
+              offset: 0.8,
+            }),
+            style({
+              transform: 'translateX(0px)',
+              opacity: 1,
+              offset: 1,
+            }),
+          ])
+        ),
+      ]),
+      transition('* => void', [
+        animate(
+          300,
+          style({
+            transform: 'translateX(100px)',
+            opacity: 0,
+          })
+        ),
+      ]),
+    ]),
+  ],
+})
+export class AppComponent { ... }
+```
+
+In `app.component.html`
+
+- Add the `[@list2]` trigger, but do not bind it to any other property because it does not need to have an initial state. The initial state is defined in the trigger
+
+```html
+<li
+  class="list-group-item"
+  (click)="onDelete(item)"
+  [@list2]
+  *ngFor="let item of list"
+>
+  {{ item }}
+</li>
+```
