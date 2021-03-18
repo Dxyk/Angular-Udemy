@@ -214,3 +214,38 @@ In `app.component.html`
 <button class="btn btn-primary" (click)="onShrink()">Shrink!</button>
 <div style="width: 100px; height: 100px;" [@wildState]="wildState"></div>
 ```
+
+### Lesson 410 - Transition Phases
+
+In `app.component.ts`
+
+- Pass in a list of `style()` and `animate()` methods as the second argument for the `trigger()` method
+  - If the method is `style()`, the style is set instantly
+  - If the method is `animate()`, the second optional argument can be a `style()` method that defines the style the transformation animation should be like
+
+```ts
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  animations: [
+    trigger('divState', [...]),
+    trigger('wildState', [
+      ...,
+      transition('shrunken <=> *', [
+        style({
+          borderRadius: '0',
+          backgroundColor: 'orange',
+        }),
+        animate(
+          1000,
+          style({
+            borderRadius: '50px',
+          })
+        ),
+        animate(500),
+      ]),
+    ]),
+  ],
+})
+export class AppComponent { ... }
+```
