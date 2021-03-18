@@ -396,3 +396,43 @@ In `app.component.html`
   {{ item }}
 </li>
 ```
+
+### Lesson 413 - Grouping Transitions
+
+In `app.component.ts`
+
+- Use `group()` to group two animations together
+  - The `group` method allows grouping of animations so that they happen at the same time (asynchronously), but don't necessarily have to finish at the same time
+
+```ts
+@Component({
+  ...,
+  animations: [
+    trigger('divState', [...]),
+    trigger('wildState', [...]),
+    trigger('list1', [...]),
+    trigger('list2', [
+      state(...),
+      transition('void => *', [...]),
+      transition('* => void', [
+        group([
+          animate(
+            800,
+            style({
+              transform: 'translateX(100px)',
+              opacity: 0,
+            })
+          ),
+          animate(
+            300,
+            style({
+              color: 'red',
+            })
+          ),
+        ]),
+      ]),
+    ]),
+  ],
+})
+export class AppComponent { ... }
+```
