@@ -67,3 +67,58 @@ describe('AppComponent', () => {
 ### Lesson 424 - Running Tests (with the CLI)
 
 To run the tests using the CLI, run `ng test`. The test result will be shown in the log - either `Executed x of x SUCCESS` or `Executed x of x (y FAILED)`. The logs also provide info on which tests failed and their stacktrace.
+
+### Lesson 425 - Adding a Component and some fitting Tests
+
+Create a `user` component using `ng g c user`, and add some basic logic
+
+In `user.component.html`
+
+```html
+<div *ngIf="isLoggedIn">
+  <h1>User logged in</h1>
+  <p>User is: {{ user.name }}</p>
+</div>
+<div *ngIf="!isLoggedIn">
+  <h1>User not logged in</h1>
+  <p>Please login first</p>
+</div>
+```
+
+In `user.component.ts`
+
+```ts
+@Component({ ... })
+export class UserComponent implements OnInit {
+  user: { name: string };
+  isLoggedIn = false;
+}
+```
+
+In `user.component.spec.ts`, write tests for the newly created `UserComponent`
+
+- Use `TestBed.configureTestingModule` to declare the `UserComponent`
+  - After all configurations are done, use `compileComponent` to compile everything
+
+```ts
+describe('UserComponent', () => {
+  let component: UserComponent;
+  let fixture: ComponentFixture<UserComponent>;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [UserComponent],
+    }).compileComponents();
+  });
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(UserComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});
+```
