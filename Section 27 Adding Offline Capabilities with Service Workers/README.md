@@ -115,3 +115,44 @@ In `ngsw-config.json`
 ```
 
 Previously, when loading the page in offline mode, the fonts were loaded using http requests. Now the fonts are cached using Service Workers.
+
+### Lesson 418 - Caching Dynamic Assets & URLs
+
+To cache APIs as dynamic assets
+
+In `ngsw-config.json`
+
+- Add a new `dataGroups` property - dynamic data asset groups
+- For each asset group, it contains
+  - `name` - the name of the asset group
+  - `urls` - a list of URLs where the dynamic data should come from
+  - `version` - the version of the cached data
+  - `cacheConfig` - the configurations for the current asset group
+    - `maxSize` - the maximum entries of the response to cache
+    - `maxAge` - the amount of time the cached data should be valid for
+    - `timeout` - the amount of time to wait for before falling back to cache data when the request does not load
+    - `strategy` - the strategy to use the cached data
+      - `freshness` - always fetch the data from the url first
+      - `performance` - load the cache data first and substitute it as soon as the request data loads up
+
+```json
+{
+  "$schema": "./node_modules/@angular/service-worker/config/schema.json",
+  "index": "/index.html",
+  "assetGroups": [
+    // ...
+  ],
+  "dataGroups": [
+    {
+      "name": "posts",
+      "urls": ["https://jsonplaceholder.typicode.com/posts"],
+      "cacheConfig": {
+        "maxSize": 5,
+        "maxAge": "6h",
+        "timeout": "10s",
+        "strategy": "freshness"
+      }
+    }
+  ]
+}
+```

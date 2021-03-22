@@ -15,7 +15,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.http
-      .get<Post[]>('https://jsonplaceholder.typicode.com/posts')
+      .get<Post[]>('https://jsonplaceholder.cypress.io/')
       .subscribe((fetchedPosts) => (this.posts = fetchedPosts));
   }
 }
