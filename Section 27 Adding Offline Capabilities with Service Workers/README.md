@@ -156,3 +156,7 @@ In `ngsw-config.json`
   ]
 }
 ```
+
+### Lesson 419 - Further Links & Resources
+
+- [Official Angular Service Worker Docs](https://angular.io/guide/service-worker-intro)
