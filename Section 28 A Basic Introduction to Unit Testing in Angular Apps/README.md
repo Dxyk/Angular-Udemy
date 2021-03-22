@@ -191,3 +191,79 @@ describe('UserComponent', () => {
   });
 });
 ```
+
+### Lesson 427 - Simulating Async Tasks
+
+Create a shared `DataService` using `ng g s shared/data`
+
+In `data.service.ts`
+
+```ts
+export class DataService {
+  getDetails(): Promise<string> {
+    const resultPromise = new Promise<string>((resolve) => {
+      setTimeout(() => {
+        resolve('Data');
+      }, 1500);
+    });
+    return resultPromise;
+  }
+}
+```
+
+In `user.component.ts`
+
+```ts
+@Component({
+  ...,
+  providers: [UserService, DataService],
+})
+export class UserComponent implements OnInit {
+  data: string;
+
+  constructor(
+    private userService: UserService,
+    private dataService: DataService
+  ) {}
+
+  ngOnInit(): void {
+    this.user = this.userService.user;
+    this.dataService.getDetails().then((data: string) => {
+      this.data = data;
+    });
+  }
+}
+```
+
+In `user.component.spec.ts`
+
+- To test asynchronous methods
+  - The test should simulate or mock the returned data instead of actually making the requests
+    - Use `spyOn` to spy on the building block making the async method call, and use `.and.return(data)` to mock the returned data
+  - The `it(description, method)`'s method should be declared as `async`, so Angular is aware that the test contains async calls
+  - When the async call is supposed to end, use `fixture.whenStable().then()` to wrap the rest of the logic
+
+```ts
+describe('UserComponent', () => {
+  ...
+  it('should not fetch data successfully if not called asynchronously', () => {
+    const dataService = fixture.debugElement.injector.get(DataService);
+    const spy = spyOn(dataService, 'getDetails').and.returnValue(
+      Promise.resolve('Data')
+    );
+    fixture.detectChanges();
+    expect(component.data).toBe(undefined);
+  });
+
+  it('should not fetch data successfully if not called asynchronously', async () => {
+    const dataService = fixture.debugElement.injector.get(DataService);
+    const spy = spyOn(dataService, 'getDetails').and.returnValue(
+      Promise.resolve('Data')
+    );
+    fixture.detectChanges();
+    fixture.whenStable().then(() => {
+      expect(component.data).toBe(undefined);
+    });
+  });
+});
+```

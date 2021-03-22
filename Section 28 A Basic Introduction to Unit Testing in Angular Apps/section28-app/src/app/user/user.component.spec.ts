@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { DataService } from '../shared/data.service';
 import { UserComponent } from './user.component';
 import { UserService } from './user.service';
 
@@ -47,5 +48,25 @@ describe('UserComponent', () => {
     expect(compiled.querySelector('p').textContent).not.toContain(
       component.user.name
     );
+  });
+
+  it('should not fetch data successfully if not called asynchronously', () => {
+    const dataService = fixture.debugElement.injector.get(DataService);
+    const spy = spyOn(dataService, 'getDetails').and.returnValue(
+      Promise.resolve('Data')
+    );
+    fixture.detectChanges();
+    expect(component.data).toBe(undefined);
+  });
+
+  it('should not fetch data successfully if not called asynchronously', async () => {
+    const dataService = fixture.debugElement.injector.get(DataService);
+    const spy = spyOn(dataService, 'getDetails').and.returnValue(
+      Promise.resolve('Data')
+    );
+    fixture.detectChanges();
+    fixture.whenStable().then(() => {
+      expect(component.data).toBe(undefined);
+    });
   });
 });
