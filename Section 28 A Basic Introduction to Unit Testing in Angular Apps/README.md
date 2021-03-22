@@ -293,3 +293,40 @@ describe('UserComponent', () => {
   }));
 });
 ```
+
+### Lesson 429 - Isolated vs Non-Isolated Tests
+
+**Isolated Tests** are tests that do not rely on the Angular framework at all.
+
+**Non-Isolated Tests** are tests that rely on the Angular framework.
+
+Create a pipe using `ng g pipe shared/reverse`
+
+In `reverse.pipe.ts`
+
+```ts
+@Pipe({ name: 'reverse' })
+export class ReversePipe implements PipeTransform {
+  transform(value: string): string {
+    return value.split('').reverse().join('');
+  }
+}
+```
+
+In `reverse.pipe.spec.ts`
+
+- Without any Angular imports or utilities, the test should be able to create a `ReversePipe` instance and execute and test its methods
+
+```ts
+describe('ReversePipe', () => {
+  it('create an instance', () => {
+    const pipe = new ReversePipe();
+    expect(pipe).toBeTruthy();
+  });
+
+  it('create reverse a string correctly', () => {
+    const pipe = new ReversePipe();
+    expect(pipe.transform('hello')).toEqual('olleh');
+  });
+});
+```
