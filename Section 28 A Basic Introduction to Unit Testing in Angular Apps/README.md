@@ -267,3 +267,29 @@ describe('UserComponent', () => {
   });
 });
 ```
+
+### Lesson 428 - Using "fakeAsync" and "tick"
+
+In `user.component.spec.ts`
+
+- An alternative of `async` is the `fakeAsync()` method
+  - Wrap the arrow function in `it` with the `fakeAsync` method
+  - Instead of using `fixture.whenStable().then()`, use `tick()` to finish all asynchronous tasks immediately
+- The difference is that
+  - With `async`, the test carries out the same workflow as the user would experience
+  - With `fakeAsync`, the test simply skips the asynchronous task
+
+```ts
+describe('UserComponent', () => {
+  ...
+  it('should not fetch data successfully if not called asynchronously', fakeAsync(() => {
+    const dataService = fixture.debugElement.injector.get(DataService);
+    const spy = spyOn(dataService, 'getDetails').and.returnValue(
+      Promise.resolve('Data')
+    );
+    fixture.detectChanges();
+    tick();
+    expect(component.data).toBe(undefined);
+  }));
+});
+```
