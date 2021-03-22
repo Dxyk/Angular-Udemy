@@ -63,3 +63,7 @@ describe('AppComponent', () => {
   });
 });
 ```
+
+### Lesson 424 - Running Tests (with the CLI)
+
+To run the tests using the CLI, run `ng test`. The test result will be shown in the log - either `Executed x of x SUCCESS` or `Executed x of x (y FAILED)`. The logs also provide info on which tests failed and their stacktrace.
