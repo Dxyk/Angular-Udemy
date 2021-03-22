@@ -122,3 +122,72 @@ describe('UserComponent', () => {
   });
 });
 ```
+
+### Lesson 426 - Testing Dependencies: Components and Services
+
+Create a `UserService` using `ng g s user/user`
+
+In `user.service.ts`
+
+```ts
+export class UserService {
+  user = { name: 'Name' };
+}
+```
+
+In `user.component.ts`
+
+```ts
+@Component({
+  ...,
+  providers: [UserService],
+})
+export class UserComponent implements OnInit {
+  ...;
+  constructor(private userService: UserService) {}
+
+  ngOnInit(): void {
+    this.user = this.userService.user;
+  }
+}
+```
+
+In `user.component.spec.ts`
+
+- Use `fixture.debugElement.injector.get(UserService)` to get the injected classes
+- Make sure to detect changes before assertions if the component is supposed to be updated
+
+```ts
+describe('UserComponent', () => {
+  let component: UserComponent;
+  let fixture: ComponentFixture<UserComponent>;
+  beforeEach(() => {
+    fixture = TestBed.createComponent(UserComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  ...
+
+  it('should use user name from the service', () => {
+    const userService = fixture.debugElement.injector.get(UserService);
+    expect(userService.user.name).toEqual(component.user.name);
+  });
+
+  it('should display user name if user is logged in', () => {
+    component.isLoggedIn = true;
+    fixture.detectChanges();
+    const compiled = fixture.debugElement.nativeElement;
+    expect(compiled.querySelector('p').textContent).toContain(
+      component.user.name
+    );
+  });
+
+  it('should not display user name if user is logged in', () => {
+    const compiled = fixture.debugElement.nativeElement;
+    expect(compiled.querySelector('p').textContent).not.toContain(
+      component.user.name
+    );
+  });
+});
+```
