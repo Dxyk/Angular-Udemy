@@ -129,3 +129,17 @@ With `ng update <package>`, Angular CLI will run migration scripts to update the
 `ng deploy` is a more convenient builder. It builds the application for production, and deploy it to a certain host. A third party package or tool needs to be included that contains a builder that supports the `ng deploy` command.
 
 For this example, Firebase hosting (`@angular/fire`) is used. To include Firebase in the project, run `ng add @angular/fire`. After the Firebase package is added, by running `ng deploy`, Angular will pick up the Firebase builder, build the project in production mode, and automatically deploy to Firebase and return a URL.
+
+### Lesson 442 - Understanding "Differential Loading"
+
+**Differential Loading** is a feature supported by Angular CLI that loads different builds depending on the browser and their versions. For modern browsers, there is no/less need for polyfills, so the required bundle has a smaller size. For legacy browsers, there is a larger need for more/all polyfills, and thus the bundle will have a larger size. **Polyfills** are files that enable browsers for certain features.
+
+Angular CLI produces multiple versions of the bundles when the app gets built for production. When the user accesses the application page, Angular first runs a small piece of code to determine the browser and the version, and decide which version of the application to serve.
+
+The advantage for this is that a user using a modern browser can download a smaller bundle to run the Angular app, so the load time is faster.
+
+In the build folder (`/dist/`), we can find the same JS files but for different versions. File names containing `es5` are for older browser versions, where as `es2015` files are for modern browser versions.
+
+Differential Loading can be configured using the `browserslist` and `tsconfig.json` files.
+
+In `browserslist`, a list of supported browsers are specified, where as in `tsconfig.json`, developers can specify the target JS version to support using the `target` attribute.
