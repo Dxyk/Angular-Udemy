@@ -330,3 +330,8 @@ describe('ReversePipe', () => {
   });
 });
 ```
+
+### Lesson 430 - Further Resources & Where to Go Next
+
+- [Angular Official Docs on Testing](https://angular.io/guide/testing)
+- [An Article from Semaphore](https://semaphoreci.com/community/tutorials/testing-components-in-angular-2-with-jasmine)
