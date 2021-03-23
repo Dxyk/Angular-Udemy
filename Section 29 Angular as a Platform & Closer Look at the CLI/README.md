@@ -57,3 +57,30 @@ From within the project, there are also some important Angular CLI commands. Use
 - `ng generate` - Generate building blocks for the application
 - `ng build` - Build the application
 - `ng lint` - Use the config saved in `tslint.json` to lint through the application
+
+### Lesson 436 - The "angular.json" File - A Closer Look
+
+The `angular.json` contains the configurations used by the CLI for running its commands
+
+- `newProjectRoot` - The project root to add new projects to
+
+- `projects` - A list of projects with their names as key, and configurations as JSON object values
+
+  - `projectType` - The type of the application, either `application` or `library`
+  - `schematics` - Covered in the next lesson
+  - `root` - The root folder for the project
+  - `prefix` - The prefix used before all component (e.g. `app` -> `app-user`)
+  - `architect` - The configurations for all different CLI commands
+
+    - `build`, `serve`, `extract-i18n`, `test`, `lint`, `e2e`, etc
+
+      - `builder` - The builder for building the project
+      - `options` - The default options for the command that will always be included when the command is run
+      - `configurations` - configurations for different environments
+
+        - E.g. `fileReplacements` replaces the `environment.ts` file with `environment.prod.ts` file depending on the environment
+        - Options specified in `configurations` overrides options specified in `options`
+
+- `defaultProject` - The default project the CLI will run command against
+
+  - Should be one of the project names specified in `projects`
