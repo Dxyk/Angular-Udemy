@@ -101,3 +101,17 @@ In the case of Angular Material, running the `ng add` command results in the fol
 4. The package updates other files such as `app.module.ts`, `angular.json`, `src/index.html` and `src/styles.css`
 
 These steps are defined by Angular Material so that by running `ng add`, most configurations are already done and consumers can start using the package relatively painlessly
+
+### Lesson 439 - Using Custom "ng generate" Schematics
+
+Developers or third party packages can also define Schematics for `ng generate`. E.g. With Angular Material installed, `ng generate @angular/material:nav main-nav` will generate a `MainNav` component using the `nav` template defined by Angular Material.
+
+In `app.component.html`
+
+- Include the generated `MainNav` component
+
+```html
+<app-main-nav></app-main-nav>
+```
+
+By running `ng serve` we can see that everything works out of the box.
