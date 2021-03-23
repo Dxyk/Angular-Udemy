@@ -75,3 +75,9 @@ export class AppComponent {
   }
 }
 ```
+
+### Lesson 447 - What's New & How to Update
+
+When new Angular versions are released, read the official documents to learn more about the new version.
+
+To update existing projects, `ng update` usually works.
