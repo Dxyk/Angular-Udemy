@@ -48,3 +48,12 @@ Configuration files included in the project
 `tslint.json` - Linter config for TS
 
 `angular.json` - Covered in later lesson
+
+### Lesson 435 - Important CLI Commands
+
+From within the project, there are also some important Angular CLI commands. Use `ng help` to get a list of available commands and their descriptions. All commands can be appended with `--help` to get a more detailed command for the current command.
+
+- `ng serve` - Serve the application
+- `ng generate` - Generate building blocks for the application
+- `ng build` - Build the application
+- `ng lint` - Use the config saved in `tslint.json` to lint through the application
