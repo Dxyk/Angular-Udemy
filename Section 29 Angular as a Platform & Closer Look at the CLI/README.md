@@ -84,3 +84,7 @@ The `angular.json` contains the configurations used by the CLI for running its c
 - `defaultProject` - The default project the CLI will run command against
 
   - Should be one of the project names specified in `projects`
+
+### Lesson 437 - Angular Schematics - An Introduction
+
+Angular CLI Schematics are blueprints which certain CLI commands can pick up. These Schematics can be built by the developers or by other third party packages
