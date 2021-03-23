@@ -115,3 +115,9 @@ In `app.component.html`
 ```
 
 By running `ng serve` we can see that everything works out of the box.
+
+### Lesson 440 - Smooth Updating of Projects with "ng update"
+
+`ng update` analyzes the Angular project and displays a table to show whether there is a package that can or needs to be updated and how. For Angular packages, this works by default. For third party packages, the packages need to have their custom schematics to support `ng update`.
+
+With `ng update <package>`, Angular CLI will run migration scripts to update the package to the latest version.
