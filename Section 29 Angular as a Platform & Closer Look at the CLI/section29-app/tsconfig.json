@@ -10,6 +10,12 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
+    "paths": {
+      "my-button": [
+        "dist/my-button/my-button",
+        "dist/my-button"
+      ]
+    },
     "target": "es2015",
     "module": "es2020",
     "lib": [

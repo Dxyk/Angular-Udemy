@@ -156,3 +156,15 @@ To create multiple Angular projects under one root, do the following
 
 - `ng new <rootProjectName> --create-application=false` - this creates an empty Angular project, with no application in it
 - `ng generate application <projectName>` - this creates a Project under the `projects` folder, so all projects will live under the same root
+
+### Lesson 444 - Angular Libraries - An Introduction
+
+To generate a new library, use `ng generate library <libraryName>`. Libraries are code that are not supposed to be run independently. They usually contain code / features utilized by other projects.
+
+Angular will generate the library under the same `projects` folder.
+
+In regards of the project structure, compared to Angular projects, Angular libraries have
+
+- `ng-package.json` - contains configurations for the library
+- `src/public-apis.ts` - used for exporting the components and features in the library
+- `src/lib` - directory that contains code / features included in the library
