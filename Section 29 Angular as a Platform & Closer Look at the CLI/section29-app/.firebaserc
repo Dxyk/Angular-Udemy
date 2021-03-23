@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "test-project-9e1d3": {
+      "hosting": {
+        "section29-app": [
+          "test-project-9e1d3"
+        ]
+      }
+    }
+  }
+}

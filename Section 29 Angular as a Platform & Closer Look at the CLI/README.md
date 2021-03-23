@@ -121,3 +121,11 @@ By running `ng serve` we can see that everything works out of the box.
 `ng update` analyzes the Angular project and displays a table to show whether there is a package that can or needs to be updated and how. For Angular packages, this works by default. For third party packages, the packages need to have their custom schematics to support `ng update`.
 
 With `ng update <package>`, Angular CLI will run migration scripts to update the package to the latest version.
+
+### Lesson 441 - Simplified Deployment with "ng deploy"
+
+**Builder**s are commands that perform certain build steps. Some examples are `ng build`, `ng test`, `ng lint`, `ng deploy`.
+
+`ng deploy` is a more convenient builder. It builds the application for production, and deploy it to a certain host. A third party package or tool needs to be included that contains a builder that supports the `ng deploy` command.
+
+For this example, Firebase hosting (`@angular/fire`) is used. To include Firebase in the project, run `ng add @angular/fire`. After the Firebase package is added, by running `ng deploy`, Angular will pick up the Firebase builder, build the project in production mode, and automatically deploy to Firebase and return a URL.
