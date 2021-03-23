@@ -168,3 +168,5 @@ In regards of the project structure, compared to Angular projects, Angular libra
 - `ng-package.json` - contains configurations for the library
 - `src/public-apis.ts` - used for exporting the components and features in the library
 - `src/lib` - directory that contains code / features included in the library
+
+### Lesson 445 - Wrap Up
