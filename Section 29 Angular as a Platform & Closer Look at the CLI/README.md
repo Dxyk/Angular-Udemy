@@ -88,3 +88,16 @@ The `angular.json` contains the configurations used by the CLI for running its c
 ### Lesson 437 - Angular Schematics - An Introduction
 
 Angular CLI Schematics are blueprints which certain CLI commands can pick up. These Schematics can be built by the developers or by other third party packages
+
+### Lesson 438 - The "ng add" Command
+
+Angular Material is a third party package maintained by part of the Angular team. It allows developers to add pre-built components following the Material Design spec. To add it to the project, use `ng add @angular/material`. Note that all parties can support the `ng add` command, as long as they provide certain configuration files that Angular uses.
+
+In the case of Angular Material, running the `ng add` command results in the following outcome
+
+1. The package is installed using npm
+2. The package prompts for configurations
+3. The package updates `package.json`
+4. The package updates other files such as `app.module.ts`, `angular.json`, `src/index.html` and `src/styles.css`
+
+These steps are defined by Angular Material so that by running `ng add`, most configurations are already done and consumers can start using the package relatively painlessly
