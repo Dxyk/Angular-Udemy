@@ -143,3 +143,16 @@ In the build folder (`/dist/`), we can find the same JS files but for different 
 Differential Loading can be configured using the `browserslist` and `tsconfig.json` files.
 
 In `browserslist`, a list of supported browsers are specified, where as in `tsconfig.json`, developers can specify the target JS version to support using the `target` attribute.
+
+### Lesson 443 - Managing Multiple Projects in One Folder
+
+An Angular project can contain multiple projects and libraries. To do so, use `ng generate <application/library> <projectName>`.
+
+To generate a new project, use `ng generate application <projectName>`.
+
+By default, Angular will create a `projects` folder containing the new project, and `angular.json` will also be updated to include the new project. To run any Angular CLI command on the non-default projects, use `--project=<projectName>` (E.g. `ng serve --project=projectName`).
+
+To create multiple Angular projects under one root, do the following
+
+- `ng new <rootProjectName> --create-application=false` - this creates an empty Angular project, with no application in it
+- `ng generate application <projectName>` - this creates a Project under the `projects` folder, so all projects will live under the same root
